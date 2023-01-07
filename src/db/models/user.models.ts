@@ -5,7 +5,9 @@ import {
   PrimaryKey,
   CreatedAt,
   UpdatedAt,
+  HasMany,
 } from 'sequelize-typescript';
+import {Group} from "./group.models";
 
 @Table({
   modelName: 'User',
@@ -13,6 +15,10 @@ import {
   timestamps: true,
 })
 export class User extends Model {
+
+  @HasMany(() => Group)
+  group: Group[];
+
   @PrimaryKey
   @Column
   userId: number;
@@ -24,7 +30,7 @@ export class User extends Model {
   password: string;
 
   @Column
-  nickname: string;
+  nickName: string;
 
   @Column
   mbti: string;

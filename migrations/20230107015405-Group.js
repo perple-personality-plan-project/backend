@@ -2,39 +2,35 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('User', {
-      userId: {
+  async up (queryInterface, Sequelize) {
+    await queryInterface.createTable('Group', {
+      groupId: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.DataTypes.INTEGER,
       },
-      loginId: {
+      groupname: {
         type: Sequelize.DataTypes.STRING,
         allowNull: false,
         unique: true,
       },
-      nickName: {
-        type: Sequelize.DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-      },
-      password: {
+      thumbnail: {
         type: Sequelize.DataTypes.STRING,
         allowNull: false,
       },
-      mbti: {
+      description: {
         type: Sequelize.DataTypes.STRING,
-        allowNull: true,
+        allowNull: false,
       },
-      platformType: {
-        type: Sequelize.DataTypes.STRING,
-        allowNull: true,
-      },
-      pick: {
-        type: Sequelize.DataTypes.STRING,
-        allowNull: true,
+      userId: {
+        type: Sequelize.DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'User',
+          key: 'userId',
+        },
+        onDelete: 'cascade',
       },
       createdAt: {
         allowNull: false,
@@ -49,7 +45,7 @@ module.exports = {
     });
   },
 
-  async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('User');
-  },
+  async down (queryInterface, Sequelize) {
+    await queryInterface.dropTable('Group');
+  }
 };
