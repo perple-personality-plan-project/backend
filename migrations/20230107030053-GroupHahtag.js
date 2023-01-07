@@ -3,38 +3,30 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('User', {
-      userId: {
+    await queryInterface.createTable('GroupHashtag', {
+      groupHashtagId:{
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.DataTypes.INTEGER,
       },
-      loginId: {
-        type: Sequelize.DataTypes.STRING,
+      groupId: {
+        type: Sequelize.DataTypes.INTEGER,
         allowNull: false,
-        unique: true,
+        references: {
+          model: 'Group',
+          key: 'groupId',
+        },
+        onDelete: 'cascade',
       },
-      nickName: {
-        type: Sequelize.DataTypes.STRING,
+      hashtagId: {
+        type: Sequelize.DataTypes.INTEGER,
         allowNull: false,
-        unique: true,
-      },
-      password: {
-        type: Sequelize.DataTypes.STRING,
-        allowNull: false,
-      },
-      mbti: {
-        type: Sequelize.DataTypes.STRING,
-        allowNull: true,
-      },
-      platformType: {
-        type: Sequelize.DataTypes.STRING,
-        allowNull: true,
-      },
-      pick: {
-        type: Sequelize.DataTypes.STRING,
-        allowNull: true,
+        references: {
+          model: 'Hashtag',
+          key: 'hashtagId',
+        },
+        onDelete: 'cascade',
       },
       createdAt: {
         allowNull: false,
@@ -50,6 +42,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('User');
+    await queryInterface.dropTable('GroupHashtag');
   },
 };
