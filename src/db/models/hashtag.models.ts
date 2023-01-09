@@ -1,4 +1,14 @@
-import {Column, CreatedAt, Model, PrimaryKey, Table, UpdatedAt,HasMany} from "sequelize-typescript";
+import {
+    Column,
+    CreatedAt,
+    Model,
+    PrimaryKey,
+    Table,
+    UpdatedAt,
+    HasMany,
+    AutoIncrement,
+    AllowNull
+} from "sequelize-typescript";
 import {GroupHashtag} from "./groupHahtag.models";
 
 @Table({
@@ -11,10 +21,12 @@ export class Hashtag extends Model {
     groupHashtag: GroupHashtag[];
 
     @PrimaryKey
+    @AutoIncrement
     @Column
     hashtagId: number;
 
     @Column
+    @AllowNull(false)
     title: string
 
     @CreatedAt
