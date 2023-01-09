@@ -6,11 +6,13 @@ import {
   ForeignKey,
   CreatedAt,
   UpdatedAt,
-  BelongsTo, HasMany, AutoIncrement, AllowNull,
+  BelongsTo,
+  AutoIncrement,
+  AllowNull,
 } from 'sequelize-typescript';
 import { User } from './user.models';
 import { Feed } from './feed.models';
-import {Group} from "./group.models";
+
 @Table({
   modelName: 'Comment',
   freezeTableName: true,
@@ -36,7 +38,7 @@ export class Comment extends Model {
   @Column
   userId: number;
 
-  @BelongsTo(()=> User)
+  @BelongsTo(() => User)
   user: User;
 
   @ForeignKey(() => Feed)

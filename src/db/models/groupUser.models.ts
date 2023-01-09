@@ -6,10 +6,12 @@ import {
   CreatedAt,
   UpdatedAt,
   ForeignKey,
-  BelongsTo, AllowNull, AutoIncrement,
+  BelongsTo,
+  AllowNull,
+  AutoIncrement,
 } from 'sequelize-typescript';
 import { User } from './user.models';
-import {Group} from "./group.models";
+import { Group } from './group.models';
 
 @Table({
   modelName: 'GroupUser',
@@ -18,21 +20,21 @@ import {Group} from "./group.models";
 })
 export class GroupUser extends Model {
   @PrimaryKey
-  @Column
   @AllowNull(false)
   @AutoIncrement
+  @Column
   groupUserId: number;
 
   @ForeignKey(() => Group)
-  @Column
   @AllowNull(false)
+  @Column
   groupId: number;
 
   @BelongsTo(() => Group)
-  group: Group
+  group: Group;
 
-  @Column
   @AllowNull(false)
+  @Column
   isGroupUser: number;
 
   @ForeignKey(() => User)
@@ -43,8 +45,8 @@ export class GroupUser extends Model {
   @BelongsTo(() => User)
   user: User;
 
-  @Column
   @AllowNull(false)
+  @Column
   isAdmin: boolean;
 
   @CreatedAt
