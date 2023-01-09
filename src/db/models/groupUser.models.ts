@@ -6,10 +6,12 @@ import {
   CreatedAt,
   UpdatedAt,
   ForeignKey,
-  BelongsTo, AllowNull, AutoIncrement,
+  BelongsTo,
+  AllowNull,
+  AutoIncrement,
 } from 'sequelize-typescript';
 import { User } from './user.models';
-import {Group} from "./group.models";
+import { Group } from './group.models';
 
 @Table({
   modelName: 'GroupUser',
@@ -29,7 +31,7 @@ export class GroupUser extends Model {
   groupId: number;
 
   @BelongsTo(() => Group)
-  group: Group
+  group: Group;
 
   @Column
   @AllowNull(false)

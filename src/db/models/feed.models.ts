@@ -7,7 +7,9 @@ import {
   CreatedAt,
   UpdatedAt,
   BelongsTo,
-  HasMany, AutoIncrement, AllowNull,
+  HasMany,
+  AutoIncrement,
+  AllowNull,
 } from 'sequelize-typescript';
 import { User } from './user.models';
 import { Comment } from './comment.models';
