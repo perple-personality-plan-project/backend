@@ -5,13 +5,16 @@ import {
   PrimaryKey,
   CreatedAt,
   UpdatedAt,
-  HasMany, AllowNull, Unique, AutoIncrement,
+  HasMany,
+  AllowNull,
+  Unique,
+  AutoIncrement,
 } from 'sequelize-typescript';
-import {Group} from "./group.models";
-import {Like} from "./like.models";
-import {Feed} from "./feed.models";
-import {Follower} from "./follower.models";
-import {Comment} from "./comment.models";
+import { Group } from './group.models';
+import { Like } from './like.models';
+import { Feed } from './feed.models';
+import { Follower } from './follower.models';
+import { Comment } from './comment.models';
 
 @Table({
   modelName: 'User',
@@ -23,13 +26,13 @@ export class User extends Model {
   @HasMany(() => Group)
   group: Group[];
 
-  @HasMany(()=> Like)
+  @HasMany(() => Like)
   like: Like[];
 
-  @HasMany(()=> Feed)
+  @HasMany(() => Feed)
   feed: Feed[];
 
-  @HasMany(()=> Follower)
+  @HasMany(() => Follower)
   follower: Follower[];
 
   @HasMany(() => Comment)
@@ -44,17 +47,17 @@ export class User extends Model {
   @Column
   userId: number;
 
-  @Column
   @AllowNull(false)
   @Unique
+  @Column
   loginId: string;
 
-  @Column
   @AllowNull(false)
+  @Column
   password: string;
 
-  @Column
   @AllowNull(false)
+  @Column
   nickName: string;
 
   @Column
