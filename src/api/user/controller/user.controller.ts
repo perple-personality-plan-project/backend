@@ -1,14 +1,25 @@
-import { Controller, UseInterceptors, Post } from '@nestjs/common';
+import {
+  Controller,
+  UseInterceptors,
+  Post,
+  Body,
+  ValidationPipe,
+} from '@nestjs/common';
 import { GlobalResponseInterceptor } from '../../../common/interceptors/global.response.interceptor';
 import { UserService } from 'src/api/user/service/user.service';
+import { CreateUserDto } from '../dto/create-user.dto';
+import { User } from 'src/db/models/user.models';
 
 @Controller('user')
 @UseInterceptors(GlobalResponseInterceptor)
 export class UserController {
   constructor(private readonly userService: UserService) {}
-  @Post()
-  createUser() {
-    this.userService.create();
-    return 'CREATE!!';
+
+  // 회원가입
+  @Post('/signup')
+  async signup(
+    @Body(ValidationPipe) createUserDto: CreateUserDto,
+  ): Promise<User> {
+    return await this.userService.signUp(createUserDto);
   }
 }
