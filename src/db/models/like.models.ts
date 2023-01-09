@@ -6,7 +6,7 @@ import {
   ForeignKey,
   CreatedAt,
   UpdatedAt,
-  BelongsTo,
+  BelongsTo, AllowNull, AutoIncrement,
 } from 'sequelize-typescript';
 import { User } from './user.models';
 import { Feed } from './feed.models';
@@ -18,18 +18,23 @@ import { Feed } from './feed.models';
 export class Like extends Model {
   @BelongsTo(() => Feed)
   feed: Feed;
+
   @BelongsTo(() => User)
   user: User;
 
   @PrimaryKey
+  @AllowNull(false)
+  @AutoIncrement
   @Column
   likeId: number;
 
   @ForeignKey(() => User)
+  @AllowNull(false)
   @Column
   userId: number;
 
   @ForeignKey(() => Feed)
+  @AllowNull(false)
   @Column
   feedId: number;
 

@@ -7,7 +7,7 @@ import {
   CreatedAt,
   UpdatedAt,
   BelongsTo,
-  HasMany,
+  HasMany, AutoIncrement, AllowNull,
 } from 'sequelize-typescript';
 import { User } from './user.models';
 import { Comment } from './comment.models';
@@ -21,22 +21,29 @@ import { Group } from './group.models';
 export class Feed extends Model {
   @HasMany(() => Comment)
   Comment: Comment[];
+
   @HasMany(() => Like)
   Like: Like[];
+
   @BelongsTo(() => User)
   user: User;
+
   @BelongsTo(() => Group)
   group: Group;
 
   @PrimaryKey
+  @AutoIncrement
+  @AllowNull(false)
   @Column
   feedId: number;
 
   @ForeignKey(() => User)
+  @AllowNull(false)
   @Column
   userId: number;
 
   @ForeignKey(() => Group)
+  @AllowNull(false)
   @Column
   groupId: number;
 
@@ -44,12 +51,15 @@ export class Feed extends Model {
   thumbnail: string;
 
   @Column
+  @AllowNull(false)
   title: string;
 
   @Column
+  @AllowNull(false)
   description: string;
 
   @Column
+  @AllowNull(false)
   location: string;
 
   @CreatedAt
