@@ -30,3 +30,11 @@ export class CreateUserDto {
   @IsString()
   mbti: string;
 }
+
+export class LocalUserDto {
+  loginId: string;
+  password: string;
+  nickName: string;
+  platformType: string;
+  mbti: string;
+}
