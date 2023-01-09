@@ -47,17 +47,17 @@ export class User extends Model {
   @Column
   userId: number;
 
-  @Column
   @AllowNull(false)
   @Unique
+  @Column
   loginId: string;
 
-  @Column
   @AllowNull(false)
+  @Column
   password: string;
 
-  @Column
   @AllowNull(false)
+  @Column
   nickName: string;
 
   @Column

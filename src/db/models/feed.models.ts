@@ -52,16 +52,16 @@ export class Feed extends Model {
   @Column
   thumbnail: string;
 
-  @Column
   @AllowNull(false)
+  @Column
   title: string;
 
-  @Column
   @AllowNull(false)
+  @Column
   description: string;
 
-  @Column
   @AllowNull(false)
+  @Column
   location: string;
 
   @CreatedAt

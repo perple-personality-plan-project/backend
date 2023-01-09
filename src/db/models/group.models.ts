@@ -36,17 +36,17 @@ export class Group extends Model {
   @Column
   groupId: number;
 
-  @Column
   @AllowNull(false)
   @Unique
+  @Column
   groupname: string;
 
-  @Column
   @AllowNull(false)
+  @Column
   thumbnail: string;
 
-  @Column
   @AllowNull(false)
+  @Column
   description: string;
 
   @ForeignKey(() => User)

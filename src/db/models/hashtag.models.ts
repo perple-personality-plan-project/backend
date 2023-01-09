@@ -25,8 +25,8 @@ export class Hashtag extends Model {
   @Column
   hashtagId: number;
 
-  @Column
   @AllowNull(false)
+  @Column
   title: string;
 
   @CreatedAt

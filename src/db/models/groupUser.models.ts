@@ -20,21 +20,21 @@ import { Group } from './group.models';
 })
 export class GroupUser extends Model {
   @PrimaryKey
-  @Column
   @AllowNull(false)
   @AutoIncrement
+  @Column
   groupUserId: number;
 
   @ForeignKey(() => Group)
-  @Column
   @AllowNull(false)
+  @Column
   groupId: number;
 
   @BelongsTo(() => Group)
   group: Group;
 
-  @Column
   @AllowNull(false)
+  @Column
   isGroupUser: number;
 
   @ForeignKey(() => User)
@@ -45,8 +45,8 @@ export class GroupUser extends Model {
   @BelongsTo(() => User)
   user: User;
 
-  @Column
   @AllowNull(false)
+  @Column
   isAdmin: boolean;
 
   @CreatedAt
