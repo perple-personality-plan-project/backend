@@ -10,7 +10,8 @@ export class UserService {
 
   async signUp(createUserDto: CreateUserDto): Promise<User> {
     // 아이디 중복검사
-    const isDupLoginId = await this.userRepository.duplicatedLoginId(
+    const isDupLoginId = await this.userRepository.IsDuplicatedInputData(
+      'loginId',
       createUserDto.loginId,
     );
 
@@ -19,7 +20,8 @@ export class UserService {
     }
 
     // 닉네임 중복검사
-    const isDupNickname = await this.userRepository.duplicatedNickname(
+    const isDupNickname = await this.userRepository.IsDuplicatedInputData(
+      'nickName',
       createUserDto.nickName,
     );
 

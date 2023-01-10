@@ -25,31 +25,23 @@ export class UserRepository {
     }
   }
 
-  async duplicatedLoginId(loginId: string): Promise<boolean> {
+  async findUserById(loginId: string): Promise<User> {
     try {
-      const isDupLoginId = await this.userModel.findOne({ where: { loginId } });
-
-      if (isDupLoginId) {
-        return true;
-      }
-
-      return false;
+      return this.userModel.findOne({
+        where: { loginId },
+      });
     } catch (error) {
       return error.message;
     }
   }
 
-  async duplicatedNickname(nickName: string): Promise<boolean> {
+  /*
+   * 컬럼명을 매개변수로 받아
+   * 동적으로 해당 컬럼에 중복 데이터가 있는지 확인
+   */
+  async IsDuplicatedInputData(column: string, data: string): Promise<User> {
     try {
-      const isDupNickname = await this.userModel.findOne({
-        where: { nickName },
-      });
-
-      if (isDupNickname) {
-        return true;
-      }
-
-      return false;
+      return this.userModel.findOne({ where: { [column]: data } });
     } catch (error) {
       return error.message;
     }

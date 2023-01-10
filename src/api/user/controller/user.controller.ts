@@ -4,6 +4,8 @@ import {
   Post,
   Body,
   ValidationPipe,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { GlobalResponseInterceptor } from '../../../common/interceptors/global.response.interceptor';
 import { UserService } from 'src/api/user/service/user.service';
