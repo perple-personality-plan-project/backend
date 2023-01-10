@@ -1,5 +1,6 @@
 import {
   IsNotEmpty,
+  IsOptional,
   IsString,
   Matches,
   MaxLength,
@@ -18,7 +19,7 @@ export class CreateUserDto {
   @IsNotEmpty({ message: '비밀번호를 입력해주세요' })
   @IsString({ message: '비밀번호는 문자열 형식이여야 합니다' })
   @MinLength(8, { message: '비밀번호는 최소 8글자입니다.' })
-  @MaxLength(10, { message: '비밀번호는 최대 15글자 입니다.' })
+  @MaxLength(15, { message: '비밀번호는 최대 15글자 입니다.' })
   @Matches(/^(?=.*[a-zA-Z])(?=.*[0-9]).{8,}$/, {
     message: '영문,숫자 조합으로 입력해주세요',
   })
@@ -29,6 +30,8 @@ export class CreateUserDto {
   @MaxLength(8, { message: '닉네임은 최대 8글자 입니다.' })
   nickName: string;
 
+  @IsOptional()
+  @IsNotEmpty({ message: 'mbti를 입력해주세요' })
   @IsString({ message: 'mbti는 문자열 형식이여야 합니다.' })
   mbti: string;
 }

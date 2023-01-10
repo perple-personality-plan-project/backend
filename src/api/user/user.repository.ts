@@ -25,16 +25,6 @@ export class UserRepository {
     }
   }
 
-  async findUserById(loginId: string): Promise<User> {
-    try {
-      return this.userModel.findOne({
-        where: { loginId },
-      });
-    } catch (error) {
-      return error.message;
-    }
-  }
-
   /*
    * 컬럼명을 매개변수로 받아
    * 동적으로 해당 컬럼에 중복 데이터가 있는지 확인
