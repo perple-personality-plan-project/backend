@@ -6,16 +6,23 @@ import {
   ValidationPipe,
   UseGuards,
   Req,
+  Res,
 } from '@nestjs/common';
 import { GlobalResponseInterceptor } from '../../../common/interceptors/global.response.interceptor';
 import { UserService } from 'src/api/user/service/user.service';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { User } from 'src/db/models/user.models';
+import { AuthGuard } from '@nestjs/passport/dist/auth.guard';
+import { Request, Response } from 'express';
+import { AuthService } from 'src/auth/auth.service';
 
 @Controller('user')
 @UseInterceptors(GlobalResponseInterceptor)
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly authService: AuthService,
+  ) {}
 
   // 회원가입
   @Post('/signup')
@@ -23,5 +30,23 @@ export class UserController {
     @Body(ValidationPipe) createUserDto: CreateUserDto,
   ): Promise<User> {
     return await this.userService.signUp(createUserDto);
+  }
+
+  // 로그인
+  @UseGuards(AuthGuard('local'))
+  @Post('/login')
+  async login(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<any> {
+    const { loginId }: any = req.user;
+
+    const { accessToken, refreshToken } =
+      await this.authService.createAccessTokenRefreshToken(loginId);
+
+    res.setHeader('accessToken', `Bearer ${accessToken}`);
+    res.setHeader('refreshToken', `Bearer ${refreshToken}`);
+
+    return { message: `${loginId} 로그인 성공` };
   }
 }
