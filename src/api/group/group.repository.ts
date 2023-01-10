@@ -19,4 +19,11 @@ export class GroupRepository {
       where: { ...findData },
     });
   }
+
+  async getGroup(sort) {
+    return this.groupModel.findAll({
+      raw: true,
+      order: [[sort, 'DESC']],
+    });
+  }
 }
