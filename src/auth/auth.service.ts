@@ -72,4 +72,10 @@ export class AuthService {
 
     return refreshToken;
   }
+
+  async tokenValidate(token: string, key: string) {
+    return await this.jwtService.verify(token, {
+      secret: key,
+    });
+  }
 }
