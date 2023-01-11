@@ -16,7 +16,6 @@ import { User } from 'src/db/models/user.models';
 import { AuthGuard } from '@nestjs/passport/dist/auth.guard';
 import { Request, Response } from 'express';
 import { AuthService } from 'src/auth/auth.service';
-import { JwtAuthGuard } from 'src/auth/jwt/jwt-auth.guard';
 
 @Controller('user')
 @UseInterceptors(GlobalResponseInterceptor)
