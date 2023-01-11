@@ -26,7 +26,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       });
     } else {
       console.log('test!');
-      response.status(500).json({
+      response.status(status).json({
         success: false,
         timestamp: new Date().toISOString(),
         ...error,
