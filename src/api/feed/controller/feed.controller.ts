@@ -35,7 +35,7 @@ export class FeedController {
   })
   @Post()
   async createFeed(@Body() body: FeedRequestDto) {
-    const userId = { userId: 1 };
+    const userId = { userId: 2 };
     return this.feedService.createFeed(body, userId);
   }
 }
