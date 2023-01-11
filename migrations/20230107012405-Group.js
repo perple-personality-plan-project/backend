@@ -3,28 +3,32 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('GroupHashtag', {
-      groupHashtagId: {
+    await queryInterface.createTable('Group', {
+      groupId: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.DataTypes.INTEGER,
       },
-      groupId: {
-        type: Sequelize.DataTypes.INTEGER,
+      groupname: {
+        type: Sequelize.DataTypes.STRING,
         allowNull: false,
-        references: {
-          model: 'Group',
-          key: 'groupId',
-        },
-        onDelete: 'cascade',
+        unique: true,
       },
-      hashtagId: {
+      thumbnail: {
+        type: Sequelize.DataTypes.STRING,
+        allowNull: false,
+      },
+      description: {
+        type: Sequelize.DataTypes.STRING,
+        allowNull: false,
+      },
+      userId: {
         type: Sequelize.DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'Hashtag',
-          key: 'hashtagId',
+          model: 'User',
+          key: 'userId',
         },
         onDelete: 'cascade',
       },
@@ -42,6 +46,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('GroupHashtag');
+    await queryInterface.dropTable('Group');
   },
 };

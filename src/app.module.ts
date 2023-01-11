@@ -19,7 +19,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_SCHEMA,
       autoLoadModels: true,
-      synchronize: true,
+      synchronize: false,
     }),
   ],
   controllers: [],
