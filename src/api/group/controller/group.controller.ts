@@ -5,10 +5,11 @@ import {
   Post,
   UseFilters,
   UseInterceptors,
+  Param,
 } from '@nestjs/common';
 import { GlobalResponseInterceptor } from 'src/common/interceptors/global.response.interceptor';
 import { GlobalExceptionFilter } from '../../../common/filter/global.exception.filter';
-import { GroupRequestDto } from '../dto/group.request.dto';
+import { GroupParamDto, GroupRequestDto } from '../dto/group.request.dto';
 import { GroupService } from '../service/group.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
@@ -20,9 +21,9 @@ export class GroupController {
   constructor(private readonly groupService: GroupService) {}
 
   @ApiOperation({ summary: '전체 그룹 리스트 가져오기' })
-  @Get()
-  getGroup() {
-    return 'get Group';
+  @Get('/:sort')
+  getGroup(@Param() req: GroupParamDto) {
+    return this.groupService.getGroup(req);
   }
 
   @ApiOperation({ summary: '그룹 만들기' })

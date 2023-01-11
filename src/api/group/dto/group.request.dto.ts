@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsArray } from 'class-validator';
+import { IsString, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class GroupRequestDto {
@@ -27,4 +27,10 @@ export class GroupRequestDto {
   @IsString({ message: 'description는 문자열 입니다.' })
   @IsNotEmpty({ message: 'description는 필수값 입니다.' })
   description: string;
+}
+
+export class GroupParamDto {
+  @IsNotEmpty()
+  @IsString()
+  sort: string;
 }
