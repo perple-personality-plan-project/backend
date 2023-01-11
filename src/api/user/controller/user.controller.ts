@@ -51,6 +51,7 @@ export class UserController {
     return { message: `${loginId} 로그인 성공` };
   }
 
+  // 엑세스 토큰 재발급
   @UseGuards(AuthGuard('jwt-refresh'))
   @Get('/refresh-token')
   async re(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
