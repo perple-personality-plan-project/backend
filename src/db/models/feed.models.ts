@@ -45,7 +45,6 @@ export class Feed extends Model {
   userId: number;
 
   @ForeignKey(() => Group)
-  @AllowNull(false)
   @Column
   groupId: number;
 
