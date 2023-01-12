@@ -42,8 +42,7 @@ export class GroupController {
   })
   @Post()
   async createGroup(@Body() body: GroupRequestDto) {
-    const userId = { userId: 1 };
-    console.log(body);
-    // return this.groupService.createGroup(body, userId);
+    const user_id = { user_id: 1 };
+    return this.groupService.createGroup(body, user_id);
   }
 }
