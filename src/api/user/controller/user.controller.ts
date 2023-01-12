@@ -28,8 +28,10 @@ export class UserController {
   @Post('/signup')
   async signup(
     @Body(ValidationPipe) createUserDto: CreateUserDto,
-  ): Promise<User> {
-    return await this.userService.signUp(createUserDto);
+  ): Promise<{ message: string }> {
+    await this.userService.signUp(createUserDto);
+
+    return { message: '회원가입에 성공했습니다.' };
   }
 
   // 로그인
