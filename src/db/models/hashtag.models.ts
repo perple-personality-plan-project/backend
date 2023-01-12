@@ -23,15 +23,15 @@ export class Hashtag extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column
-  hashtagId: number;
+  hashtag_id: number;
 
   @AllowNull(false)
   @Column
   title: string;
 
   @CreatedAt
-  createdAt: Date;
+  created_at: Date;
 
   @UpdatedAt
-  updatedAt: Date;
+  updated_at: Date;
 }

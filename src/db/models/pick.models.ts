@@ -5,46 +5,44 @@ import {
   PrimaryKey,
   CreatedAt,
   UpdatedAt,
-  ForeignKey,
-  BelongsTo,
   AllowNull,
+  Unique,
   AutoIncrement,
+  BelongsTo,
+  ForeignKey,
 } from 'sequelize-typescript';
+import { Feed } from './feed.models';
 import { User } from './user.models';
-import { Group } from './group.models';
 
 @Table({
-  modelName: 'GroupUser',
-  tableName: 'group_users',
+  modelName: 'Pick',
+  tableName: 'picks',
   freezeTableName: false,
   timestamps: true,
 })
-export class GroupUser extends Model {
+export class Pick extends Model {
   @BelongsTo(() => User)
   user: User;
 
-  @BelongsTo(() => Group)
-  group: Group;
+  @BelongsTo(() => Feed)
+  feed: Feed;
 
   @PrimaryKey
   @AllowNull(false)
   @AutoIncrement
+  @Unique
   @Column
-  group_user_id: number;
-
-  @ForeignKey(() => Group)
-  @AllowNull(false)
-  @Column
-  group_id: number;
+  pick_id: number;
 
   @ForeignKey(() => User)
   @AllowNull(false)
   @Column
   user_id: number;
 
+  @ForeignKey(() => Feed)
   @AllowNull(false)
   @Column
-  admin_flag: boolean;
+  feed_id: number;
 
   @CreatedAt
   created_at: Date;

@@ -10,21 +10,23 @@ import {
   Unique,
   AutoIncrement,
 } from 'sequelize-typescript';
-import { Group } from './group.models';
 import { Like } from './like.models';
 import { Feed } from './feed.models';
-import { Follower } from './follower.models';
 import { Comment } from './comment.models';
+import { Map } from './map.models';
+import { Pick } from './pick.models';
+import { GroupUser } from './groupUser.models';
 
 @Table({
   modelName: 'User',
-  freezeTableName: true,
+  tableName: 'users',
+  freezeTableName: false,
   timestamps: true,
 })
 export class User extends Model {
   //HasMany
-  @HasMany(() => Group)
-  group: Group[];
+  @HasMany(() => GroupUser)
+  groupUser: GroupUser[];
 
   @HasMany(() => Like)
   like: Like[];
@@ -32,25 +34,26 @@ export class User extends Model {
   @HasMany(() => Feed)
   feed: Feed[];
 
-  @HasMany(() => Follower)
-  follower: Follower[];
+  @HasMany(() => Map)
+  map: Map[];
+
+  @HasMany(() => Pick)
+  pick: Pick[];
 
   @HasMany(() => Comment)
   comment: Comment[];
-
-  //belong to
 
   @PrimaryKey
   @AllowNull(false)
   @AutoIncrement
   @Unique
   @Column
-  userId: number;
+  user_id: number;
 
   @AllowNull(false)
   @Unique
   @Column
-  loginId: string;
+  login_id: string;
 
   @AllowNull(false)
   @Column
@@ -58,20 +61,17 @@ export class User extends Model {
 
   @AllowNull(false)
   @Column
-  nickName: string;
+  nickname: string;
 
   @Column
   mbti: string;
 
   @Column
-  platformType: string;
-
-  @Column
-  pick: string;
+  provider: string;
 
   @CreatedAt
-  createdAt: Date;
+  created_at: Date;
 
   @UpdatedAt
-  updatedAt: Date;
+  updated_at: Date;
 }

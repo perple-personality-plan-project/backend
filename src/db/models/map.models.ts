@@ -5,37 +5,30 @@ import {
   PrimaryKey,
   CreatedAt,
   UpdatedAt,
-  ForeignKey,
-  BelongsTo,
   AllowNull,
+  Unique,
   AutoIncrement,
+  BelongsTo,
+  ForeignKey,
 } from 'sequelize-typescript';
 import { User } from './user.models';
-import { Group } from './group.models';
 
 @Table({
-  modelName: 'GroupUser',
-  tableName: 'group_users',
+  modelName: 'Map',
+  tableName: 'maps',
   freezeTableName: false,
   timestamps: true,
 })
-export class GroupUser extends Model {
+export class Map extends Model {
   @BelongsTo(() => User)
   user: User;
-
-  @BelongsTo(() => Group)
-  group: Group;
 
   @PrimaryKey
   @AllowNull(false)
   @AutoIncrement
+  @Unique
   @Column
-  group_user_id: number;
-
-  @ForeignKey(() => Group)
-  @AllowNull(false)
-  @Column
-  group_id: number;
+  map_id: number;
 
   @ForeignKey(() => User)
   @AllowNull(false)
@@ -44,11 +37,23 @@ export class GroupUser extends Model {
 
   @AllowNull(false)
   @Column
-  admin_flag: boolean;
+  thumbnail: string;
+
+  @AllowNull(false)
+  @Column
+  description: string;
+
+  @AllowNull(false)
+  @Column
+  marker: string;
+
+  @AllowNull(false)
+  @Column
+  location_group: string;
 
   @CreatedAt
-  created_at: Date;
+  createdAt: Date;
 
   @UpdatedAt
-  updated_at: Date;
+  updatedAt: Date;
 }

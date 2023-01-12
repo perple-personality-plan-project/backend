@@ -15,34 +15,35 @@ import { Hashtag } from './hashtag.models';
 
 @Table({
   modelName: 'GroupHashtag',
-  freezeTableName: true,
+  tableName: 'group_hashtags',
+  freezeTableName: false,
   timestamps: true,
 })
 export class GroupHashtag extends Model {
-  @PrimaryKey
-  @AutoIncrement
-  @Column
-  groupHashtagId: number;
-
-  @ForeignKey(() => Group)
-  @AllowNull(false)
-  @Column
-  groupId: number;
-
   @BelongsTo(() => Group)
   group: Group;
-
-  @ForeignKey(() => Hashtag)
-  @AllowNull(false)
-  @Column
-  hashtagId: number;
 
   @BelongsTo(() => Hashtag)
   hashtag: Hashtag;
 
+  @PrimaryKey
+  @AutoIncrement
+  @Column
+  group_hashtag_id: number;
+
+  @ForeignKey(() => Group)
+  @AllowNull(false)
+  @Column
+  group_id: number;
+
+  @ForeignKey(() => Hashtag)
+  @AllowNull(false)
+  @Column
+  hashtag_id: number;
+
   @CreatedAt
-  createdAt: Date;
+  created_at: Date;
 
   @UpdatedAt
-  updatedAt: Date;
+  updated_at: Date;
 }
