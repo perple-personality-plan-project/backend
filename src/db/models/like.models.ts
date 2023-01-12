@@ -6,7 +6,9 @@ import {
   ForeignKey,
   CreatedAt,
   UpdatedAt,
-  BelongsTo, AllowNull, AutoIncrement,
+  BelongsTo,
+  AllowNull,
+  AutoIncrement,
 } from 'sequelize-typescript';
 import { User } from './user.models';
 import { Feed } from './feed.models';

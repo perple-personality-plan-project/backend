@@ -7,7 +7,9 @@ import {
   CreatedAt,
   UpdatedAt,
   BelongsTo,
-  HasMany, AutoIncrement, AllowNull,
+  HasMany,
+  AutoIncrement,
+  AllowNull,
 } from 'sequelize-typescript';
 import { User } from './user.models';
 import { Comment } from './comment.models';
@@ -50,16 +52,16 @@ export class Feed extends Model {
   @Column
   thumbnail: string;
 
-  @Column
   @AllowNull(false)
+  @Column
   title: string;
 
-  @Column
   @AllowNull(false)
+  @Column
   description: string;
 
-  @Column
   @AllowNull(false)
+  @Column
   location: string;
 
   @CreatedAt

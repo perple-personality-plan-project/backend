@@ -1,50 +1,48 @@
 import {
-    AllowNull,
-    AutoIncrement,
-    BelongsTo,
-    Column,
-    CreatedAt,
-    ForeignKey,
-    Model,
-    PrimaryKey,
-    Table,
-    UpdatedAt
-} from "sequelize-typescript";
-import {Group} from "./group.models";
-import {Hashtag} from "./hashtag.models";
+  AllowNull,
+  AutoIncrement,
+  BelongsTo,
+  Column,
+  CreatedAt,
+  ForeignKey,
+  Model,
+  PrimaryKey,
+  Table,
+  UpdatedAt,
+} from 'sequelize-typescript';
+import { Group } from './group.models';
+import { Hashtag } from './hashtag.models';
 
 @Table({
-    modelName: 'GroupHashtag',
-    freezeTableName: true,
-    timestamps: true,
+  modelName: 'GroupHashtag',
+  freezeTableName: true,
+  timestamps: true,
 })
 export class GroupHashtag extends Model {
-    @PrimaryKey
-    @AutoIncrement
-    @Column
-    groupHashtagId: number
+  @PrimaryKey
+  @AutoIncrement
+  @Column
+  groupHashtagId: number;
 
-    @ForeignKey(() => Group)
-    @AllowNull(false)
-    @Column
-    groupId: number;
+  @ForeignKey(() => Group)
+  @AllowNull(false)
+  @Column
+  groupId: number;
 
-    @BelongsTo(()=> Group)
-    group: Group;
+  @BelongsTo(() => Group)
+  group: Group;
 
+  @ForeignKey(() => Hashtag)
+  @AllowNull(false)
+  @Column
+  hashtagId: number;
 
-    @ForeignKey(() => Hashtag)
-    @AllowNull(false)
-    @Column
-    hashtagId: number;
+  @BelongsTo(() => Hashtag)
+  hashtag: Hashtag;
 
-    @BelongsTo(()=>Hashtag)
-    hashtag: Hashtag;
+  @CreatedAt
+  createdAt: Date;
 
-
-    @CreatedAt
-    createdAt: Date;
-
-    @UpdatedAt
-    updatedAt: Date;
+  @UpdatedAt
+  updatedAt: Date;
 }
