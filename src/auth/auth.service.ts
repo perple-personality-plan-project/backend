@@ -19,8 +19,8 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(loginId: string, password: string) {
-    const existsUser = await this.userRepository.findUserById(loginId);
+  async validateUser(login_id: string, password: string) {
+    const existsUser = await this.userRepository.findUserById(login_id);
 
     if (!existsUser) {
       throw new UnauthorizedException('아이디 또는 비밀번호를 확인해주세요');
@@ -47,7 +47,7 @@ export class AuthService {
      */
 
     await this.cacheManager.set(refreshToken, loginId);
-    
+
     return { accessToken, refreshToken };
   }
 

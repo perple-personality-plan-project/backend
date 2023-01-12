@@ -12,12 +12,12 @@ export class UserRepository {
 
   async createUser(localUser: LocalUserDto): Promise<User> {
     try {
-      const { loginId, password, nickName, platformType, mbti } = localUser;
+      const { login_id, password, nickname, provider, mbti } = localUser;
       return await this.userModel.create({
-        loginId,
+        login_id,
         password,
-        nickName,
-        platformType,
+        nickname,
+        provider,
         mbti,
       });
     } catch (error) {

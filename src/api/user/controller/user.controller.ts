@@ -33,7 +33,6 @@ export class UserController {
     await this.userService.signUp(createUserDto);
 
     return { message: '회원가입에 성공했습니다.' };
-    
   }
 
   // 로그인
