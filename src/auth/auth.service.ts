@@ -4,7 +4,6 @@ import {
   CACHE_MANAGER,
   UnauthorizedException,
   ForbiddenException,
-  InternalServerErrorException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserRepository } from 'src/api/user/user.repository';
@@ -19,8 +18,8 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(loginId: string, password: string) {
-    const existsUser = await this.userRepository.findUserById(loginId);
+  async validateUser(login_id: string, password: string) {
+    const existsUser = await this.userRepository.findUserById(login_id);
 
     if (!existsUser) {
       throw new UnauthorizedException('아이디 또는 비밀번호를 확인해주세요');
@@ -35,8 +34,8 @@ export class AuthService {
     return existsUser;
   }
 
-  async createAccessTokenRefreshToken(loginId: string) {
-    const payload = { loginId };
+  async createAccessTokenRefreshToken(login_id: string) {
+    const payload = { login_id };
 
     const accessToken = await this.getAccessToken(payload);
     const refreshToken = await this.getRefreshToken();
@@ -46,8 +45,8 @@ export class AuthService {
      * 유효시간은 리프레시 토큰의 유효시간과 동일
      */
 
-    await this.cacheManager.set(refreshToken, loginId);
-    
+    await this.cacheManager.set(refreshToken, login_id);
+
     return { accessToken, refreshToken };
   }
 

@@ -25,8 +25,8 @@ export class UserRepository {
     }
   }
 
-  async findUserById(loginId: string): Promise<User> {
-    return this.userModel.findOne({ raw: true, where: { loginId } });
+  async findUserById(login_id: string): Promise<User> {
+    return this.userModel.findOne({ raw: true, where: { login_id } });
   }
 
   /*
