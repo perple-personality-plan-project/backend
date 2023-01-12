@@ -3,25 +3,16 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Group', {
-      groupId: {
+    await queryInterface.createTable('Comment', {
+      commentId: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.DataTypes.INTEGER,
       },
-      groupname: {
-        type: Sequelize.DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-      },
-      thumbnail: {
-        type: Sequelize.DataTypes.STRING,
-        allowNull: false,
-      },
-      description: {
-        type: Sequelize.DataTypes.STRING,
-        allowNull: false,
+      parentId: {
+        allowNull: true,
+        type: Sequelize.DataTypes.INTEGER,
       },
       userId: {
         type: Sequelize.DataTypes.INTEGER,
@@ -31,6 +22,19 @@ module.exports = {
           key: 'userId',
         },
         onDelete: 'cascade',
+      },
+      feedId: {
+        type: Sequelize.DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Feed',
+          key: 'feedId',
+        },
+        onDelete: 'cascade',
+      },
+      comment: {
+        type: Sequelize.DataTypes.TEXT,
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,
@@ -46,6 +50,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Group');
+    await queryInterface.dropTable('Comment');
   },
 };

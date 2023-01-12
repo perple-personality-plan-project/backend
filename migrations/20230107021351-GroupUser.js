@@ -18,10 +18,6 @@ module.exports = {
           key: 'groupId',
         },
       },
-      isGroupUser: {
-        allowNull: false,
-        type: Sequelize.DataTypes.INTEGER,
-      },
       userId: {
         allowNull: false,
         type: Sequelize.DataTypes.INTEGER,

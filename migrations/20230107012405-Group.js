@@ -10,17 +10,17 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.DataTypes.INTEGER,
       },
-      groupname: {
+      groupName: {
         type: Sequelize.DataTypes.STRING,
         allowNull: false,
         unique: true,
       },
       thumbnail: {
-        type: Sequelize.DataTypes.STRING,
+        type: Sequelize.DataTypes.TEXT,
         allowNull: false,
       },
       description: {
-        type: Sequelize.DataTypes.STRING,
+        type: Sequelize.DataTypes.TEXT,
         allowNull: false,
       },
       userId: {
