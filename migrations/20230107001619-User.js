@@ -32,9 +32,14 @@ module.exports = {
         type: Sequelize.DataTypes.STRING,
         allowNull: true,
       },
-      pick: {
-        type: Sequelize.DataTypes.STRING,
+      mapId: {
+        type: Sequelize.DataTypes.INTEGER,
         allowNull: true,
+        references: {
+          model: 'Map',
+          key: 'mapId',
+        },
+        onDelete: 'cascade',
       },
       createdAt: {
         allowNull: false,

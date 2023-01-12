@@ -4,9 +4,13 @@ import {
   Model,
   PrimaryKey,
   CreatedAt,
-  UpdatedAt, ForeignKey, BelongsTo, AutoIncrement, AllowNull,
+  UpdatedAt,
+  ForeignKey,
+  BelongsTo,
+  AutoIncrement,
+  AllowNull,
 } from 'sequelize-typescript';
-import {User} from "./user.models";
+import { User } from './user.models';
 
 @Table({
   modelName: 'Follower',

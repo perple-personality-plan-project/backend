@@ -3,28 +3,42 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Follower', {
-      followerId: {
+    await queryInterface.createTable('Feed', {
+      feedId: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.DataTypes.INTEGER,
       },
-      toUserId: {
-        allowNull: false,
+      userId: {
         type: Sequelize.DataTypes.INTEGER,
+        allowNull: false,
         references: {
           model: 'User',
           key: 'userId',
         },
+        onDelete: 'cascade',
       },
-      fromUserId: {
+      thumbnail: {
+        type: Sequelize.DataTypes.TEXT,
         allowNull: false,
+      },
+      title: {
+        type: Sequelize.DataTypes.STRING,
+        allowNull: false,
+      },
+      description: {
+        type: Sequelize.DataTypes.TEXT,
+        allowNull: false,
+      },
+      mapId: {
         type: Sequelize.DataTypes.INTEGER,
+        allowNull: false,
         references: {
-          model: 'User',
-          key: 'userId',
+          model: 'Map',
+          key: 'mapId',
         },
+        onDelete: 'cascade',
       },
       createdAt: {
         allowNull: false,
@@ -40,6 +54,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Follower');
+    await queryInterface.dropTable('Feed');
   },
 };

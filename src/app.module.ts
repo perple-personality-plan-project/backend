@@ -22,7 +22,7 @@ import * as redisStore from 'cache-manager-ioredis';
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_SCHEMA,
       autoLoadModels: true,
-      synchronize: true,
+      synchronize: false,
     }),
     CacheModule.register({
       store: redisStore,
