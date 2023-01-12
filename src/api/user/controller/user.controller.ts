@@ -7,6 +7,7 @@ import {
   UseGuards,
   Req,
   Res,
+  Get,
 } from '@nestjs/common';
 import { GlobalResponseInterceptor } from '../../../common/interceptors/global.response.interceptor';
 import { UserService } from 'src/api/user/service/user.service';
@@ -15,7 +16,6 @@ import { User } from 'src/db/models/user.models';
 import { AuthGuard } from '@nestjs/passport/dist/auth.guard';
 import { Request, Response } from 'express';
 import { AuthService } from 'src/auth/auth.service';
-
 
 @Controller('user')
 @UseInterceptors(GlobalResponseInterceptor)
@@ -52,5 +52,15 @@ export class UserController {
     res.setHeader('refreshToken', `Bearer ${refreshToken}`);
 
     return { message: `${loginId} 로그인 성공` };
+  }
+
+  // 엑세스 토큰 재발급
+  @UseGuards(AuthGuard('jwt-refresh'))
+  @Get('/refresh-token')
+  async re(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    const loginId = req.user;
+    const newAccessToken = await this.authService.getAccessToken({ loginId });
+    res.setHeader('accessToken', `Bearer ${newAccessToken}`);
+    return { message: '토큰 재발급 성공' };
   }
 }

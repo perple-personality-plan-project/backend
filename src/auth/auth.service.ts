@@ -3,6 +3,8 @@ import {
   Injectable,
   CACHE_MANAGER,
   UnauthorizedException,
+  ForbiddenException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserRepository } from 'src/api/user/user.repository';
@@ -43,12 +45,9 @@ export class AuthService {
      * Redis에 리프레시 토큰과 사용자 아이디 insert
      * 유효시간은 리프레시 토큰의 유효시간과 동일
      */
-    await this.cacheManager.set(
-      loginId,
-      refreshToken,
-      +process.env.REFRESH_TOKEN_EXP,
-    );
 
+    await this.cacheManager.set(refreshToken, loginId);
+    
     return { accessToken, refreshToken };
   }
 
@@ -71,5 +70,21 @@ export class AuthService {
     );
 
     return refreshToken;
+  }
+
+  async getUserRefreshTokenToMatches(refreshToken: string) {
+    const loginId = await this.cacheManager.get(refreshToken);
+
+    if (!loginId) {
+      throw new ForbiddenException('리프레쉬 토큰이 존재하지 않습니다');
+    }
+
+    return loginId;
+  }
+
+  async tokenValidate(token: string, key: string) {
+    return this.jwtService.verify(token, {
+      secret: key,
+    });
   }
 }
