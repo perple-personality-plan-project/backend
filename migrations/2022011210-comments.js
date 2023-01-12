@@ -13,6 +13,10 @@ module.exports = {
       parent_id: {
         allowNull: true,
         type: Sequelize.DataTypes.INTEGER,
+        references: {
+          model: 'comments',
+          key: 'comment_id',
+        },
       },
       user_id: {
         type: Sequelize.DataTypes.INTEGER,
