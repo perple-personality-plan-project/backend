@@ -38,4 +38,15 @@ export class FeedController {
     const userId = { userId: 2 };
     return this.feedService.createFeed(body, userId);
   }
+
+  @ApiOperation({ summary: '게시글 이미지 업로드' })
+  @UseInterceptors(FilesInterceptor('image', 10, multerOptions('feedImg')))
+  @UseGuards(JwtAuthGuard)
+  @Post('upload')
+  uploadCatImg(
+    @UploadedFiles() files: Array<Express.Multer.File>,
+    @CurrentUser() feedImg: FeedImg,
+  ) {
+    return this.feedService.uploadImg(feedImg, files);
+  }
 }

@@ -19,4 +19,15 @@ export class FeedRepository {
       where: { ...findData },
     });
   }
+
+  async findByIdAndUpdateImg(id: string, fileName: string) {
+    const feedImg = await this.userModel.findById(id);
+
+    feedImg.imgUrl = `http://localhost:8000/media/${fileName}`;
+
+    const newFeedImg = await feedImg.save();
+
+    console.log(newFeedImg);
+    return newFeedImg.readOnlyData;
+  }
 }

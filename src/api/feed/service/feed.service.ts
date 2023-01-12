@@ -12,4 +12,15 @@ export class FeedService {
       return '피드가 생성 되었습니다.';
     }
   }
+
+  async uploadImg(feedImg: FeedImg, files: Express.Multer.File[]) {
+    const fileName = `cats/${files[0].filename}`;
+
+    const newFeedImg = await this.feedRepository.findByIdAndUpdateImg(
+      userId,
+      fileName,
+    );
+
+    return newFeedImg;
+  }
 }
