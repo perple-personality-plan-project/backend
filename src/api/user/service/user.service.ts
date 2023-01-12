@@ -39,8 +39,6 @@ export class UserService {
 
     const createUser = await this.userRepository.createUser(localUser);
 
-    createUser.password = undefined;
-
     return createUser;
   }
 }
