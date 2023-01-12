@@ -3,35 +3,23 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Follower', {
-      followerId: {
+    await queryInterface.createTable('hashtags', {
+      hashtag_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.DataTypes.INTEGER,
       },
-      toUserId: {
+      title: {
+        type: Sequelize.DataTypes.STRING,
         allowNull: false,
-        type: Sequelize.DataTypes.INTEGER,
-        references: {
-          model: 'User',
-          key: 'userId',
-        },
       },
-      fromUserId: {
-        allowNull: false,
-        type: Sequelize.DataTypes.INTEGER,
-        references: {
-          model: 'User',
-          key: 'userId',
-        },
-      },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DataTypes.DATE,
         defaultValue: Sequelize.DataTypes.NOW,
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DataTypes.DATE,
         defaultValue: Sequelize.DataTypes.NOW,
@@ -40,6 +28,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Follower');
+    await queryInterface.dropTable('hashtags');
   },
 };

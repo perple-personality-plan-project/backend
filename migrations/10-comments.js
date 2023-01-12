@@ -3,27 +3,45 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Map', {
-      mapId: {
+    await queryInterface.createTable('comments', {
+      comment_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.DataTypes.INTEGER,
       },
-      placeName: {
-        allowNull: false,
-        type: Sequelize.DataTypes.TEXT,
+      parent_id: {
+        allowNull: true,
+        type: Sequelize.DataTypes.INTEGER,
       },
-      addressName: {
+      user_id: {
+        type: Sequelize.DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'users',
+          key: 'user_id',
+        },
+        onDelete: 'cascade',
+      },
+      feed_id: {
+        type: Sequelize.DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'feeds',
+          key: 'feed_id',
+        },
+        onDelete: 'cascade',
+      },
+      comment: {
         type: Sequelize.DataTypes.TEXT,
         allowNull: false,
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DataTypes.DATE,
         defaultValue: Sequelize.DataTypes.NOW,
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DataTypes.DATE,
         defaultValue: Sequelize.DataTypes.NOW,
@@ -32,6 +50,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Map');
+    await queryInterface.dropTable('comments');
   },
 };

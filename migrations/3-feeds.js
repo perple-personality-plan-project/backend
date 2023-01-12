@@ -3,46 +3,44 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('GroupHashtag', {
-      groupHashtagId: {
+    await queryInterface.createTable('feeds', {
+      feed_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.DataTypes.INTEGER,
       },
-      groupId: {
-        type: Sequelize.DataTypes.INTEGER,
-        allowNull: true,
-        references: {
-          model: 'Group',
-          key: 'groupId',
-        },
-        onDelete: 'cascade',
-      },
-      groupFeedId: {
-        type: Sequelize.DataTypes.INTEGER,
-        allowNull: true,
-        references: {
-          model: 'GroupFeed',
-          key: 'groupFeedId',
-        },
-        onDelete: 'cascade',
-      },
-      hashtagId: {
+      user_id: {
         type: Sequelize.DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'Hashtag',
-          key: 'hashtagId',
+          model: 'users',
+          key: 'user_id',
         },
         onDelete: 'cascade',
       },
-      createdAt: {
+      group_name: {
+        type: Sequelize.DataTypes.STRING,
+        allowNull: true,
+      },
+      thumbnail: {
+        type: Sequelize.DataTypes.TEXT,
+        allowNull: false,
+      },
+      description: {
+        type: Sequelize.DataTypes.TEXT,
+        allowNull: false,
+      },
+      location: {
+        type: Sequelize.DataTypes.TEXT,
+        allowNull: true,
+      },
+      created_at: {
         allowNull: false,
         type: Sequelize.DataTypes.DATE,
         defaultValue: Sequelize.DataTypes.NOW,
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DataTypes.DATE,
         defaultValue: Sequelize.DataTypes.NOW,
@@ -51,6 +49,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('GroupHashtag');
+    await queryInterface.dropTable('feeds');
   },
 };

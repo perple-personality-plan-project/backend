@@ -3,37 +3,44 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('GroupLike', {
-      groupLikeId: {
+    await queryInterface.createTable('maps', {
+      map_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.DataTypes.INTEGER,
       },
-      groupUserId: {
+      user_id: {
         type: Sequelize.DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'GroupUser',
-          key: 'groupUserId',
+          model: 'users',
+          key: 'user_id',
         },
         onDelete: 'cascade',
       },
-      groupFeedId: {
-        type: Sequelize.DataTypes.INTEGER,
+      maker: {
         allowNull: false,
-        references: {
-          model: 'GroupFeed',
-          key: 'groupFeedId',
-        },
-        onDelete: 'cascade',
+        type: Sequelize.DataTypes.TEXT,
       },
-      createdAt: {
+      thumbnail: {
+        type: Sequelize.DataTypes.TEXT,
+        allowNull: false,
+      },
+      description: {
+        type: Sequelize.DataTypes.TEXT,
+        allowNull: false,
+      },
+      location_group: {
+        type: Sequelize.DataTypes.TEXT,
+        allowNull: false,
+      },
+      created_at: {
         allowNull: false,
         type: Sequelize.DataTypes.DATE,
         defaultValue: Sequelize.DataTypes.NOW,
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DataTypes.DATE,
         defaultValue: Sequelize.DataTypes.NOW,
@@ -42,6 +49,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('GroupLike');
+    await queryInterface.dropTable('maps');
   },
 };

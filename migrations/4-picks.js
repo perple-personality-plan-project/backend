@@ -1,51 +1,47 @@
 'use strict';
 
 /** @type {import('sequelize-cli').Migration} */
+
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Group', {
-      groupId: {
+    await queryInterface.createTable('maps', {
+      pick_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.DataTypes.INTEGER,
       },
-      groupName: {
-        type: Sequelize.DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-      },
-      thumbnail: {
-        type: Sequelize.DataTypes.TEXT,
-        allowNull: false,
-      },
-      description: {
-        type: Sequelize.DataTypes.TEXT,
-        allowNull: false,
-      },
-      userId: {
+      user_id: {
         type: Sequelize.DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'User',
-          key: 'userId',
+          model: 'users',
+          key: 'user_id',
         },
         onDelete: 'cascade',
       },
-      createdAt: {
+      feed_id: {
+        type: Sequelize.DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'feeds',
+          key: 'feed_id',
+        },
+        onDelete: 'cascade',
+      },
+      created_at: {
         allowNull: false,
         type: Sequelize.DataTypes.DATE,
         defaultValue: Sequelize.DataTypes.NOW,
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DataTypes.DATE,
         defaultValue: Sequelize.DataTypes.NOW,
       },
     });
   },
-
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Group');
+    await queryInterface.dropTable('maps');
   },
 };
