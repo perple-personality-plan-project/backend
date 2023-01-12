@@ -3,14 +3,14 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Group', {
-      groupId: {
+    await queryInterface.createTable('groups', {
+      group_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.DataTypes.INTEGER,
       },
-      groupName: {
+      group_name: {
         type: Sequelize.DataTypes.STRING,
         allowNull: false,
         unique: true,
@@ -23,21 +23,12 @@ module.exports = {
         type: Sequelize.DataTypes.TEXT,
         allowNull: false,
       },
-      userId: {
-        type: Sequelize.DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'User',
-          key: 'userId',
-        },
-        onDelete: 'cascade',
-      },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DataTypes.DATE,
         defaultValue: Sequelize.DataTypes.NOW,
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DataTypes.DATE,
         defaultValue: Sequelize.DataTypes.NOW,
@@ -46,6 +37,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Group');
+    await queryInterface.dropTable('groups');
   },
 };

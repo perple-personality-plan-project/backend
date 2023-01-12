@@ -3,35 +3,49 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Follower', {
-      followerId: {
+    await queryInterface.createTable('comments', {
+      comment_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.DataTypes.INTEGER,
       },
-      toUserId: {
-        allowNull: false,
+      parent_id: {
+        allowNull: true,
         type: Sequelize.DataTypes.INTEGER,
         references: {
-          model: 'User',
-          key: 'userId',
+          model: 'comments',
+          key: 'comment_id',
         },
       },
-      fromUserId: {
-        allowNull: false,
+      user_id: {
         type: Sequelize.DataTypes.INTEGER,
+        allowNull: false,
         references: {
-          model: 'User',
-          key: 'userId',
+          model: 'users',
+          key: 'user_id',
         },
+        onDelete: 'cascade',
       },
-      createdAt: {
+      feed_id: {
+        type: Sequelize.DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'feeds',
+          key: 'feed_id',
+        },
+        onDelete: 'cascade',
+      },
+      comment: {
+        type: Sequelize.DataTypes.TEXT,
+        allowNull: false,
+      },
+      created_at: {
         allowNull: false,
         type: Sequelize.DataTypes.DATE,
         defaultValue: Sequelize.DataTypes.NOW,
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DataTypes.DATE,
         defaultValue: Sequelize.DataTypes.NOW,
@@ -40,6 +54,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Follower');
+    await queryInterface.dropTable('comments');
   },
 };

@@ -3,45 +3,37 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('GroupComment', {
-      groupCommentId: {
+    await queryInterface.createTable('group_hashtags', {
+      group_hashtag_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.DataTypes.INTEGER,
       },
-      parentId: {
-        allowNull: true,
-        type: Sequelize.DataTypes.INTEGER,
-      },
-      groupUserId: {
+      group_id: {
         type: Sequelize.DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'GroupUser',
-          key: 'groupUserId',
+          model: 'groups',
+          key: 'group_id',
         },
         onDelete: 'cascade',
       },
-      groupFeedId: {
+      hashtag_id: {
         type: Sequelize.DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'GroupFeed',
-          key: 'groupFeedId',
+          model: 'hashtags',
+          key: 'hashtag_id',
         },
         onDelete: 'cascade',
       },
-      comment: {
-        type: Sequelize.DataTypes.TEXT,
-        allowNull: false,
-      },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DataTypes.DATE,
         defaultValue: Sequelize.DataTypes.NOW,
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DataTypes.DATE,
         defaultValue: Sequelize.DataTypes.NOW,
@@ -50,6 +42,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('GroupComment');
+    await queryInterface.dropTable('group_hashtags');
   },
 };

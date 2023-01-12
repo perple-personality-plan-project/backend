@@ -3,35 +3,41 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('GroupUser', {
-      groupUserId: {
+    await queryInterface.createTable('users', {
+      user_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.DataTypes.INTEGER,
       },
-      groupId: {
+      login_id: {
+        type: Sequelize.DataTypes.STRING,
         allowNull: false,
-        type: Sequelize.DataTypes.INTEGER,
-        references: {
-          model: 'Group',
-          key: 'groupId',
-        },
+        unique: true,
       },
-      userId: {
+      password: {
+        type: Sequelize.DataTypes.STRING,
         allowNull: false,
-        type: Sequelize.DataTypes.INTEGER,
       },
-      isAdmin: {
+      nickname: {
+        type: Sequelize.DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+      },
+      mbti: {
+        type: Sequelize.DataTypes.STRING,
         allowNull: true,
-        type: Sequelize.DataTypes.BOOLEAN,
       },
-      createdAt: {
+      provider: {
+        type: Sequelize.DataTypes.STRING,
+        allowNull: true,
+      },
+      created_at: {
         allowNull: false,
         type: Sequelize.DataTypes.DATE,
         defaultValue: Sequelize.DataTypes.NOW,
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DataTypes.DATE,
         defaultValue: Sequelize.DataTypes.NOW,
@@ -40,6 +46,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('GroupUser');
+    await queryInterface.dropTable('users');
   },
 };
