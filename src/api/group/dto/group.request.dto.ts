@@ -9,7 +9,7 @@ export class GroupRequestDto {
   })
   @IsNotEmpty({ message: 'groupname 필수값 입니다.' })
   @IsString({ message: 'groupname 문자열 입니다.' })
-  groupname: string;
+  group_name: string;
 
   @ApiProperty({
     example: '[{thumbnail1.jpg},{thumbnail2.jpg}]',
@@ -27,6 +27,9 @@ export class GroupRequestDto {
   @IsString({ message: 'description는 문자열 입니다.' })
   @IsNotEmpty({ message: 'description는 필수값 입니다.' })
   description: string;
+
+  @IsString({ message: 'hashtag는 문자열 입니다.' })
+  hashtag: string;
 }
 
 export class GroupParamDto {
