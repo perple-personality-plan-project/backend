@@ -42,6 +42,10 @@ export class GroupUser extends Model {
   @Column
   user_id: number;
 
+  @AllowNull(false)
+  @Column
+  admin_flag: boolean;
+
   @CreatedAt
   created_at: Date;
 
