@@ -23,7 +23,7 @@ export class Hashtag extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column
-  hashtagId: number;
+  hashtag_id: number;
 
   @AllowNull(false)
   @Column
