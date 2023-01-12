@@ -39,7 +39,7 @@ export class UserController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ): Promise<any> {
-    const { loginId }: any = req.user;
+    const loginId = req.user as string;
 
     const { accessToken, refreshToken } =
       await this.authService.createAccessTokenRefreshToken(loginId);
