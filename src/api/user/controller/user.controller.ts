@@ -16,6 +16,7 @@ import { AuthGuard } from '@nestjs/passport/dist/auth.guard';
 import { Request, Response } from 'express';
 import { AuthService } from 'src/auth/auth.service';
 
+
 @Controller('user')
 @UseInterceptors(GlobalResponseInterceptor)
 export class UserController {
@@ -32,6 +33,7 @@ export class UserController {
     await this.userService.signUp(createUserDto);
 
     return { message: '회원가입에 성공했습니다.' };
+    
   }
 
   // 로그인

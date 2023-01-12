@@ -3,28 +3,42 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Follower', {
-      followerId: {
+    await queryInterface.createTable('GroupFeed', {
+      groupFeedId: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.DataTypes.INTEGER,
       },
-      toUserId: {
-        allowNull: false,
+      groupUserId: {
         type: Sequelize.DataTypes.INTEGER,
+        allowNull: false,
         references: {
-          model: 'User',
-          key: 'userId',
+          model: 'GroupUser',
+          key: 'groupUserId',
         },
+        onDelete: 'cascade',
       },
-      fromUserId: {
-        allowNull: false,
+      groupId: {
         type: Sequelize.DataTypes.INTEGER,
+        allowNull: false,
         references: {
-          model: 'User',
-          key: 'userId',
+          model: 'Group',
+          key: 'groupId',
         },
+        onDelete: 'cascade',
+      },
+      title: {
+        type: Sequelize.DataTypes.STRING,
+        allowNull: false,
+      },
+      thumbnail: {
+        type: Sequelize.DataTypes.TEXT,
+        allowNull: false,
+      },
+      description: {
+        type: Sequelize.DataTypes.TEXT,
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,
@@ -40,6 +54,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Follower');
+    await queryInterface.dropTable('GroupFeed');
   },
 };
