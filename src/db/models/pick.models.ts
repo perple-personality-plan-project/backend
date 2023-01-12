@@ -42,7 +42,7 @@ export class Pick extends Model {
   @ForeignKey(() => Feed)
   @AllowNull(false)
   @Column
-  Feed: number;
+  feed_id: number;
 
   @CreatedAt
   created_at: Date;

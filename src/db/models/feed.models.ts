@@ -52,7 +52,6 @@ export class Feed extends Model {
   @Column
   description: string;
 
-  @AllowNull(false)
   @Column
   location: string;
 

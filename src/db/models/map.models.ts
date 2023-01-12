@@ -45,6 +45,10 @@ export class Map extends Model {
 
   @AllowNull(false)
   @Column
+  marker: string;
+
+  @AllowNull(false)
+  @Column
   location_group: string;
 
   @CreatedAt
