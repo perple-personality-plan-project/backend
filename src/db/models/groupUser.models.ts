@@ -15,43 +15,36 @@ import { Group } from './group.models';
 
 @Table({
   modelName: 'GroupUser',
-  freezeTableName: true,
+  tableName: 'group_users',
+  freezeTableName: false,
   timestamps: true,
 })
 export class GroupUser extends Model {
-  @PrimaryKey
-  @AllowNull(false)
-  @AutoIncrement
-  @Column
-  groupUserId: number;
-
-  @ForeignKey(() => Group)
-  @AllowNull(false)
-  @Column
-  groupId: number;
+  @BelongsTo(() => User)
+  user: User;
 
   @BelongsTo(() => Group)
   group: Group;
 
+  @PrimaryKey
+  @AllowNull(false)
+  @AutoIncrement
+  @Column
+  group_user_id: number;
+
+  @ForeignKey(() => Group)
   @AllowNull(false)
   @Column
-  isGroupUser: number;
+  group_id: number;
 
   @ForeignKey(() => User)
   @AllowNull(false)
   @Column
-  userId: number;
-
-  @BelongsTo(() => User)
-  user: User;
-
-  @AllowNull(false)
-  @Column
-  isAdmin: boolean;
+  user_id: number;
 
   @CreatedAt
-  createdAt: Date;
+  created_at: Date;
 
   @UpdatedAt
-  updatedAt: Date;
+  updated_at: Date;
 }

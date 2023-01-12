@@ -3,41 +3,36 @@ import {
   Column,
   Model,
   PrimaryKey,
-  ForeignKey,
   CreatedAt,
   UpdatedAt,
-  BelongsTo,
-  AutoIncrement,
   AllowNull,
+  Unique,
+  AutoIncrement,
+  BelongsTo,
+  ForeignKey,
 } from 'sequelize-typescript';
-import { User } from './user.models';
 import { Feed } from './feed.models';
+import { User } from './user.models';
+
 @Table({
-  modelName: 'Comment',
-  tableName: 'comments',
+  modelName: 'Pick',
+  tableName: 'picks',
   freezeTableName: false,
   timestamps: true,
 })
-export class Comment extends Model {
+export class Pick extends Model {
   @BelongsTo(() => User)
   user: User;
 
   @BelongsTo(() => Feed)
   feed: Feed;
 
-  @BelongsTo(() => Comment)
-  comment: Comment;
-
   @PrimaryKey
+  @AllowNull(false)
   @AutoIncrement
-  @AllowNull(false)
+  @Unique
   @Column
-  comment_id: number;
-
-  @ForeignKey(() => Comment)
-  @AllowNull(false)
-  @Column
-  parent_id: number;
+  pick_id: number;
 
   @ForeignKey(() => User)
   @AllowNull(false)
@@ -47,7 +42,7 @@ export class Comment extends Model {
   @ForeignKey(() => Feed)
   @AllowNull(false)
   @Column
-  feed_id: number;
+  Feed: number;
 
   @CreatedAt
   created_at: Date;

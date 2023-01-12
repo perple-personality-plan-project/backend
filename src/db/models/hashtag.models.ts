@@ -30,8 +30,8 @@ export class Hashtag extends Model {
   title: string;
 
   @CreatedAt
-  createdAt: Date;
+  created_at: Date;
 
   @UpdatedAt
-  updatedAt: Date;
+  updated_at: Date;
 }
