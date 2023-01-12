@@ -19,7 +19,7 @@ module.exports = {
         },
         onDelete: 'cascade',
       },
-      maker: {
+      marker: {
         allowNull: false,
         type: Sequelize.DataTypes.TEXT,
       },
