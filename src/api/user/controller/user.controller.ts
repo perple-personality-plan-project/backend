@@ -7,7 +7,10 @@ import {
 } from '@nestjs/common';
 import { GlobalResponseInterceptor } from '../../../common/interceptors/global.response.interceptor';
 import { UserService } from 'src/api/user/service/user.service';
-import { CreateUserDto } from '../dto/create-user.dto';
+
+import { CreateUserDto } from '../dto/create.user.dto';
+import { User } from 'src/db/models/user.models';
+
 
 @Controller('user')
 @UseInterceptors(GlobalResponseInterceptor)
@@ -22,5 +25,6 @@ export class UserController {
     await this.userService.signUp(createUserDto);
 
     return { message: '회원가입에 성공했습니다.' };
+    
   }
 }

@@ -3,12 +3,25 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Feed', {
-      feedId: {
+    await queryInterface.createTable('Group', {
+      groupId: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.DataTypes.INTEGER,
+      },
+      groupName: {
+        type: Sequelize.DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+      },
+      thumbnail: {
+        type: Sequelize.DataTypes.TEXT,
+        allowNull: false,
+      },
+      description: {
+        type: Sequelize.DataTypes.TEXT,
+        allowNull: false,
       },
       userId: {
         type: Sequelize.DataTypes.INTEGER,
@@ -18,31 +31,6 @@ module.exports = {
           key: 'userId',
         },
         onDelete: 'cascade',
-      },
-      groupId: {
-        type: Sequelize.DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'Group',
-          key: 'groupId',
-        },
-        onDelete: 'cascade',
-      },
-      thumbnail: {
-        type: Sequelize.DataTypes.STRING,
-        allowNull: false,
-      },
-      title: {
-        type: Sequelize.DataTypes.STRING,
-        allowNull: false,
-      },
-      description: {
-        type: Sequelize.DataTypes.STRING,
-        allowNull: false,
-      },
-      location: {
-        type: Sequelize.DataTypes.STRING,
-        allowNull: false,
       },
       createdAt: {
         allowNull: false,
@@ -58,6 +46,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Feed');
+    await queryInterface.dropTable('Group');
   },
 };
