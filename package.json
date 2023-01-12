@@ -27,6 +27,7 @@
     "@nestjs/passport": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/sequelize": "^9.0.0",
+    "@nestjs/swagger": "^6.1.4",
     "bcrypt": "^5.1.0",
     "cache-manager": "^5.1.4",
     "cache-manager-ioredis": "^2.1.0",
