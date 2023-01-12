@@ -80,10 +80,4 @@ export class AuthService {
 
     return loginId;
   }
-
-  async tokenValidate(token: string, key: string) {
-    return this.jwtService.verify(token, {
-      secret: key,
-    });
-  }
 }
