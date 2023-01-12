@@ -59,6 +59,11 @@ export class AuthService {
     return accessToken;
   }
 
+  async logoutUser(refreshToken: string) {
+    await this.cacheManager.del(refreshToken);
+    return true;
+  }
+
   async getRefreshToken() {
     const refreshToken = this.jwtService.sign(
       {},

@@ -52,13 +52,27 @@ export class UserController {
     return { message: `${login_id} 로그인 성공` };
   }
 
+  // 로그아웃
+  @UseGuards(AuthGuard('jwt-refresh'))
+  @Post('/logout')
+  async logout(@Req() req: Request) {
+    const { refreshToken }: any = req.user;
+    console.log(refreshToken);
+    await this.authService.logoutUser(refreshToken);
+
+    return { message: '로그아웃 성공' };
+  }
+
   // 엑세스 토큰 재발급
   @UseGuards(AuthGuard('jwt-refresh'))
   @Get('/refresh-token')
   async re(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    const loginId = req.user;
-    const newAccessToken = await this.authService.getAccessToken({ loginId });
+    const { login_id }: any = req.user;
+
+    const newAccessToken = await this.authService.getAccessToken({ login_id });
+
     res.setHeader('accessToken', `Bearer ${newAccessToken}`);
+
     return { message: '토큰 재발급 성공' };
   }
 }
