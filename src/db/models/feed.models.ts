@@ -23,10 +23,10 @@ import { Like } from './like.models';
 })
 export class Feed extends Model {
   @HasMany(() => Comment)
-  Comment: Comment[];
+  comment: Comment[];
 
   @HasMany(() => Like)
-  Like: Like[];
+  like: Like[];
 
   @BelongsTo(() => User)
   user: User;
