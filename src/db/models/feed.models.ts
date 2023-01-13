@@ -14,6 +14,7 @@ import {
 import { User } from './user.models';
 import { Comment } from './comment.models';
 import { Like } from './like.models';
+import { GroupUser } from './groupUser.models';
 
 @Table({
   modelName: 'Feed',
@@ -31,6 +32,9 @@ export class Feed extends Model {
   @BelongsTo(() => User)
   user: User;
 
+  @BelongsTo(() => GroupUser)
+  groupUser: GroupUser;
+
   @PrimaryKey
   @AutoIncrement
   @AllowNull(false)
@@ -38,15 +42,17 @@ export class Feed extends Model {
   feed_id: number;
 
   @ForeignKey(() => User)
-  @AllowNull(false)
+  @AllowNull(true)
   @Column
   user_id: number;
 
+  @ForeignKey(() => GroupUser)
+  @AllowNull(true)
   @Column
-  thumbnail: string;
+  group_user_id: number;
 
   @Column
-  group_name: string;
+  thumbnail: string;
 
   @AllowNull(false)
   @Column

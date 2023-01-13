@@ -32,12 +32,12 @@ module.exports = {
         allowNull: true,
         type: Sequelize.DataTypes.BOOLEAN,
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DataTypes.DATE,
         defaultValue: Sequelize.DataTypes.NOW,
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DataTypes.DATE,
         defaultValue: Sequelize.DataTypes.NOW,
