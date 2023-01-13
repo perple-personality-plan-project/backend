@@ -11,6 +11,7 @@ import {
   Unique,
 } from 'sequelize-typescript';
 import { GroupHashtag } from './groupHahtag.models';
+import { GroupUser } from './groupUser.models';
 
 @Table({
   modelName: 'Group',
@@ -21,6 +22,9 @@ import { GroupHashtag } from './groupHahtag.models';
 export class Group extends Model {
   @HasMany(() => GroupHashtag)
   groupHashTag: GroupHashtag[];
+
+  @HasMany(() => GroupUser)
+  groupUser: GroupUser[];
 
   @PrimaryKey
   @AutoIncrement
