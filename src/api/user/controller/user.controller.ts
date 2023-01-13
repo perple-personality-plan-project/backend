@@ -12,7 +12,6 @@ import {
 import { GlobalResponseInterceptor } from '../../../common/interceptors/global.response.interceptor';
 import { UserService } from 'src/api/user/service/user.service';
 import { CreateUserDto } from '../dto/create-user.dto';
-import { User } from 'src/db/models/user.models';
 import { AuthGuard } from '@nestjs/passport/dist/auth.guard';
 import { Request, Response } from 'express';
 import { AuthService } from 'src/auth/auth.service';
@@ -33,7 +32,6 @@ export class UserController {
     await this.userService.signUp(createUserDto);
 
     return { message: '회원가입에 성공했습니다.' };
-    
   }
 
   // 로그인
@@ -43,15 +41,15 @@ export class UserController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ): Promise<any> {
-    const loginId = req.user as string;
+    const user_id = req.user as string;
 
     const { accessToken, refreshToken } =
-      await this.authService.createAccessTokenRefreshToken(loginId);
+      await this.authService.createAccessTokenRefreshToken(user_id);
 
     res.setHeader('accessToken', `Bearer ${accessToken}`);
     res.setHeader('refreshToken', `Bearer ${refreshToken}`);
 
-    return { message: `${loginId} 로그인 성공` };
+    return { message: '로그인 성공' };
   }
 
   // 엑세스 토큰 재발급
