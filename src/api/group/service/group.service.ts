@@ -58,4 +58,23 @@ export class GroupService {
 
     return this.groupRepository.getGroup(this.GROUPSORT[sort]);
   }
+
+  async groupSignUp(user_id: object, req: object) {
+    const findGroupUser = await this.groupRepository.findGroupUser(user_id);
+    const groupAdmin = {
+      group_id: req['groupId'],
+      ...user_id,
+      admin_flag: false,
+    };
+    let result;
+
+    if (findGroupUser) {
+      const data = await this.groupRepository.destroyGroupUser(groupAdmin);
+      result = '그룹 구독을 취소하였습니다.';
+    } else {
+      const data = await this.groupRepository.groupUserSignUp(groupAdmin);
+      result = '그룹을 구독 하였습니다.';
+    }
+    return result;
+  }
 }
