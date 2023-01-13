@@ -12,12 +12,12 @@ export class UserRepository {
 
   async createUser(localUser: LocalUserDto): Promise<User> {
     try {
-      const { loginId, password, nickName, platformType, mbti } = localUser;
+      const { login_id, password, nickname, provider, mbti } = localUser;
       return await this.userModel.create({
-        loginId,
+        login_id,
         password,
-        nickName,
-        platformType,
+        nickname,
+        provider,
         mbti,
       });
     } catch (error) {
@@ -25,8 +25,8 @@ export class UserRepository {
     }
   }
 
-  async findUserById(loginId: string): Promise<User> {
-    return this.userModel.findOne({ raw: true, where: { loginId } });
+  async findUserById(login_id: string): Promise<User> {
+    return this.userModel.findOne({ raw: true, where: { login_id } });
   }
 
   /*

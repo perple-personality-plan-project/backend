@@ -7,12 +7,17 @@ import {
   UseInterceptors,
   Param,
   Query,
+  Put,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { GlobalResponseInterceptor } from 'src/common/interceptors/global.response.interceptor';
 import { GlobalExceptionFilter } from '../../../common/filter/global.exception.filter';
 import { GroupParamDto, GroupRequestDto } from '../dto/group.request.dto';
 import { GroupService } from '../service/group.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport/dist/auth.guard';
+import { Request } from 'express';
 
 @Controller('group')
 @ApiTags('group')
@@ -45,5 +50,11 @@ export class GroupController {
   async createGroup(@Body() body: GroupRequestDto) {
     const user_id = { user_id: 1 };
     return this.groupService.createGroup(body, user_id);
+  }
+
+  @Put('/:groupId')
+  async signUpGroup(@Param() req) {
+    const user_id = { user_id: 2 };
+    return this.groupService.groupSignUp(user_id, req);
   }
 }

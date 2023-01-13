@@ -112,4 +112,12 @@ export class GroupRepository {
   async groupUserSignUp(createData: object) {
     return this.groupUser.create({ ...createData });
   }
+
+  async findGroupUser(findData: object) {
+    return this.groupUser.findOne({ raw: true, where: { ...findData } });
+  }
+
+  async destroyGroupUser(groupUser) {
+    this.groupUser.destroy({ where: { ...groupUser } });
+  }
 }
