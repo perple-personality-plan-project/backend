@@ -3,6 +3,8 @@ import { Group } from '../../db/models/group.models';
 import { InjectModel } from '@nestjs/sequelize';
 import { Hashtag } from '../../db/models/hashtag.models';
 import { GroupUser } from '../../db/models/groupUser.models';
+import { GroupHashtag } from '../../db/models/groupHahtag.models';
+import { Sequelize } from 'sequelize-typescript';
 
 @Injectable()
 export class GroupRepository {
@@ -28,8 +30,55 @@ export class GroupRepository {
 
   async getGroup(sort) {
     return this.groupModel.findAll({
-      raw: true,
+      include: [
+        {
+          model: GroupUser,
+          as: 'groupUser',
+          attributes: [],
+          required: false,
+        },
+        {
+          model: GroupHashtag,
+          as: 'groupHashTag',
+          required: false,
+          attributes: [],
+          include: [
+            {
+              model: Hashtag,
+              required: false,
+              attributes: ['title'],
+            },
+          ],
+        },
+      ],
+      attributes: [
+        'group_id',
+        'group_name',
+        'thumbnail',
+        'description',
+        [
+          Sequelize.fn(
+            'COUNT',
+            Sequelize.fn('DISTINCT', Sequelize.col('groupUser.group_user_id')),
+          ),
+          'group_user_count',
+        ],
+        [
+          Sequelize.fn(
+            'GROUP_CONCAT',
+            Sequelize.fn(
+              'DISTINCT',
+              Sequelize.col('groupHashTag.hashtag.title'),
+            ),
+          ),
+          'hashtags',
+        ],
+        'created_at',
+        'updated_at',
+      ],
+      group: ['group_id'],
       order: [[sort, 'DESC']],
+      raw: false,
     });
   }
 

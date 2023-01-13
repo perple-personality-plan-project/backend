@@ -6,6 +6,7 @@ import {
   UseFilters,
   UseInterceptors,
   Param,
+  Query,
 } from '@nestjs/common';
 import { GlobalResponseInterceptor } from 'src/common/interceptors/global.response.interceptor';
 import { GlobalExceptionFilter } from '../../../common/filter/global.exception.filter';
@@ -21,8 +22,8 @@ export class GroupController {
   constructor(private readonly groupService: GroupService) {}
 
   @ApiOperation({ summary: '전체 그룹 리스트 가져오기' })
-  @Get('/:sort')
-  getGroup(@Param() req: GroupParamDto) {
+  @Get()
+  getGroup(@Query() req: GroupParamDto) {
     return this.groupService.getGroup(req);
   }
 

@@ -5,8 +5,8 @@ import { GroupRepository } from '../group.repository';
 @Injectable()
 export class GroupService {
   private GROUPSORT: object = {
-    date: 'createdAt',
-    rank: 'createdAt',
+    date: 'created_at',
+    rank: 'group_user_count',
   };
   constructor(private readonly groupRepository: GroupRepository) {}
 
@@ -52,6 +52,7 @@ export class GroupService {
 
   async getGroup(req: GroupParamDto) {
     const { sort } = req;
+
     if (sort !== 'rank' && sort !== 'date') {
       throw new BadRequestException('정렬은 인기순/생성순만 있습니다.');
     }
