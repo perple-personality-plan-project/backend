@@ -41,15 +41,15 @@ export class UserController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ): Promise<any> {
-    const login_id = req.user as string;
+    const user_id = req.user as string;
 
     const { accessToken, refreshToken } =
-      await this.authService.createAccessTokenRefreshToken(login_id);
+      await this.authService.createAccessTokenRefreshToken(user_id);
 
     res.setHeader('accessToken', `Bearer ${accessToken}`);
     res.setHeader('refreshToken', `Bearer ${refreshToken}`);
 
-    return { message: `${login_id} 로그인 성공` };
+    return { message: '로그인 성공' };
   }
 
   // 엑세스 토큰 재발급
