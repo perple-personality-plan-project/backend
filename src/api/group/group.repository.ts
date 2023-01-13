@@ -16,6 +16,8 @@ export class GroupRepository {
     private hashtagModel: typeof Hashtag,
     @InjectModel(GroupUser)
     private groupUser: typeof GroupUser,
+    @InjectModel(GroupHashtag)
+    private groupHashtagModel: typeof GroupHashtag,
   ) {}
 
   async createGroup(body, userId) {
@@ -106,6 +108,11 @@ export class GroupRepository {
   }
   async createHashtag(title: object) {
     return this.hashtagModel.create({ ...title });
+  }
+
+  //그룹 해쉬 태그
+  async createGroupHashtag(groupHashtag: object) {
+    return this.groupHashtagModel.create({ ...groupHashtag });
   }
 
   //그룹유저

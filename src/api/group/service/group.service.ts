@@ -20,6 +20,8 @@ export class GroupService {
       throw new BadRequestException('이미 생성된 그룹명 입니다.');
     }
 
+    const createGroup = await this.groupRepository.createGroup(body, user_id);
+
     if (hashtag.length > 0) {
       const hashtagArr = JSON.parse(hashtag.replace(/'/g, '"'));
 
@@ -29,15 +31,21 @@ export class GroupService {
         hashtagArr.map(async (tag) => {
           const title = { title: tag };
           const result = await this.groupRepository.findHashtag(title);
+          const groupHashtag = {
+            group_id: createGroup.dataValues['group_id'],
+          };
 
           if (!result) {
-            await this.groupRepository.createHashtag(title);
+            const hashtag = await this.groupRepository.createHashtag(title);
+            groupHashtag['hashtag_id'] = hashtag.dataValues['hashtag_id'];
+          } else {
+            groupHashtag['hashtag_id'] = result.hashtag_id;
           }
+
+          await this.groupRepository.createGroupHashtag(groupHashtag);
         }),
       );
     }
-
-    const createGroup = await this.groupRepository.createGroup(body, user_id);
 
     const groupAdmin = {
       group_id: createGroup.dataValues['group_id'],
