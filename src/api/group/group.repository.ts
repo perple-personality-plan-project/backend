@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Hashtag } from '../../db/models/hashtag.models';
 import { GroupUser } from '../../db/models/groupUser.models';
 import { GroupHashtag } from '../../db/models/groupHahtag.models';
+import { Feed } from '../../db/models/feed.models';
 import { Sequelize } from 'sequelize-typescript';
 
 @Injectable()
@@ -36,6 +37,13 @@ export class GroupRepository {
           as: 'groupUser',
           attributes: [],
           required: false,
+          include: [
+            {
+              model: Feed,
+              required: false,
+              attributes: [],
+            },
+          ],
         },
         {
           model: GroupHashtag,
@@ -72,6 +80,13 @@ export class GroupRepository {
             ),
           ),
           'hashtags',
+        ],
+        [
+          Sequelize.fn(
+            'COUNT',
+            Sequelize.fn('DISTINCT', Sequelize.col('groupUser.feed.feed_id')),
+          ),
+          'feedCount',
         ],
         'created_at',
         'updated_at',
