@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from '@nestjs/common';
 import { User } from 'src/db/models/user.models';
 import { CreateUserDto } from '../dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
@@ -11,18 +15,23 @@ export class UserService {
   async signUp(createUserDto: CreateUserDto): Promise<User> {
     // 아이디 중복검사
     const isDupLoginId = await this.userRepository.IsDuplicatedInputData(
-      'loginId',
-      createUserDto.loginId,
+      'login_id',
+      createUserDto.login_id,
     );
 
     if (isDupLoginId) {
       throw new ConflictException('중복되는 아이디가 존재합니다.');
     }
 
+    // 비밀번호와 confirm 검사
+    if (createUserDto.password !== createUserDto.confirm_password) {
+      throw new BadRequestException('비밀번호가 일치하지 않습니다.');
+    }
+
     // 닉네임 중복검사
     const isDupNickname = await this.userRepository.IsDuplicatedInputData(
-      'nickName',
-      createUserDto.nickName,
+      'nickname',
+      createUserDto.nickname,
     );
 
     if (isDupNickname) {
@@ -34,7 +43,7 @@ export class UserService {
     const localUser = {
       ...createUserDto,
       password: hashedPassword,
-      platformType: 'local',
+      provider: 'local',
     };
 
     const createUser = await this.userRepository.createUser(localUser);
