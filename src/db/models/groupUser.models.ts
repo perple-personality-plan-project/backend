@@ -34,12 +34,18 @@ export class GroupUser extends Model {
 
   @ForeignKey(() => Group)
   @AllowNull(false)
-  @Column
+  @Column({
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   group_id: number;
 
   @ForeignKey(() => User)
   @AllowNull(false)
-  @Column
+  @Column({
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   user_id: number;
 
   @AllowNull(false)

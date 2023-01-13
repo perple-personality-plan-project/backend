@@ -13,6 +13,7 @@ import { GroupHashtag } from './groupHahtag.models';
 
 @Table({
   modelName: 'Hashtag',
+  tableName: 'hashtags',
   freezeTableName: true,
   timestamps: true,
 })
