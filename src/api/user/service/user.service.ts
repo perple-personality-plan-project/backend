@@ -7,6 +7,7 @@ import { User } from 'src/db/models/user.models';
 import { CreateUserDto } from '../dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { UserRepository } from '../user.repository';
+import { UpdateUserDto } from '../dto/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -50,15 +51,10 @@ export class UserService {
     return isPicked ? true : false;
   }
 
-  async updatedProfile(user_id: number, body) {
-    const { nickname } = body;
-    console.log(nickname);
-    console.log(body);
-    console.log(user_id);
+  async updatedProfile(user_id: number, updateUserDto: UpdateUserDto) {
+    const { nickname } = updateUserDto;
 
     const currentUserInfo = await this.findUserByUserId(user_id);
-
-    console.log(currentUserInfo);
 
     if (nickname !== currentUserInfo.nickname) {
       const isDupNickname = await this.userRepository.IsDuplicatedInputData(
@@ -72,7 +68,10 @@ export class UserService {
       }
     }
 
-    const updatedProfile = this.userRepository.updatedProfile(user_id, body);
+    const updatedProfile = this.userRepository.updatedProfile(
+      user_id,
+      updateUserDto,
+    );
 
     if (!updatedProfile) {
       throw new BadRequestException('프로필 수정에 실패하였습니다.');

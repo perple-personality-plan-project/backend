@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Pick } from 'src/db/models/pick.models';
 import { User } from 'src/db/models/user.models';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserRepository {
@@ -49,9 +50,8 @@ export class UserRepository {
     return isPicked;
   }
 
-  async updatedProfile(user_id: number, body: object) {
-    console.log(body);
-    return this.userModel.update({ ...body }, { where: { user_id } });
+  async updatedProfile(user_id: number, updateUserDto: UpdateUserDto) {
+    return this.userModel.update({ ...updateUserDto }, { where: { user_id } });
   }
 
   /*
@@ -60,9 +60,7 @@ export class UserRepository {
    */
   async IsDuplicatedInputData(column: string, data: string): Promise<User> {
     try {
-      const test = await this.userModel.findOne({ where: { [column]: data } });
-      console.log(test);
-      return test;
+      return this.userModel.findOne({ where: { [column]: data } });
     } catch (error) {
       return error.message;
     }

@@ -18,6 +18,7 @@ import { AuthService } from 'src/auth/auth.service';
 import { KakaoAuthGuard } from 'src/auth/kakao/kaka-auth.guard';
 import { Param, Patch, Put } from '@nestjs/common/decorators';
 import { ParseIntPipe } from '@nestjs/common/pipes';
+import { UpdateUserDto } from '../dto/update-user.dto';
 
 @Controller('user')
 @UseInterceptors(GlobalResponseInterceptor)
@@ -106,10 +107,10 @@ export class UserController {
   // 프로필 수정
   @UseGuards(AuthGuard('jwt'))
   @Patch('/edit')
-  async updatedProfile(@Req() req, @Body() body) {
+  async updatedProfile(@Req() req, @Body() updateUserDto: UpdateUserDto) {
     const user_id = req.user;
 
-    await this.userService.updatedProfile(user_id, body);
+    await this.userService.updatedProfile(user_id, updateUserDto);
 
     return { message: '프로필 수정 성공' };
   }
