@@ -28,11 +28,15 @@ export class UserRepository {
     }
   }
 
-  async findUserById(login_id: string): Promise<User> {
+  async findUserByLoginId(login_id: string): Promise<User> {
     return this.userModel.findOne({ raw: true, where: { login_id } });
   }
 
-  async chkPicked(user_id, feed_id) {
+  async findUserByUserId(user_id: number): Promise<User> {
+    return this.userModel.findOne({ raw: true, where: { user_id } });
+  }
+
+  async chkPicked(user_id: number, feed_id: number) {
     const [_, isPicked] = await this.pickModel.findOrCreate({
       where: { user_id, feed_id },
       defaults: { user_id, feed_id },
@@ -45,13 +49,20 @@ export class UserRepository {
     return isPicked;
   }
 
+  async updatedProfile(user_id: number, body: object) {
+    console.log(body);
+    return this.userModel.update({ ...body }, { where: { user_id } });
+  }
+
   /*
    * 컬럼명을 매개변수로 받아
    * 동적으로 해당 컬럼에 중복 데이터가 있는지 확인
    */
   async IsDuplicatedInputData(column: string, data: string): Promise<User> {
     try {
-      return this.userModel.findOne({ where: { [column]: data } });
+      const test = await this.userModel.findOne({ where: { [column]: data } });
+      console.log(test);
+      return test;
     } catch (error) {
       return error.message;
     }

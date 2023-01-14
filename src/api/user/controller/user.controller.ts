@@ -16,7 +16,7 @@ import { AuthGuard } from '@nestjs/passport/dist/auth.guard';
 import { Request, Response } from 'express';
 import { AuthService } from 'src/auth/auth.service';
 import { KakaoAuthGuard } from 'src/auth/kakao/kaka-auth.guard';
-import { Param, Put } from '@nestjs/common/decorators';
+import { Param, Patch, Put } from '@nestjs/common/decorators';
 import { ParseIntPipe } from '@nestjs/common/pipes';
 
 @Controller('user')
@@ -101,6 +101,17 @@ export class UserController {
     }
 
     return { message: '찜목록에 추가되었습니다.' };
+  }
+
+  // 프로필 수정
+  @UseGuards(AuthGuard('jwt'))
+  @Patch('/edit')
+  async updatedProfile(@Req() req, @Body() body) {
+    const user_id = req.user;
+
+    await this.userService.updatedProfile(user_id, body);
+
+    return { message: '프로필 수정 성공' };
   }
 
   // 엑세스 토큰 재발급

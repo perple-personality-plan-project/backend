@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from '@nestjs/common';
 import { User } from 'src/db/models/user.models';
 import { CreateUserDto } from '../dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
@@ -46,7 +50,43 @@ export class UserService {
     return isPicked ? true : false;
   }
 
-  async findUserById(login_id: string) {
-    return this.userRepository.findUserById(login_id);
+  async updatedProfile(user_id: number, body) {
+    const { nickname } = body;
+    console.log(nickname);
+    console.log(body);
+    console.log(user_id);
+
+    const currentUserInfo = await this.findUserByUserId(user_id);
+
+    console.log(currentUserInfo);
+
+    if (nickname !== currentUserInfo.nickname) {
+      const isDupNickname = await this.userRepository.IsDuplicatedInputData(
+        'nickname',
+        nickname,
+      );
+
+      console.log(isDupNickname);
+      if (isDupNickname) {
+        console.log('들어오냐?');
+        throw new ConflictException('중복되는 닉네임이 존재합니다.');
+      }
+    }
+
+    const updatedProfile = this.userRepository.updatedProfile(user_id, body);
+
+    if (!updatedProfile) {
+      throw new BadRequestException('프로필 수정에 실패하였습니다.');
+    }
+
+    return updatedProfile;
+  }
+
+  async findUserByLoginId(login_id: string) {
+    return this.userRepository.findUserByLoginId(login_id);
+  }
+
+  async findUserByUserId(user_id: number) {
+    return this.userRepository.findUserByUserId(user_id);
   }
 }
