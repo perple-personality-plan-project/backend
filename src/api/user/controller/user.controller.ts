@@ -16,6 +16,8 @@ import { AuthGuard } from '@nestjs/passport/dist/auth.guard';
 import { Request, Response } from 'express';
 import { AuthService } from 'src/auth/auth.service';
 import { KakaoAuthGuard } from 'src/auth/kakao/kaka-auth.guard';
+import { Param, Put } from '@nestjs/common/decorators';
+import { ParseIntPipe } from '@nestjs/common/pipes';
 
 @Controller('user')
 @UseInterceptors(GlobalResponseInterceptor)
@@ -81,6 +83,24 @@ export class UserController {
     await this.authService.logoutUser(refreshToken);
 
     return { message: '로그아웃 성공' };
+  }
+
+  // 찜하기
+  @UseGuards(AuthGuard('jwt'))
+  @Put('/feeds/:feedId/pick')
+  async pickedFeed(@Req() req, @Param('feedId', ParseIntPipe) feed_id: number) {
+    const user_id = req.user as number;
+
+    // 합쳐지면 feed service 확인 후 존재하는 게시물인지
+    // 확인하는 로직 추가
+
+    const chkPicked = await this.userService.chkPicked(user_id, feed_id);
+
+    if (!chkPicked) {
+      return { message: '찜하기가 취소되었습니다.' };
+    }
+
+    return { message: '찜목록에 추가되었습니다.' };
   }
 
   // 엑세스 토큰 재발급

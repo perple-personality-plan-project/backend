@@ -41,6 +41,11 @@ export class UserService {
     return createUser;
   }
 
+  async chkPicked(user_id: number, feed_id: number) {
+    const isPicked = await this.userRepository.chkPicked(user_id, feed_id);
+    return isPicked ? true : false;
+  }
+
   async findUserById(login_id: string) {
     return this.userRepository.findUserById(login_id);
   }
