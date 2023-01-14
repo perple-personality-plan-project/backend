@@ -68,7 +68,6 @@ export class UserService {
 
       console.log(isDupNickname);
       if (isDupNickname) {
-        console.log('들어오냐?');
         throw new ConflictException('중복되는 닉네임이 존재합니다.');
       }
     }
