@@ -24,6 +24,7 @@ export class FeedRepository {
       raw: true,
       attributes: [
         'feed_id',
+        'thumbnail',
         'description',
         [Sequelize.col('user.user_id'), 'user_id'],
         [Sequelize.col('user.mbti'), 'mbti'],
