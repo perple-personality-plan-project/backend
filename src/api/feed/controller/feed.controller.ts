@@ -23,7 +23,7 @@ import { request } from 'http';
 export class FeedController {
   constructor(private readonly feedService: FeedService) {}
 
-  @ApiOperation({ summary: '피드 만들기' })
+  @ApiOperation({ summary: '피드 생성' })
   @ApiResponse({
     status: 200,
     description: '성공!',
@@ -44,7 +44,7 @@ export class FeedController {
     return this.feedService.createFeed(body, user_id);
   }
 
-  @ApiOperation({ summary: '전체 피드 조회하기' })
+  @ApiOperation({ summary: '전체 피드 조회' })
   @ApiResponse({
     status: 200,
     description: '성공!',
@@ -72,7 +72,7 @@ export class FeedController {
     return this.feedService.findFeedById(feed_id);
   }
 
-  @ApiOperation({ summary: '피드 삭제하기' })
+  @ApiOperation({ summary: '피드 삭제' })
   @ApiResponse({
     status: 200,
     description: '성공!',
