@@ -11,8 +11,8 @@ export class UserService {
   async signUp(createUserDto: CreateUserDto): Promise<User> {
     // 아이디 중복검사
     const isDupLoginId = await this.userRepository.IsDuplicatedInputData(
-      'loginId',
-      createUserDto.loginId,
+      'login_id',
+      createUserDto.login_id,
     );
 
     if (isDupLoginId) {
@@ -21,8 +21,8 @@ export class UserService {
 
     // 닉네임 중복검사
     const isDupNickname = await this.userRepository.IsDuplicatedInputData(
-      'nickName',
-      createUserDto.nickName,
+      'nickname',
+      createUserDto.nickname,
     );
 
     if (isDupNickname) {
@@ -31,14 +31,17 @@ export class UserService {
 
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
 
-    const localUser = {
+    const user = {
       ...createUserDto,
       password: hashedPassword,
-      platformType: 'local',
     };
 
-    const createUser = await this.userRepository.createUser(localUser);
+    const createUser = await this.userRepository.createUser(user);
 
     return createUser;
+  }
+
+  async findUserById(login_id: string) {
+    return this.userRepository.findUserById(login_id);
   }
 }

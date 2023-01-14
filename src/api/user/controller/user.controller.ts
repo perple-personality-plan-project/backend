@@ -15,6 +15,7 @@ import { CreateUserDto } from '../dto/create-user.dto';
 import { AuthGuard } from '@nestjs/passport/dist/auth.guard';
 import { Request, Response } from 'express';
 import { AuthService } from 'src/auth/auth.service';
+import { KakaoAuthGuard } from 'src/auth/kakao/kaka-auth.guard';
 
 @Controller('user')
 @UseInterceptors(GlobalResponseInterceptor)
@@ -41,15 +42,34 @@ export class UserController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ): Promise<any> {
-    const login_id = req.user as string;
+    const user_id = req.user as number;
 
     const { accessToken, refreshToken } =
-      await this.authService.createAccessTokenRefreshToken(login_id);
+      await this.authService.createAccessTokenRefreshToken(user_id);
 
     res.setHeader('accessToken', `Bearer ${accessToken}`);
     res.setHeader('refreshToken', `Bearer ${refreshToken}`);
 
-    return { message: `${login_id} 로그인 성공` };
+    return { message: '로그인 성공' };
+  }
+
+  // 카카오 로그인
+  @UseGuards(KakaoAuthGuard)
+  @Get('auth/kakao')
+  async kakao() {
+    return 'hello';
+  }
+
+  // 카카오 로그인 콜백
+  @UseGuards(KakaoAuthGuard)
+  @Get('/auth/kakao/callback')
+  async kakaoCallBack(@Req() req, @Res({ passthrough: true }) res: Response) {
+    const { accessToken, refreshToken } = req.user;
+
+    res.setHeader('accessToken', `Bearer ${accessToken}`);
+    res.setHeader('refreshToken', `Bearer ${refreshToken}`);
+
+    return { message: 'ok' };
   }
 
   // 로그아웃
@@ -67,9 +87,9 @@ export class UserController {
   @UseGuards(AuthGuard('jwt-refresh'))
   @Get('/refresh-token')
   async re(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    const { login_id }: any = req.user;
+    const { user_id }: any = req.user;
 
-    const newAccessToken = await this.authService.getAccessToken({ login_id });
+    const newAccessToken = await this.authService.getAccessToken({ user_id });
 
     res.setHeader('accessToken', `Bearer ${newAccessToken}`);
 

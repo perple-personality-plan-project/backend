@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from 'src/db/models/user.models';
-import { LocalUserDto } from './dto/create-user.dto';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()
 export class UserRepository {
@@ -10,14 +10,14 @@ export class UserRepository {
     private userModel: typeof User,
   ) {}
 
-  async createUser(localUser: LocalUserDto): Promise<User> {
+  async createUser(user: CreateUserDto): Promise<User> {
     try {
-      const { loginId, password, nickName, platformType, mbti } = localUser;
+      const { login_id, password, nickname, provider, mbti } = user;
       return await this.userModel.create({
-        loginId,
+        login_id,
         password,
-        nickName,
-        platformType,
+        nickname,
+        provider,
         mbti,
       });
     } catch (error) {
