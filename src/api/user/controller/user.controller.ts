@@ -78,7 +78,7 @@ export class UserController {
   async logout(@Req() req: Request) {
     const { refreshToken }: any = req.user;
     console.log(refreshToken);
-    await this.authService.logoutUser(refreshToken);
+    await this.userService.logoutUser(refreshToken);
 
     return { message: '로그아웃 성공' };
   }

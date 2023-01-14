@@ -1,12 +1,21 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  CACHE_MANAGER,
+  ConflictException,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { User } from 'src/db/models/user.models';
 import { CreateUserDto } from '../dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { UserRepository } from '../user.repository';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    private readonly userRepository: UserRepository,
+  ) {}
 
   async signUp(createUserDto: CreateUserDto): Promise<User> {
     // 아이디 중복검사
@@ -41,7 +50,14 @@ export class UserService {
     return createUser;
   }
 
+  // 로그인 아이디로 유저 검색
   async findUserById(login_id: string) {
     return this.userRepository.findUserById(login_id);
+  }
+
+  // 로그아웃
+  async logoutUser(refreshToken: string) {
+    await this.cacheManager.del(refreshToken);
+    return true;
   }
 }
