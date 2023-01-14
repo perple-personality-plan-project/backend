@@ -86,4 +86,12 @@ export class GroupService {
     }
     return result;
   }
+
+  async getGroupFeed(req: number) {
+    return this.groupRepository.getGroupFeed(req);
+  }
+
+  async getGroupFeedDetail(groupId, feedId) {
+    return this.groupRepository.getGroupFeedDetail(groupId, feedId);
+  }
 }

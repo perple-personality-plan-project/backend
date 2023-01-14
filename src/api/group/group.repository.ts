@@ -6,6 +6,9 @@ import { GroupUser } from '../../db/models/groupUser.models';
 import { GroupHashtag } from '../../db/models/groupHahtag.models';
 import { Feed } from '../../db/models/feed.models';
 import { Sequelize } from 'sequelize-typescript';
+import { User } from '../../db/models/user.models';
+import { Like } from '../../db/models/like.models';
+import { Comment } from '../../db/models/comment.models';
 
 @Injectable()
 export class GroupRepository {
@@ -18,6 +21,14 @@ export class GroupRepository {
     private groupUser: typeof GroupUser,
     @InjectModel(GroupHashtag)
     private groupHashtagModel: typeof GroupHashtag,
+    @InjectModel(Feed)
+    private feed: typeof Feed,
+    @InjectModel(User)
+    private user: typeof User,
+    @InjectModel(Like)
+    private like: typeof Like,
+    @InjectModel(Comment)
+    private comment: typeof Comment,
   ) {}
 
   async createGroup(body, userId) {
@@ -126,5 +137,39 @@ export class GroupRepository {
 
   async destroyGroupUser(groupUser) {
     this.groupUser.destroy({ where: { ...groupUser } });
+  }
+
+  async getGroupFeed(groupId) {
+    return this.feed.findAll({
+      attributes: { exclude: ['user_id'] },
+      include: [
+        {
+          model: GroupUser,
+          attributes: [],
+          include: [{ model: Group, attributes: [] }],
+        },
+      ],
+      where: {
+        '$groupUser.group.group_id$': groupId,
+      },
+    });
+  }
+
+  async getGroupFeedDetail(groupId, feedId) {
+    return this.feed.findOne({
+      include: [
+        {
+          model: GroupUser,
+          attributes: [],
+          include: [{ model: Group, attributes: [] }],
+        },
+        { model: Comment },
+        { model: Like },
+      ],
+      where: {
+        '$groupUser.group.group_id$': groupId,
+        feed_id: feedId,
+      },
+    });
   }
 }

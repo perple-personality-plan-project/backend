@@ -8,8 +8,7 @@ import {
   Param,
   Query,
   Put,
-  Req,
-  UseGuards,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { GlobalResponseInterceptor } from 'src/common/interceptors/global.response.interceptor';
 import { GlobalExceptionFilter } from '../../../common/filter/global.exception.filter';
@@ -18,6 +17,7 @@ import { GroupService } from '../service/group.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport/dist/auth.guard';
 import { Request } from 'express';
+import { PositiveIntPipe } from '../../../common/pipes/positiveInt.pipe';
 
 @Controller('group')
 @ApiTags('group')
@@ -56,5 +56,20 @@ export class GroupController {
   async signUpGroup(@Param() req) {
     const user_id = { user_id: 2 };
     return this.groupService.groupSignUp(user_id, req);
+  }
+
+  @Get('/:groupId/feed')
+  async getGroupFeed(
+    @Param('groupId', ParseIntPipe, PositiveIntPipe) req: number,
+  ) {
+    return this.groupService.getGroupFeed(req);
+  }
+
+  @Get('/:groupId/feed/:feedId')
+  async getGroupFeedDetail(
+    @Param('groupId', ParseIntPipe, PositiveIntPipe) groupId: number,
+    @Param('feedId', ParseIntPipe, PositiveIntPipe) feedId: number,
+  ) {
+    return this.groupService.getGroupFeedDetail(groupId, feedId);
   }
 }
