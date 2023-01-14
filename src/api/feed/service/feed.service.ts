@@ -22,6 +22,10 @@ export class FeedService {
   async findFeedById(feed_id) {
     return this.feedRepository.findFeedById(feed_id);
   }
+
+  async deleteFeed(feed_id) {
+    return this.feedRepository.deleteFeed(feed_id);
+  }
 }
 // async uploadImg(cat: Cat, files: Express.Multer.File[]) {
 //     const fileName = `cats/${files[0].filename}`;

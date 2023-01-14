@@ -67,6 +67,12 @@ export class FeedRepository {
       },
     });
   }
+
+  async deleteFeed(feed_id) {
+    return this.feedModel.destroy({
+      where: { feed_id },
+    });
+  }
 }
 
 // async findByIdAndUpdateImg(id: string, fileName: string) {

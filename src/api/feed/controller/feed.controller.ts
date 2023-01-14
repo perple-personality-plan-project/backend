@@ -6,12 +6,15 @@ import {
   UseFilters,
   UseInterceptors,
   Param,
+  Delete,
+  Req,
 } from '@nestjs/common';
 import { GlobalResponseInterceptor } from 'src/common/interceptors/global.response.interceptor';
 import { GlobalExceptionFilter } from '../../../common/filter/global.exception.filter';
 import { FeedRequestDto } from '../dto/feed.request.dto';
 import { FeedService } from '../service/feed.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { request } from 'http';
 
 @Controller('feed')
 @ApiTags('feed')
@@ -42,15 +45,45 @@ export class FeedController {
   }
 
   @ApiOperation({ summary: '전체 피드 조회하기' })
+  @ApiResponse({
+    status: 200,
+    description: '성공!',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Server Error...',
+  })
   @Get()
   getAllFeed() {
     return this.feedService.getAllFeed();
   }
 
   @ApiOperation({ summary: '피드 상세조회' })
+  @ApiResponse({
+    status: 200,
+    description: '성공!',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Server Error...',
+  })
   @Get('/:feed_id')
   findFeedById(@Param('feed_id') feed_id) {
     return this.feedService.findFeedById(feed_id);
+  }
+
+  @ApiOperation({ summary: '피드 삭제하기' })
+  @ApiResponse({
+    status: 200,
+    description: '성공!',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Server Error...',
+  })
+  @Delete('/:feed_id')
+  deleteFeed(@Param('feed_id') feed_id) {
+    return this.feedService.deleteFeed(feed_id);
   }
 }
 // @ApiOperation({ summary: '고양이 이미지 업로드' })
