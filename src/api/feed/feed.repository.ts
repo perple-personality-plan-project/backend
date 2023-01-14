@@ -3,7 +3,7 @@ import { Feed } from '../../db/models/feed.models';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from 'src/db/models/user.models';
 import { Like } from 'src/db/models/like.models';
-
+import { Sequelize } from 'sequelize-typescript';
 @Injectable()
 export class FeedRepository {
   constructor(
@@ -20,27 +20,41 @@ export class FeedRepository {
   }
 
   async getAllFeed() {
-    return this.feedModel.findAll({
+    const feeds = await this.feedModel.findAll({
       raw: true,
+      attributes: [
+        'feed_id',
+        'description',
+        [Sequelize.col('user.user_id'), 'user_id'],
+        [Sequelize.col('user.mbti'), 'mbti'],
+        'created_at',
+        'updated_at',
+      ],
       include: [
         {
-          model: this.userModel,
-          attributes: {
-            exclude: ['user_id', 'mbti'],
-          },
+          model: User,
+          as: 'user',
+          attributes: [],
         },
         {
-          model: this.likeModel,
-          attributes: {
-            exclude: ['like_id'],
-          },
+          model: Like,
+          as: 'like',
+          attributes: [
+            [
+              Sequelize.fn('COUNT', Sequelize.col('like.like_id')),
+              'like_count',
+            ],
+          ],
         },
       ],
+      group: ['feed_id'],
       order: [['created_at', 'DESC']],
     });
+    console.log(feeds);
+    return feeds;
   }
 
-  async findFeed(findData: object) {
+  async findFeedById(findData: object) {
     return this.feedModel.findOne({
       raw: true,
       where: { ...findData },
