@@ -5,8 +5,8 @@ import { GroupRepository } from '../group.repository';
 @Injectable()
 export class GroupService {
   private GROUPSORT: object = {
-    date: 'createdAt',
-    rank: 'createdAt',
+    date: 'created_at',
+    rank: 'group_user_count',
   };
   constructor(private readonly groupRepository: GroupRepository) {}
 
@@ -20,6 +20,8 @@ export class GroupService {
       throw new BadRequestException('이미 생성된 그룹명 입니다.');
     }
 
+    const createGroup = await this.groupRepository.createGroup(body, user_id);
+
     if (hashtag.length > 0) {
       const hashtagArr = JSON.parse(hashtag.replace(/'/g, '"'));
 
@@ -29,15 +31,21 @@ export class GroupService {
         hashtagArr.map(async (tag) => {
           const title = { title: tag };
           const result = await this.groupRepository.findHashtag(title);
+          const groupHashtag = {
+            group_id: createGroup.dataValues['group_id'],
+          };
 
           if (!result) {
-            await this.groupRepository.createHashtag(title);
+            const hashtag = await this.groupRepository.createHashtag(title);
+            groupHashtag['hashtag_id'] = hashtag.dataValues['hashtag_id'];
+          } else {
+            groupHashtag['hashtag_id'] = result.hashtag_id;
           }
+
+          await this.groupRepository.createGroupHashtag(groupHashtag);
         }),
       );
     }
-
-    const createGroup = await this.groupRepository.createGroup(body, user_id);
 
     const groupAdmin = {
       group_id: createGroup.dataValues['group_id'],
@@ -52,6 +60,7 @@ export class GroupService {
 
   async getGroup(req: GroupParamDto) {
     const { sort } = req;
+
     if (sort !== 'rank' && sort !== 'date') {
       throw new BadRequestException('정렬은 인기순/생성순만 있습니다.');
     }

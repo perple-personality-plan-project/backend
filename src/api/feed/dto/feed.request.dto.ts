@@ -7,10 +7,6 @@ export class FeedRequestDto {
     description: 'title',
     required: true,
   })
-  @IsNotEmpty({ message: 'title 필수값 입니다.' })
-  @IsString({ message: 'title 문자열 입니다.' })
-  title: string;
-
   @ApiProperty({
     example: '[{thumbnail1.jpg},{thumbnail2.jpg}]',
     description: 'thumbnail',
