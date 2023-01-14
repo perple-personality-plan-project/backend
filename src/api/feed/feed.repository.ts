@@ -54,10 +54,17 @@ export class FeedRepository {
     return feeds;
   }
 
-  async findFeedById(findData: object) {
+  async findFeedById(feed_id) {
     return this.feedModel.findOne({
       raw: true,
-      where: { ...findData },
+      where: { feed_id },
+      include: {
+        model: Like,
+        as: 'like',
+        attributes: [
+          [Sequelize.fn('COUNT', Sequelize.col('like.like_id')), 'like_count'],
+        ],
+      },
     });
   }
 }

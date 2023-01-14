@@ -5,6 +5,7 @@ import {
   Post,
   UseFilters,
   UseInterceptors,
+  Param,
 } from '@nestjs/common';
 import { GlobalResponseInterceptor } from 'src/common/interceptors/global.response.interceptor';
 import { GlobalExceptionFilter } from '../../../common/filter/global.exception.filter';
@@ -19,12 +20,6 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 export class FeedController {
   constructor(private readonly feedService: FeedService) {}
 
-  @ApiOperation({ summary: '전체 피드 조회하기' })
-  @Get()
-  getAllFeed() {
-    return this.feedService.getAllFeed();
-  }
-
   @ApiOperation({ summary: '피드 만들기' })
   @ApiResponse({
     status: 200,
@@ -37,7 +32,7 @@ export class FeedController {
   })
   @ApiResponse({
     status: 412,
-    description: 'title or description는 필수값 입니다',
+    description: 'description는 필수값 입니다',
   })
   @Post()
   async createFeed(@Body() body: FeedRequestDto) {
@@ -46,14 +41,25 @@ export class FeedController {
     return this.feedService.createFeed(body, user_id);
   }
 
-  // @ApiOperation({ summary: '고양이 이미지 업로드' })
-  // @UseInterceptors(FilesInterceptor('image', 10, multerOptions('cats')))
-  // @UseGuards(JwtAuthGuard)
-  // @Post('upload')
-  // uploadCatImg(
-  //   @UploadedFiles() files: Array<Express.Multer.File>,
-  //   @CurrentUser() cat: Cat,
-  // ) {
-  //   return this.catsService.uploadImg(cat, files);
-  // }
+  @ApiOperation({ summary: '전체 피드 조회하기' })
+  @Get()
+  getAllFeed() {
+    return this.feedService.getAllFeed();
+  }
+
+  @ApiOperation({ summary: '피드 상세조회' })
+  @Get('/:feed_id')
+  findFeedById(@Param('feed_id') feed_id) {
+    return this.feedService.findFeedById(feed_id);
+  }
 }
+// @ApiOperation({ summary: '고양이 이미지 업로드' })
+// @UseInterceptors(FilesInterceptor('image', 10, multerOptions('cats')))
+// @UseGuards(JwtAuthGuard)
+// @Post('upload')
+// uploadCatImg(
+//   @UploadedFiles() files: Array<Express.Multer.File>,
+//   @CurrentUser() cat: Cat,
+// ) {
+//   return this.catsService.uploadImg(cat, files);
+// }
