@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { QueryTypes } from 'sequelize';
+import Sequelize from 'sequelize/types/sequelize';
 import { Pick } from 'src/db/models/pick.models';
 import { User } from 'src/db/models/user.models';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -12,6 +14,7 @@ export class UserRepository {
     private userModel: typeof User,
     @InjectModel(Pick)
     private pickModel: typeof Pick,
+    private sequelize: Sequelize,
   ) {}
 
   async createUser(user: CreateUserDto): Promise<User> {
@@ -52,6 +55,20 @@ export class UserRepository {
 
   async updatedProfile(user_id: number, updateUserDto: UpdateUserDto) {
     return this.userModel.update({ ...updateUserDto }, { where: { user_id } });
+  }
+
+  async getMypageInfo(user_id: number) {
+    const query = ` SELECT 
+                        u.nickname,
+                        u.mbti,
+                        (SELECT COUNT(*) FROM feeds f WHERE u.user_id = f.user_id) as feeds_cnt,
+                        (SELECT COUNT(*) FROM maps m WHERE u.user_id = m.user_id) as routes_cnt,
+                        (SELECT COUNT(*) FROM picks p  WHERE u.user_id = p.user_id) as picks_cnt,
+                        (SELECT COUNT(*) FROM group_users g WHERE u.user_id = g.user_id) as groups_cnt
+                      FROM users u 
+                      WHERE user_id = ${user_id};
+                    `;
+    return this.sequelize.query(query, { type: QueryTypes.SELECT });
   }
 
   /*

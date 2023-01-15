@@ -115,6 +115,15 @@ export class UserController {
     return { message: '프로필 수정 성공' };
   }
 
+  // 마이 페이지
+  @UseGuards(AuthGuard('jwt'))
+  @Get('/mypage')
+  async myPage(@Req() req) {
+    const user_id = req.user;
+
+    return this.userService.getMypageInfo(user_id);
+  }
+
   // 엑세스 토큰 재발급
   @UseGuards(AuthGuard('jwt-refresh'))
   @Get('/refresh-token')

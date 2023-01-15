@@ -80,6 +80,10 @@ export class UserService {
     return updatedProfile;
   }
 
+  async getMypageInfo(user_id: number) {
+    return this.userRepository.getMypageInfo(user_id);
+  }
+
   async findUserByLoginId(login_id: string) {
     return this.userRepository.findUserByLoginId(login_id);
   }
