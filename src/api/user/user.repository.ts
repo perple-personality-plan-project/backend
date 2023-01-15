@@ -58,20 +58,6 @@ export class UserRepository {
     return this.userModel.update({ ...updateUserDto }, { where: { user_id } });
   }
 
-  async getMypageInfo(user_id: number) {
-    const query = ` SELECT 
-                        u.nickname,
-                        u.mbti,
-                        (SELECT COUNT(*) FROM feeds f WHERE u.user_id = f.user_id) as feeds_cnt,
-                        (SELECT COUNT(*) FROM maps m WHERE u.user_id = m.user_id) as routes_cnt,
-                        (SELECT COUNT(*) FROM picks p  WHERE u.user_id = p.user_id) as picks_cnt,
-                        (SELECT COUNT(*) FROM group_users g WHERE u.user_id = g.user_id) as groups_cnt
-                      FROM users u 
-                      WHERE user_id = ${user_id};
-                    `;
-    return this.sequelize.query(query, { type: QueryTypes.SELECT });
-  }
-
   /*
    * 컬럼명을 매개변수로 받아
    * 동적으로 해당 컬럼에 중복 데이터가 있는지 확인
