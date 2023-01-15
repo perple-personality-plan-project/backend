@@ -52,8 +52,8 @@ export class Map extends Model {
   location_group: string;
 
   @CreatedAt
-  createdAt: Date;
+  created_at: Date;
 
   @UpdatedAt
-  updatedAt: Date;
+  updated_at: Date;
 }
