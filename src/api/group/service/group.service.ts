@@ -69,12 +69,12 @@ export class GroupService {
   }
 
   async groupSignUp(user_id: object, req: object) {
-    const findGroupUser = await this.groupRepository.findGroupUser(user_id);
     const groupAdmin = {
       group_id: req['groupId'],
       ...user_id,
       admin_flag: false,
     };
+    const findGroupUser = await this.groupRepository.findGroupUser(groupAdmin);
     let result;
 
     if (findGroupUser) {
@@ -93,5 +93,28 @@ export class GroupService {
 
   async getGroupFeedDetail(groupId, feedId) {
     return this.groupRepository.getGroupFeedDetail(groupId, feedId);
+  }
+
+  async getSubscription(userId, req) {
+    const groupInfo = {
+      group_id: req['groupId'],
+      ...userId,
+    };
+    return this.groupRepository.findGroupUser(groupInfo);
+  }
+
+  async createGroupFeed(body, req, userId) {
+    const groupInfo = {
+      group_id: req['groupId'],
+      ...userId,
+    };
+    const groupUser = await this.groupRepository.findGroupUser(groupInfo);
+    if (!groupUser) {
+      throw new BadRequestException('구독 되지 않은 유저 입니다.');
+    }
+
+    const feedData = body;
+    feedData.group_user_id = groupUser.group_user_id;
+    this.groupRepository.createGroupFeed(feedData);
   }
 }

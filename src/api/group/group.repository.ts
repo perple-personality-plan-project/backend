@@ -172,4 +172,8 @@ export class GroupRepository {
       },
     });
   }
+
+  async createGroupFeed(feedData) {
+    this.feed.create({ ...feedData });
+  }
 }

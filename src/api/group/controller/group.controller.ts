@@ -58,6 +58,12 @@ export class GroupController {
     return this.groupService.groupSignUp(user_id, req);
   }
 
+  @Get('/:groupId')
+  async getSubscription(@Param() req) {
+    const user_id = { user_id: 2 };
+    return this.groupService.getSubscription(user_id, req);
+  }
+
   @Get('/:groupId/feed')
   async getGroupFeed(
     @Param('groupId', ParseIntPipe, PositiveIntPipe) req: number,
@@ -71,5 +77,11 @@ export class GroupController {
     @Param('feedId', ParseIntPipe, PositiveIntPipe) feedId: number,
   ) {
     return this.groupService.getGroupFeedDetail(groupId, feedId);
+  }
+
+  @Post('/:groupId/feed/')
+  async createGroupFeed(@Body() body, @Param() req) {
+    const userId = { user_id: 2 };
+    return this.groupService.createGroupFeed(body, req, userId);
   }
 }
