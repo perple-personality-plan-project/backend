@@ -57,7 +57,7 @@ export class UserController {
   @UseGuards(KakaoAuthGuard)
   @Get('auth/kakao')
   async kakao() {
-    return 'hello';
+    return;
   }
 
   // 카카오 로그인 콜백
