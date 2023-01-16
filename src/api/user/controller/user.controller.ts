@@ -16,6 +16,9 @@ import { AuthGuard } from '@nestjs/passport/dist/auth.guard';
 import { Request, Response } from 'express';
 import { AuthService } from 'src/auth/auth.service';
 import { KakaoAuthGuard } from 'src/auth/kakao/kaka-auth.guard';
+import { Param, Patch, Put } from '@nestjs/common/decorators';
+import { ParseIntPipe } from '@nestjs/common/pipes';
+import { UpdateUserDto } from '../dto/update-user.dto';
 import { Param, Put } from '@nestjs/common/decorators';
 import { ParseIntPipe } from '@nestjs/common/pipes';
 
@@ -59,7 +62,7 @@ export class UserController {
   @UseGuards(KakaoAuthGuard)
   @Get('auth/kakao')
   async kakao() {
-    return 'hello';
+    return;
   }
 
   // 카카오 로그인 콜백
@@ -101,6 +104,27 @@ export class UserController {
     }
 
     return { message: '찜목록에 추가되었습니다.' };
+  }
+
+
+  // 프로필 수정
+  @UseGuards(AuthGuard('jwt'))
+  @Patch('/edit')
+  async updatedProfile(@Req() req, @Body() updateUserDto: UpdateUserDto) {
+    const user_id = req.user;
+
+    await this.userService.updatedProfile(user_id, updateUserDto);
+
+    return { message: '프로필 수정 성공' };
+  }
+
+  // 마이 페이지
+  @UseGuards(AuthGuard('jwt'))
+  @Get('/mypage')
+  async myPage(@Req() req) {
+    const user_id = req.user;
+    
+    return this.userService.getMypageInfo(user_id);
   }
 
   // 엑세스 토큰 재발급

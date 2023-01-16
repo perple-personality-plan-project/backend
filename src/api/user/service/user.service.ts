@@ -7,6 +7,7 @@ import { User } from 'src/db/models/user.models';
 import { CreateUserDto } from '../dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { UserRepository } from '../user.repository';
+import { UpdateUserDto } from '../dto/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -55,7 +56,45 @@ export class UserService {
     return isPicked ? true : false;
   }
 
-  async findUserById(login_id: string) {
-    return this.userRepository.findUserById(login_id);
+
+  async updatedProfile(user_id: number, updateUserDto: UpdateUserDto) {
+    const { nickname } = updateUserDto;
+
+    const currentUserInfo = await this.findUserByUserId(user_id);
+
+    if (nickname !== currentUserInfo.nickname) {
+      const isDupNickname = await this.userRepository.IsDuplicatedInputData(
+        'nickname',
+        nickname,
+      );
+
+      console.log(isDupNickname);
+      if (isDupNickname) {
+        throw new ConflictException('중복되는 닉네임이 존재합니다.');
+      }
+    }
+
+    const updatedProfile = this.userRepository.updatedProfile(
+      user_id,
+      updateUserDto,
+    );
+
+    if (!updatedProfile) {
+      throw new BadRequestException('프로필 수정에 실패하였습니다.');
+    }
+
+    return updatedProfile;
+  }
+
+  async getMypageInfo(user_id: number) {
+    return this.userRepository.getMypageInfo(user_id);
+  }
+
+  async findUserByLoginId(login_id: string) {
+    return this.userRepository.findUserByLoginId(login_id);
+  }
+
+  async findUserByUserId(user_id: number) {
+    return this.userRepository.findUserByUserId(user_id);
   }
 }
