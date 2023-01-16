@@ -16,6 +16,6 @@ import { Pick } from '../../db/models/pick.models';
   ],
   providers: [UserService, AuthService, UserRepository, JwtService],
   controllers: [UserController],
-  exports: [UserRepository],
+  exports: [UserRepository, UserService],
 })
 export class UserModule {}

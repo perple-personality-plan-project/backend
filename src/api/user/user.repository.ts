@@ -1,18 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { Pick } from 'src/db/models/pick.models';
 import { User } from 'src/db/models/user.models';
-import { LocalUserDto } from './dto/create-user.dto';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()
 export class UserRepository {
   constructor(
     @InjectModel(User)
     private userModel: typeof User,
+    @InjectModel(Pick)
+    private pickModel: typeof Pick,
   ) {}
 
-  async createUser(localUser: LocalUserDto): Promise<User> {
+  async createUser(user: CreateUserDto): Promise<User> {
     try {
-      const { login_id, password, nickname, provider, mbti } = localUser;
+      const { login_id, password, nickname, provider, mbti } = user;
+
       return await this.userModel.create({
         login_id,
         password,
@@ -27,6 +31,19 @@ export class UserRepository {
 
   async findUserById(login_id: string): Promise<User> {
     return this.userModel.findOne({ raw: true, where: { login_id } });
+  }
+
+  async chkPicked(user_id, feed_id) {
+    const [_, isPicked] = await this.pickModel.findOrCreate({
+      where: { user_id, feed_id },
+      defaults: { user_id, feed_id },
+    });
+
+    if (!isPicked) {
+      await this.pickModel.destroy({ where: { user_id, feed_id } });
+    }
+
+    return isPicked;
   }
 
   /*

@@ -34,7 +34,7 @@ export class AuthService {
     return existsUser;
   }
 
-  async createAccessTokenRefreshToken(user_id: string) {
+  async createAccessTokenRefreshToken(user_id: number) {
     const payload = { user_id };
 
     const accessToken = await this.getAccessToken(payload);
