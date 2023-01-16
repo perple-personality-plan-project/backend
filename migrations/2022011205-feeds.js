@@ -12,16 +12,21 @@ module.exports = {
       },
       user_id: {
         type: Sequelize.DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
           model: 'users',
           key: 'user_id',
         },
         onDelete: 'cascade',
       },
-      group_name: {
-        type: Sequelize.DataTypes.STRING,
+      group_user_id: {
+        type: Sequelize.DataTypes.INTEGER,
         allowNull: true,
+        references: {
+          model: 'group_users',
+          key: 'group_user_id',
+        },
+        onDelete: 'cascade',
       },
       thumbnail: {
         type: Sequelize.DataTypes.TEXT,
