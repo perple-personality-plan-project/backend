@@ -9,27 +9,18 @@ export class FeedService {
   constructor(private readonly feedRepository: FeedRepository) {}
 
   async createFeed(body: FeedRequestDto, user_id: object) {
-    const createFeed = await this.feedRepository.createFeed(body, user_id);
-    if (createFeed) {
+    const feed = await this.feedRepository.createFeed(body, user_id);
+    if (feed) {
       return '피드가 생성 되었습니다.';
     }
   }
 
   async getAllFeed() {
-    const feeds = await this.feedRepository.getAllFeed();
+    return this.feedRepository.getAllFeed();
+  }
 
-    return feeds.map((feed) => {
-      return {
-        feed_id: feed.feed_id,
-        user_id: feed.user_id,
-        thumbnail: feed.thumbnail,
-        description: feed.description,
-        // mbti: feed.user.mbti,
-        // likes: feed.like.length,
-        created_at: feed.created_at,
-        updated_at: feed.updated_at,
-      };
-    });
+  async findFeedById(feed_id) {
+    return this.feedRepository.findFeedById(feed_id);
   }
 }
 // async uploadImg(cat: Cat, files: Express.Multer.File[]) {
