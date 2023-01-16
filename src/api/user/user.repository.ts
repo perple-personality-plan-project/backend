@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { QueryTypes } from 'sequelize';
-import Sequelize from 'sequelize/types/sequelize';
+import { Sequelize } from 'sequelize-typescript';
 import { Pick } from 'src/db/models/pick.models';
 import { User } from 'src/db/models/user.models';
 import { CreateUserDto } from './dto/create-user.dto';
