@@ -5,11 +5,12 @@ import { UserModule } from 'src/api/user/user.module';
 import { AuthService } from './auth.service';
 import { JwtRefreshStrategy } from './jwt/jwt-refresh.strategy';
 import { JwtStrategy } from './jwt/jwt.strategy';
+import { KakaoStrategy } from './kakao/kakao.strategy';
 import { LocalStrategy } from './local/local.strategy';
 
 @Module({
   imports: [
-    PassportModule.register({ defaultStrategy: 'jwt' }),
+    PassportModule.register({ defaultStrategy: 'jwt', session: false }),
     forwardRef(() => UserModule),
     JwtModule.register({
       secret: process.env.ACCESS_TOKEN_KEY,
@@ -26,6 +27,7 @@ import { LocalStrategy } from './local/local.strategy';
     JwtService,
     JwtStrategy,
     JwtRefreshStrategy,
+    KakaoStrategy,
   ],
   exports: [AuthService, JwtModule, PassportModule],
 })

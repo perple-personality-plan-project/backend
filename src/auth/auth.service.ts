@@ -34,7 +34,7 @@ export class AuthService {
     return existsUser;
   }
 
-  async createAccessTokenRefreshToken(user_id: string) {
+  async createAccessTokenRefreshToken(user_id: number) {
     const payload = { user_id };
 
     const accessToken = await this.getAccessToken(payload);
@@ -56,6 +56,11 @@ export class AuthService {
     });
 
     return accessToken;
+  }
+
+  async logoutUser(refreshToken: string) {
+    await this.cacheManager.del(refreshToken);
+    return true;
   }
 
   async getRefreshToken() {

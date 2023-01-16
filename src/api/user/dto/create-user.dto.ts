@@ -44,12 +44,7 @@ export class CreateUserDto {
   @MaxLength(4, { message: 'mbti는 최대 4글자 입니다.' })
   @IsString({ message: 'mbti는 문자열 형식이여야 합니다.' })
   mbti: string;
-}
 
-export class LocalUserDto {
-  login_id: string;
-  password: string;
-  nickname: string;
+  @IsString()
   provider: string;
-  mbti: string;
 }
