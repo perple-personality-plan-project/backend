@@ -43,7 +43,7 @@ export class UserController {
     @Res({ passthrough: true }) res: Response,
   ): Promise<any> {
     const user_id = req.user as number;
-
+    
     const { accessToken, refreshToken } =
       await this.authService.createAccessTokenRefreshToken(user_id);
 
