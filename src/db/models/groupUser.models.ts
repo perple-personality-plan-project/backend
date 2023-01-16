@@ -9,9 +9,11 @@ import {
   BelongsTo,
   AllowNull,
   AutoIncrement,
+  HasMany,
 } from 'sequelize-typescript';
 import { User } from './user.models';
 import { Group } from './group.models';
+import { Feed } from './feed.models';
 
 @Table({
   modelName: 'GroupUser',
@@ -26,6 +28,9 @@ export class GroupUser extends Model {
   @BelongsTo(() => Group)
   group: Group;
 
+  @HasMany(() => Feed)
+  feed: Feed[];
+
   @PrimaryKey
   @AllowNull(false)
   @AutoIncrement
@@ -34,12 +39,18 @@ export class GroupUser extends Model {
 
   @ForeignKey(() => Group)
   @AllowNull(false)
-  @Column
+  @Column({
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   group_id: number;
 
   @ForeignKey(() => User)
   @AllowNull(false)
-  @Column
+  @Column({
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   user_id: number;
 
   @AllowNull(false)

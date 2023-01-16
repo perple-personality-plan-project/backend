@@ -44,7 +44,6 @@ export class AuthService {
      * Redis에 리프레시 토큰과 사용자 아이디 insert
      * 유효시간은 리프레시 토큰의 유효시간과 동일
      */
-
     await this.cacheManager.set(refreshToken, user_id);
 
     return { accessToken, refreshToken };

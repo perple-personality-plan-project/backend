@@ -8,10 +8,24 @@ import { Hashtag } from 'src/db/models/hashtag.models';
 import { GroupUser } from 'src/db/models/groupUser.models';
 import { Map } from 'src/db/models/map.models';
 import { GroupRepository } from './group.repository';
+import { Feed } from '../../db/models/feed.models';
+import { User } from '../../db/models/user.models';
+import { Like } from '../../db/models/like.models';
+import { Comment } from '../../db/models/comment.models';
 
 @Module({
   imports: [
-    SequelizeModule.forFeature([Group, GroupUser, GroupHashtag, Hashtag, Map]),
+    SequelizeModule.forFeature([
+      Group,
+      GroupUser,
+      GroupHashtag,
+      Hashtag,
+      Map,
+      Feed,
+      User,
+      Like,
+      Comment,
+    ]),
   ],
   controllers: [GroupController],
   providers: [GroupService, GroupRepository],
