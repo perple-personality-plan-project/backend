@@ -132,7 +132,6 @@ export class UserController {
   @Get('/refresh-token')
   async re(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const { user_id }: any = req.user;
-
     const newAccessToken = await this.authService.getAccessToken({ user_id });
 
     res.setHeader('accessToken', `Bearer ${newAccessToken}`);
