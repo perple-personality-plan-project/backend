@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+
 import { QueryTypes } from 'sequelize';
 import { Sequelize } from 'sequelize-typescript';
 import { Pick } from 'src/db/models/pick.models';
@@ -15,6 +16,7 @@ export class UserRepository {
     @InjectModel(Pick)
     private pickModel: typeof Pick,
     private sequelize: Sequelize,
+
   ) {}
 
   async createUser(user: CreateUserDto): Promise<User> {

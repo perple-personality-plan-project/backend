@@ -56,6 +56,7 @@ export class UserService {
     return isPicked ? true : false;
   }
 
+
   async updatedProfile(user_id: number, updateUserDto: UpdateUserDto) {
     const { nickname } = updateUserDto;
 

@@ -19,6 +19,8 @@ import { KakaoAuthGuard } from 'src/auth/kakao/kaka-auth.guard';
 import { Param, Patch, Put } from '@nestjs/common/decorators';
 import { ParseIntPipe } from '@nestjs/common/pipes';
 import { UpdateUserDto } from '../dto/update-user.dto';
+import { Param, Put } from '@nestjs/common/decorators';
+import { ParseIntPipe } from '@nestjs/common/pipes';
 
 @Controller('user')
 @UseInterceptors(GlobalResponseInterceptor)
@@ -104,6 +106,7 @@ export class UserController {
     return { message: '찜목록에 추가되었습니다.' };
   }
 
+
   // 프로필 수정
   @UseGuards(AuthGuard('jwt'))
   @Patch('/edit')
@@ -120,9 +123,8 @@ export class UserController {
   @Get('/mypage')
   async myPage(@Req() req) {
     const user_id = req.user;
-
+    
     return this.userService.getMypageInfo(user_id);
-
   }
 
   // 엑세스 토큰 재발급
