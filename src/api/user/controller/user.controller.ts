@@ -60,7 +60,7 @@ export class UserController {
   @UseGuards(KakaoAuthGuard)
   @Get('auth/kakao')
   async kakao() {
-    return 'hello';
+    return;
   }
 
   // 카카오 로그인 콜백
@@ -122,6 +122,7 @@ export class UserController {
     const user_id = req.user;
 
     return this.userService.getMypageInfo(user_id);
+
   }
 
   // 엑세스 토큰 재발급

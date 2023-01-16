@@ -20,6 +20,7 @@ export class UserRepository {
   async createUser(user: CreateUserDto): Promise<User> {
     try {
       const { login_id, password, nickname, provider, mbti } = user;
+
       return await this.userModel.create({
         login_id,
         password,
