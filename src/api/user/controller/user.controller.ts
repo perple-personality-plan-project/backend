@@ -8,6 +8,9 @@ import {
   Req,
   Res,
   Get,
+  Param,
+  Put,
+  Patch,
 } from '@nestjs/common';
 import { GlobalResponseInterceptor } from '../../../common/interceptors/global.response.interceptor';
 import { UserService } from 'src/api/user/service/user.service';
@@ -16,10 +19,7 @@ import { AuthGuard } from '@nestjs/passport/dist/auth.guard';
 import { Request, Response } from 'express';
 import { AuthService } from 'src/auth/auth.service';
 import { KakaoAuthGuard } from 'src/auth/kakao/kaka-auth.guard';
-import { Param, Patch, Put } from '@nestjs/common/decorators';
-import { ParseIntPipe } from '@nestjs/common/pipes';
 import { UpdateUserDto } from '../dto/update-user.dto';
-import { Param, Put } from '@nestjs/common/decorators';
 import { ParseIntPipe } from '@nestjs/common/pipes';
 
 @Controller('user')
@@ -106,7 +106,6 @@ export class UserController {
     return { message: '찜목록에 추가되었습니다.' };
   }
 
-
   // 프로필 수정
   @UseGuards(AuthGuard('jwt'))
   @Patch('/edit')
@@ -123,7 +122,7 @@ export class UserController {
   @Get('/mypage')
   async myPage(@Req() req) {
     const user_id = req.user;
-    
+
     return this.userService.getMypageInfo(user_id);
   }
 

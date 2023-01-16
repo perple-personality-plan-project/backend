@@ -16,7 +16,6 @@ export class UserRepository {
     @InjectModel(Pick)
     private pickModel: typeof Pick,
     private sequelize: Sequelize,
-
   ) {}
 
   async createUser(user: CreateUserDto): Promise<User> {
