@@ -19,7 +19,7 @@ export class AuthService {
   ) {}
 
   async validateUser(login_id: string, password: string) {
-    const existsUser = await this.userRepository.findUserById(login_id);
+    const existsUser = await this.userRepository.findUserByLoginId(login_id);
 
     if (!existsUser) {
       throw new UnauthorizedException('아이디 또는 비밀번호를 확인해주세요');
