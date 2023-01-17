@@ -21,9 +21,7 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
     refresh_token: string,
     profile: any,
   ): Promise<{ accessToken: string; refreshToken: string }> {
-  
     let user = await this.userService.findUserByLoginId(profile.id);
-
 
     if (!user) {
       const newUser = await this.userService.signUp({

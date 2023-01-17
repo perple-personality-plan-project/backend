@@ -80,10 +80,9 @@ export class UserController {
   // 로그아웃
   @UseGuards(AuthGuard('jwt-refresh'))
   @Post('/logout')
-  async logout(@Req() req: Request) {
-    const { refreshToken }: any = req.user;
-    console.log(refreshToken);
-    await this.userService.logoutUser(refreshToken);
+  async logout(@Req() req) {
+    const { refreshToken } = req.user;
+    await this.authService.deleteRefreshToken(refreshToken);
 
     return { message: '로그아웃 성공' };
   }

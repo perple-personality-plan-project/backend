@@ -34,6 +34,11 @@ export class AuthService {
     return existsUser;
   }
 
+  async deleteRefreshToken(refreshToken: string) {
+    await this.cacheManager.del(refreshToken);
+    return true;
+  }
+
   async createAccessTokenRefreshToken(user_id: number) {
     const payload = { user_id };
 
