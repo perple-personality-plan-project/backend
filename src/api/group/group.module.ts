@@ -12,6 +12,7 @@ import { Feed } from '../../db/models/feed.models';
 import { User } from '../../db/models/user.models';
 import { Like } from '../../db/models/like.models';
 import { Comment } from '../../db/models/comment.models';
+import { AwsS3Service } from '../../common/utils/asw.s3.service';
 
 @Module({
   imports: [
@@ -28,7 +29,7 @@ import { Comment } from '../../db/models/comment.models';
     ]),
   ],
   controllers: [GroupController],
-  providers: [GroupService, GroupRepository],
+  providers: [GroupService, GroupRepository, AwsS3Service],
   exports: [GroupService, GroupRepository],
 })
 export class GroupModule {}

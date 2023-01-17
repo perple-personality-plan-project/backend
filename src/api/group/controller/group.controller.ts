@@ -9,6 +9,7 @@ import {
   Query,
   Put,
   ParseIntPipe,
+  UploadedFiles,
 } from '@nestjs/common';
 import { GlobalResponseInterceptor } from 'src/common/interceptors/global.response.interceptor';
 import { GlobalExceptionFilter } from '../../../common/filter/global.exception.filter';
@@ -18,6 +19,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport/dist/auth.guard';
 import { Request } from 'express';
 import { PositiveIntPipe } from '../../../common/pipes/positiveInt.pipe';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('group')
 @ApiTags('group')
@@ -47,9 +49,13 @@ export class GroupController {
     description: 'groupname or description는 필수값 입니다',
   })
   @Post()
-  async createGroup(@Body() body: GroupRequestDto) {
+  @UseInterceptors(FilesInterceptor('thumbnail', 5))
+  async createGroup(
+    @Body() body: GroupRequestDto,
+    @UploadedFiles() files: Array<Express.Multer.File>,
+  ) {
     const user_id = { user_id: 1 };
-    return this.groupService.createGroup(body, user_id);
+    return this.groupService.createGroup(body, user_id, files);
   }
 
   @Put('/:groupId')
@@ -80,8 +86,13 @@ export class GroupController {
   }
 
   @Post('/:groupId/feed/')
-  async createGroupFeed(@Body() body, @Param() req) {
+  @UseInterceptors(FilesInterceptor('thumbnail', 5))
+  async createGroupFeed(
+    @Body() body,
+    @Param() group_id,
+    @UploadedFiles() files: Array<Express.Multer.File>,
+  ) {
     const userId = { user_id: 2 };
-    return this.groupService.createGroupFeed(body, req, userId);
+    return this.groupService.createGroupFeed(body, group_id, userId, files);
   }
 }
