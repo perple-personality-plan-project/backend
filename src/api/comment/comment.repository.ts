@@ -38,4 +38,10 @@ export class CommentRepository {
   async createComment(body, user_id, req) {
     return this.commentModel.create({ ...body, ...user_id, ...req });
   }
+
+  async deleteComment(comment_id) {
+    return this.commentModel.destroy({
+      where: { comment_id },
+    });
+  }
 }
