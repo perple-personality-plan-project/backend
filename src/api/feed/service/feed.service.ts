@@ -3,7 +3,7 @@ import { User } from 'src/db/models/user.models';
 import { Like } from 'src/db/models/like.models';
 import { FeedRequestDto } from '../dto/feed.request.dto';
 import { FeedRepository } from '../feed.repository';
-
+import { map } from 'rxjs/operators';
 @Injectable()
 export class FeedService {
   constructor(private readonly feedRepository: FeedRepository) {}

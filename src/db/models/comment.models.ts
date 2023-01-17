@@ -25,8 +25,8 @@ export class Comment extends Model {
   @BelongsTo(() => Feed)
   feed: Feed;
 
-  @BelongsTo(() => Comment)
-  comment: Comment;
+  // @BelongsTo(() => Comment)
+  // comment: Comment;
 
   @PrimaryKey
   @AutoIncrement
@@ -34,10 +34,9 @@ export class Comment extends Model {
   @Column
   comment_id: number;
 
-  @ForeignKey(() => Comment)
-  @AllowNull(false)
-  @Column
-  parent_id: number;
+  // @ForeignKey(() => Comment)
+  // @Column
+  // parent_id: number;
 
   @ForeignKey(() => User)
   @AllowNull(false)
@@ -48,6 +47,9 @@ export class Comment extends Model {
   @AllowNull(false)
   @Column
   feed_id: number;
+
+  @Column
+  comment: string;
 
   @CreatedAt
   created_at: Date;
