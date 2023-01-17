@@ -11,6 +11,7 @@ import {
   Param,
   Put,
   Patch,
+  HttpStatus,
 } from '@nestjs/common';
 import { GlobalResponseInterceptor } from '../../../common/interceptors/global.response.interceptor';
 import { UserService } from 'src/api/user/service/user.service';
@@ -61,14 +62,17 @@ export class UserController {
   // 카카오 로그인
   @UseGuards(KakaoAuthGuard)
   @Get('auth/kakao')
-  async kakao() {
-    return;
+  async kakaoLogin() {
+    return HttpStatus.OK;
   }
 
   // 카카오 로그인 콜백
   @UseGuards(KakaoAuthGuard)
   @Get('/auth/kakao/callback')
-  async kakaoCallBack(@Req() req, @Res({ passthrough: true }) res: Response) {
+  async kakaoLoginCallBack(
+    @Req() req,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const { accessToken, refreshToken } = req.user;
 
     res.setHeader('accessToken', `Bearer ${accessToken}`);
