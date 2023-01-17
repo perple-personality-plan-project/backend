@@ -107,21 +107,23 @@ export class UserController {
   }
 
   // 프로필 수정
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
   @Patch('/edit')
   async updatedProfile(@Req() req, @Body() updateUserDto: UpdateUserDto) {
-    const user_id = req.user;
+    // const user_id = req.user;
+    const user_id = 1;
 
     await this.userService.updatedProfile(user_id, updateUserDto);
 
     return { message: '프로필 수정 성공' };
   }
 
-  // 마이 페이지
-  @UseGuards(AuthGuard('jwt'))
+  // // 마이 페이지
+  // @UseGuards(AuthGuard('jwt'))
   @Get('/mypage')
   async myPage(@Req() req) {
-    const user_id = req.user;
+    // const user_id = req.user;
+    const user_id = 1;
 
     return this.userService.getMypageInfo(user_id);
   }
