@@ -174,6 +174,6 @@ export class GroupRepository {
   }
 
   async createGroupFeed(feedData) {
-    this.feed.create({ ...feedData });
+    return this.feed.create({ ...feedData });
   }
 }

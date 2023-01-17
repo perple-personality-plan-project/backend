@@ -16,9 +16,6 @@ export class GroupRequestDto {
     description: 'thumbnail',
     required: true,
   })
-  @IsString({ message: 'thumbnail은 문자열 입니다.' })
-  thumbnail: string;
-
   @ApiProperty({
     example: '인싸들의 핫플레이스 뿌셔',
     description: 'description',

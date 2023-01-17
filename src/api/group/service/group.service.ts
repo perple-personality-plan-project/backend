@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { GroupParamDto, GroupRequestDto } from '../dto/group.request.dto';
 import { GroupRepository } from '../group.repository';
+import { AwsS3Service } from '../../../common/utils/asw.s3.service';
 
 @Injectable()
 export class GroupService {
@@ -8,10 +9,18 @@ export class GroupService {
     date: 'created_at',
     rank: 'group_user_count',
   };
-  constructor(private readonly groupRepository: GroupRepository) {}
+  constructor(
+    private readonly groupRepository: GroupRepository,
+    private readonly awsS3Service: AwsS3Service,
+  ) {}
 
-  async createGroup(body: GroupRequestDto, user_id: object) {
-    const { group_name, thumbnail, description, hashtag } = body;
+  async createGroup(
+    body: GroupRequestDto,
+    user_id: object,
+    files: Array<Express.Multer.File>,
+  ) {
+    const { group_name, description, hashtag } = body;
+
     const result = await this.groupRepository.findGroup({
       group_name: body['group_name'],
     });
@@ -19,6 +28,19 @@ export class GroupService {
     if (result) {
       throw new BadRequestException('이미 생성된 그룹명 입니다.');
     }
+
+    const imageList = [];
+    if (files) {
+      const uploadImage = await this.awsS3Service.uploadFileToS3(files);
+      uploadImage.map((data) => {
+        const key = data['key'].split('/');
+        imageList.push(key[1]);
+      });
+    } else {
+      //디폴트 이미지로 바꿔 줘야함!
+      imageList.push('');
+    }
+    body['thumbnail'] = imageList.join(',');
 
     const createGroup = await this.groupRepository.createGroup(body, user_id);
 
@@ -103,7 +125,9 @@ export class GroupService {
     return this.groupRepository.findGroupUser(groupInfo);
   }
 
-  async createGroupFeed(body, req, userId) {
+  async createGroupFeed(body, req, userId, files) {
+    const feedData = body;
+
     const groupInfo = {
       group_id: req['groupId'],
       ...userId,
@@ -113,8 +137,20 @@ export class GroupService {
       throw new BadRequestException('구독 되지 않은 유저 입니다.');
     }
 
-    const feedData = body;
+    const imageList = [];
+    if (files) {
+      const uploadImage = await this.awsS3Service.uploadFileToS3(files);
+      uploadImage.map((data) => {
+        const key = data['key'].split('/');
+        imageList.push(key[1]);
+      });
+    } else {
+      //디폴트 이미지로 바꿔 줘야함!
+      imageList.push('');
+    }
+    feedData['thumbnail'] = imageList.join(',');
+
     feedData.group_user_id = groupUser.group_user_id;
-    this.groupRepository.createGroupFeed(feedData);
+    return this.groupRepository.createGroupFeed(feedData);
   }
 }
