@@ -15,4 +15,8 @@ export class CommentService {
 
     return this.commentRepository.findComment(newComment.comment_id);
   }
+
+  async deleteComment(comment_id) {
+    return this.commentRepository.deleteComment(comment_id);
+  }
 }

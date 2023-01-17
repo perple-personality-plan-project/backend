@@ -28,8 +28,14 @@ export class CommentController {
     @Body()
     body: CommentRequestDto,
   ) {
-    const user_id = { user_id: 3 };
+    const user_id = { user_id: 1 };
 
     return this.commentService.createComment(body, req, user_id);
+  }
+
+  @ApiOperation({ summary: '댓글 삭제' })
+  @Delete('/:feed_id/:comment_id')
+  deleteComment(@Param('feed_id') feed_id, @Param('comment_id') comment_id) {
+    return this.commentService.deleteComment(comment_id);
   }
 }
