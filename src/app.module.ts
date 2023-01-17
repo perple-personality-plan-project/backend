@@ -5,6 +5,7 @@ import { GroupModule } from './api/group/group.module';
 import { ConfigModule } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { AuthModule } from './auth/auth.module';
+import { CommentModule } from './api/comment/comment.module';
 import * as redisStore from 'cache-manager-ioredis';
 
 @Module({
@@ -32,6 +33,7 @@ import * as redisStore from 'cache-manager-ioredis';
       isGlobal: true,
       ttl: +process.env.REFRESH_TOKEN_EXP,
     }),
+    CommentModule,
   ],
   controllers: [],
   providers: [],

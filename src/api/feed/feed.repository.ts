@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { User } from 'src/db/models/user.models';
 import { Like } from 'src/db/models/like.models';
 import { Sequelize } from 'sequelize-typescript';
+import { Comment } from '../../db/models/comment.models';
 @Injectable()
 export class FeedRepository {
   constructor(
@@ -13,6 +14,8 @@ export class FeedRepository {
     private userModel: typeof User,
     @InjectModel(Like)
     private likeModel: typeof Like,
+    @InjectModel(Comment)
+    private commentModel: typeof Comment,
   ) {}
 
   async createFeed(body, user_id) {
@@ -57,21 +60,63 @@ export class FeedRepository {
 
   async findFeedById(feed_id) {
     return this.feedModel.findOne({
-      raw: true,
       where: { feed_id },
-      include: {
-        model: Like,
-        as: 'like',
-        attributes: [
-          [Sequelize.fn('COUNT', Sequelize.col('like.like_id')), 'like_count'],
-        ],
-      },
+      attributes: [
+        'thumbnail',
+        'description',
+        [Sequelize.col('user.user_id'), 'user_id'],
+        [Sequelize.col('user.mbti'), 'mbti'],
+        'created_at',
+        'updated_at',
+      ],
+      include: [
+        {
+          model: User,
+          required: false,
+          as: 'user',
+          attributes: [],
+        },
+        {
+          model: Comment,
+          required: false,
+          as: 'comment',
+          include: [{ model: User, as: 'user', attributes: ['nickname'] }],
+          // attributes: [],
+        },
+        // {
+        //   model: Like,
+        //   as: 'like',
+        //   attributes: [
+        //     [
+        //       Sequelize.fn('COUNT', Sequelize.col('like.like_id')),
+        //       'like_count',
+        //     ],
+        //   ],
+        // },
+      ],
+      // group: ['feed_id'],
     });
   }
 
   async deleteFeed(feed_id) {
     return this.feedModel.destroy({
       where: { feed_id },
+    });
+  }
+
+  async findComment(feed_id) {
+    return this.commentModel.findAll({
+      raw: true,
+      where: { feed_id },
+      attributes: [[Sequelize.col('comment.nickname'), 'nickname']],
+      include: [
+        {
+          model: User,
+          as: 'user',
+          attributes: [],
+        },
+      ],
+      order: [['created_at', 'DESC']],
     });
   }
 }
