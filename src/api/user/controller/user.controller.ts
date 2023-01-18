@@ -134,14 +134,14 @@ export class UserController {
   // 엑세스 토큰 재발급
   @UseGuards(AuthGuard('jwt-refresh'))
   @Get('/refresh-token')
-  async reissue(@Req() req, @Res({ passthrough: true }) res: Response) {
+  async reIssue(@Req() req, @Res({ passthrough: true }) res: Response) {
     const { user_id }: any = req.user;
     const newAccessToken = await this.authService.createAccessToken({
       user_id,
     });
 
-    res.setHeader('accessToken', `Bearer ${newAccessToken}`);
-
-    return { message: '토큰 재발급 성공' };
+    return {
+      accessToken: `Bearer ${newAccessToken}`,
+    };
   }
 }
