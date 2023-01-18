@@ -21,9 +21,7 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
     refresh_token: string,
     profile: any,
   ): Promise<{ accessToken: string; refreshToken: string }> {
-  
     let user = await this.userService.findUserByLoginId(profile.id);
-
 
     if (!user) {
       const newUser = await this.userService.signUp({
@@ -38,9 +36,6 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
       user = newUser;
     }
 
-    const { accessToken, refreshToken } =
-      await this.authService.createAccessTokenRefreshToken(user.user_id);
-
-    return { accessToken, refreshToken };
+    return await this.authService.createAccessTokenRefreshToken(user.user_id);
   }
 }

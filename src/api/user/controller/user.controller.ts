@@ -11,6 +11,7 @@ import {
   Param,
   Put,
   Patch,
+  HttpStatus,
 } from '@nestjs/common';
 import { GlobalResponseInterceptor } from '../../../common/interceptors/global.response.interceptor';
 import { UserService } from 'src/api/user/service/user.service';
@@ -46,29 +47,32 @@ export class UserController {
   async login(
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
-  ): Promise<any> {
+  ): Promise<{ accessToken: string; refreshToken: string }> {
     const user_id = req.user as number;
 
     const { accessToken, refreshToken } =
       await this.authService.createAccessTokenRefreshToken(user_id);
 
-    res.setHeader('accessToken', `Bearer ${accessToken}`);
-    res.setHeader('refreshToken', `Bearer ${refreshToken}`);
-
-    return { message: '로그인 성공' };
+    return {
+      accessToken: `Bearer ${accessToken}`,
+      refreshToken: `Bearer ${refreshToken}`,
+    };
   }
 
   // 카카오 로그인
   @UseGuards(KakaoAuthGuard)
   @Get('auth/kakao')
-  async kakao() {
-    return;
+  async kakaoLogin() {
+    return HttpStatus.OK;
   }
 
   // 카카오 로그인 콜백
   @UseGuards(KakaoAuthGuard)
   @Get('/auth/kakao/callback')
-  async kakaoCallBack(@Req() req, @Res({ passthrough: true }) res: Response) {
+  async kakaoLoginCallBack(
+    @Req() req,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const { accessToken, refreshToken } = req.user;
 
     res.setHeader('accessToken', `Bearer ${accessToken}`);
@@ -80,10 +84,9 @@ export class UserController {
   // 로그아웃
   @UseGuards(AuthGuard('jwt-refresh'))
   @Post('/logout')
-  async logout(@Req() req: Request) {
-    const { refreshToken }: any = req.user;
-    console.log(refreshToken);
-    await this.userService.logoutUser(refreshToken);
+  async logout(@Req() req) {
+    const { refreshToken } = req.user;
+    await this.authService.deleteRefreshToken(refreshToken);
 
     return { message: '로그아웃 성공' };
   }
@@ -131,9 +134,11 @@ export class UserController {
   // 엑세스 토큰 재발급
   @UseGuards(AuthGuard('jwt-refresh'))
   @Get('/refresh-token')
-  async re(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+  async reissue(@Req() req, @Res({ passthrough: true }) res: Response) {
     const { user_id }: any = req.user;
-    const newAccessToken = await this.authService.getAccessToken({ user_id });
+    const newAccessToken = await this.authService.createAccessToken({
+      user_id,
+    });
 
     res.setHeader('accessToken', `Bearer ${newAccessToken}`);
 

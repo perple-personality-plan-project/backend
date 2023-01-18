@@ -57,11 +57,6 @@ export class UserService {
     return createUser;
   }
 
-  // 로그아웃
-  async logoutUser(refreshToken: string) {
-    await this.cacheManager.del(refreshToken);
-    return true;
-  }
   async chkPicked(user_id: number, feed_id: number) {
     const isPicked = await this.userRepository.chkPicked(user_id, feed_id);
     return isPicked ? true : false;

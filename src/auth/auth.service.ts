@@ -34,22 +34,23 @@ export class AuthService {
     return existsUser;
   }
 
+  async deleteRefreshToken(refreshToken: string) {
+    await this.cacheManager.del(refreshToken);
+    return true;
+  }
+
   async createAccessTokenRefreshToken(user_id: number) {
     const payload = { user_id };
 
-    const accessToken = await this.getAccessToken(payload);
-    const refreshToken = await this.getRefreshToken();
+    const accessToken = await this.createAccessToken(payload);
+    const refreshToken = await this.createRefreshToken();
 
-    /*
-     * Redis에 리프레시 토큰과 사용자 아이디 insert
-     * 유효시간은 리프레시 토큰의 유효시간과 동일
-     */
     await this.cacheManager.set(refreshToken, user_id);
 
     return { accessToken, refreshToken };
   }
 
-  async getAccessToken(payload: object) {
+  async createAccessToken(payload: object) {
     const accessToken = this.jwtService.sign(payload, {
       secret: process.env.ACCESS_TOKEN_KEY,
       expiresIn: `${process.env.ACCESS_TOKEN_EXP}s`,
@@ -58,12 +59,7 @@ export class AuthService {
     return accessToken;
   }
 
-  async logoutUser(refreshToken: string) {
-    await this.cacheManager.del(refreshToken);
-    return true;
-  }
-
-  async getRefreshToken() {
+  async createRefreshToken() {
     const refreshToken = this.jwtService.sign(
       {},
       {
