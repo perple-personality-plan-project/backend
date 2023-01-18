@@ -156,21 +156,64 @@ export class GroupRepository {
   }
 
   async getGroupFeedDetail(groupId, feedId) {
-    return this.feed.findOne({
+    const feed = await this.feed.findOne({
       include: [
         {
           model: GroupUser,
           attributes: [],
-          include: [{ model: Group, attributes: [] }],
+          include: [{ model: User, attributes: [] }],
         },
-        { model: Comment },
-        { model: Like },
+        { model: Like, attributes: [] },
       ],
       where: {
-        '$groupUser.group.group_id$': groupId,
         feed_id: feedId,
       },
+      attributes: [
+        'feed_id',
+        'group_user_id',
+        'thumbnail',
+        'description',
+        'location',
+        [Sequelize.col('groupUser.user.nickname'), 'nickname'],
+        [Sequelize.fn('COUNT', Sequelize.col('like.like_id')), 'likeCount'],
+        'created_at',
+        'updated_at',
+      ],
+      raw: true,
     });
+
+    const commentResult = await this.comment.findAll({
+      where: { feed_id: feedId },
+      include: [
+        {
+          model: User,
+          required: false,
+          include: [
+            {
+              model: GroupUser,
+              attributes: [],
+              include: [{ model: Group, attributes: [] }],
+              where: { group_id: groupId },
+            },
+          ],
+          attributes: [],
+        },
+      ],
+      attributes: [
+        'comment_id',
+        'user_id',
+        'feed_id',
+        'comment',
+        [Sequelize.col('user.nickname'), 'nickname'],
+        [Sequelize.col('user.groupUser.group_user_id'), 'group_user_id'],
+        'created_at',
+        'updated_at',
+      ],
+      raw: true,
+    });
+
+    feed.comment = commentResult;
+    return feed;
   }
 
   async createGroupFeed(feedData) {
