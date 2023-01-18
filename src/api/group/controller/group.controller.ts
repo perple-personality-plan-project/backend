@@ -30,7 +30,7 @@ export class GroupController {
 
   @ApiOperation({ summary: '전체 그룹 리스트 가져오기' })
   @Get()
-  getGroup(@Query() req: GroupParamDto) {
+  async getGroup(@Query() req: GroupParamDto) {
     return this.groupService.getGroup(req);
   }
 

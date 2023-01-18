@@ -19,20 +19,12 @@ module.exports = {
         },
         onDelete: 'cascade',
       },
-      marker: {
+      place_group: {
         allowNull: false,
         type: Sequelize.DataTypes.TEXT,
       },
-      thumbnail: {
-        type: Sequelize.DataTypes.TEXT,
-        allowNull: false,
-      },
-      description: {
-        type: Sequelize.DataTypes.TEXT,
-        allowNull: false,
-      },
-      location_group: {
-        type: Sequelize.DataTypes.TEXT,
+      place_group_name: {
+        type: Sequelize.DataTypes.STRING,
         allowNull: false,
       },
       created_at: {
