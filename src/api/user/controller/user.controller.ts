@@ -47,16 +47,13 @@ export class UserController {
   async login(
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
-  ): Promise<{ message: string }> {
+  ): Promise<{ accessToken: string; refreshToken: string }> {
     const user_id = req.user as number;
 
     const { accessToken, refreshToken } =
       await this.authService.createAccessTokenRefreshToken(user_id);
 
-    res.setHeader('accessToken', `Bearer ${accessToken}`);
-    res.setHeader('refreshToken', `Bearer ${refreshToken}`);
-
-    return { message: '로그인 성공' };
+    return { accessToken, refreshToken };
   }
 
   // 카카오 로그인
