@@ -46,7 +46,6 @@ export class UserController {
   @Post('/login')
   async login(
     @Req() req: Request,
-    @Res({ passthrough: true }) res: Response,
   ): Promise<{ accessToken: string; refreshToken: string }> {
     const user_id = req.user as number;
 
@@ -86,6 +85,7 @@ export class UserController {
   @Post('/logout')
   async logout(@Req() req) {
     const { refreshToken } = req.user;
+
     await this.authService.deleteRefreshToken(refreshToken);
 
     return { message: '로그아웃 성공' };

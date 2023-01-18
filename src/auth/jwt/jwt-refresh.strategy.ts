@@ -11,16 +11,7 @@ export class JwtRefreshStrategy extends PassportStrategy(
 ) {
   constructor(private authService: AuthService) {
     super({
-      jwtFromRequest: ExtractJwt.fromExtractors([
-        (request: any) => {
-          // console.log(request);
-          const { authorization } = request.headers;
-          console.log(authorization);
-          const refreshToken = authorization.split(' ')[1];
-          console.log(refreshToken);
-          return refreshToken;
-        },
-      ]),
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
       secretOrKey: process.env.REFRESH_TOKEN_KEY,
       passReqToCallback: true,
@@ -28,12 +19,13 @@ export class JwtRefreshStrategy extends PassportStrategy(
   }
 
   async validate(request: Request) {
-    // console.log(request);
     const { authorization } = request.headers;
-    console.log(authorization);
     const refreshToken = authorization.split(' ')[1];
-    console.log(refreshToken);
 
-    return this.authService.getUserRefreshTokenToMatches(refreshToken);
+    const user_id = await this.authService.getUserRefreshTokenToMatches(
+      refreshToken,
+    );
+
+    return { user_id, refreshToken };
   }
 }

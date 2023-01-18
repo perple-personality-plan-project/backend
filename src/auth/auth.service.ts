@@ -35,7 +35,7 @@ export class AuthService {
   }
 
   async deleteRefreshToken(refreshToken: string) {
-    await this.cacheManager.del(refreshToken);
+    const deletedToken = await this.cacheManager.del(refreshToken);
     return true;
   }
 
