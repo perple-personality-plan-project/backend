@@ -147,6 +147,13 @@ export class UserController {
     };
   }
 
+  // @UseGuards(AuthGuard('jwt'))
+  @Get('my-group-list')
+  async getMyGroupList() {
+    const user_id = { user_id: 2 };
+    return await this.userService.getMyGroupList(user_id);
+  }
+  
   // 유저 피드 조회
   @ApiOperation({ summary: '유저 피드 조회' })
   @ApiResponse({

@@ -219,4 +219,71 @@ export class GroupRepository {
   async createGroupFeed(feedData) {
     return this.feed.create({ ...feedData });
   }
+
+  async findMyGroupList(user_id) {
+    return this.groupModel.findAll({
+      include: [
+        {
+          model: GroupUser,
+          as: 'groupUser',
+          where: { ...user_id },
+          attributes: [],
+          include: [
+            {
+              model: Feed,
+              required: false,
+              attributes: [],
+            },
+          ],
+        },
+        {
+          model: GroupHashtag,
+          as: 'groupHashTag',
+          required: false,
+          attributes: [],
+          include: [
+            {
+              model: Hashtag,
+              required: false,
+              attributes: ['title'],
+            },
+          ],
+        },
+      ],
+      attributes: [
+        'group_id',
+        'group_name',
+        'thumbnail',
+        'description',
+        [
+          Sequelize.fn(
+            'COUNT',
+            Sequelize.fn('DISTINCT', Sequelize.col('groupUser.group_user_id')),
+          ),
+          'group_user_count',
+        ],
+        [
+          Sequelize.fn(
+            'GROUP_CONCAT',
+            Sequelize.fn(
+              'DISTINCT',
+              Sequelize.col('groupHashTag.hashtag.title'),
+            ),
+          ),
+          'hashtags',
+        ],
+        [
+          Sequelize.fn(
+            'COUNT',
+            Sequelize.fn('DISTINCT', Sequelize.col('groupUser.feed.feed_id')),
+          ),
+          'feedCount',
+        ],
+        'created_at',
+        'updated_at',
+      ],
+      group: ['group_id'],
+      raw: false,
+    });
+  }
 }
