@@ -79,7 +79,6 @@ export class UserService {
         nickname,
       );
 
-      console.log(isDupNickname);
       if (isDupNickname) {
         throw new ConflictException('중복되는 닉네임이 존재합니다.');
       }
@@ -111,5 +110,9 @@ export class UserService {
 
   async getMyGroupList(user_id) {
     return this.groupRepository.findMyGroupList(user_id);
+  }
+  
+  async getUserFeed(user_id) {
+    return this.userRepository.getUserFeed(user_id);
   }
 }

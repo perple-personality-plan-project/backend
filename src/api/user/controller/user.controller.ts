@@ -22,6 +22,7 @@ import { AuthService } from 'src/auth/auth.service';
 import { KakaoAuthGuard } from 'src/auth/kakao/kaka-auth.guard';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { ParseIntPipe } from '@nestjs/common/pipes';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('user')
 @UseInterceptors(GlobalResponseInterceptor)
@@ -92,10 +93,11 @@ export class UserController {
   }
 
   // 찜하기
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
   @Put('/feeds/:feedId/pick')
   async pickedFeed(@Req() req, @Param('feedId', ParseIntPipe) feed_id: number) {
-    const user_id = req.user as number;
+    // const user_id = req.user as number;
+    const user_id = 1;
 
     // 합쳐지면 feed service 확인 후 존재하는 게시물인지
     // 확인하는 로직 추가
@@ -150,5 +152,20 @@ export class UserController {
   async getMyGroupList() {
     const user_id = { user_id: 2 };
     return await this.userService.getMyGroupList(user_id);
+  }
+  
+  // 유저 피드 조회
+  @ApiOperation({ summary: '유저 피드 조회' })
+  @ApiResponse({
+    status: 200,
+    description: '성공!',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Server Error...',
+  })
+  @Get('/:user_id')
+  getUserFeed(@Param('user_id') user_id) {
+    return this.userService.getUserFeed(user_id);
   }
 }

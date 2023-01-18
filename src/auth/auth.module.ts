@@ -10,7 +10,7 @@ import { LocalStrategy } from './local/local.strategy';
 
 @Module({
   imports: [
-    PassportModule.register({ defaultStrategy: 'jwt', session: false }),
+    PassportModule.register({ session: false }),
     forwardRef(() => UserModule),
     JwtModule.register({
       secret: process.env.ACCESS_TOKEN_KEY,

@@ -118,6 +118,43 @@ export class FeedRepository {
     });
   }
 
+  async getUserFeed(user_id) {
+    const feeds = await this.feedModel.findAll({
+      raw: true,
+      where: { ...user_id },
+      attributes: [
+        'feed_id',
+        'thumbnail',
+        'description',
+        [Sequelize.col('user.user_id'), 'user_id'],
+        [Sequelize.col('user.mbti'), 'mbti'],
+        'created_at',
+        'updated_at',
+      ],
+      include: [
+        {
+          model: User,
+          as: 'user',
+          attributes: [],
+        },
+        {
+          model: Like,
+          as: 'like',
+          attributes: [
+            [
+              Sequelize.fn('COUNT', Sequelize.col('like.like_id')),
+              'like_count',
+            ],
+          ],
+        },
+      ],
+      group: ['feed_id'],
+      order: [['created_at', 'DESC']],
+    });
+    console.log(feeds);
+    return feeds;
+  }
+
   // async findComment(feed_id) {
   //   return this.commentModel.findAll({
   //     raw: true,

@@ -33,7 +33,7 @@ export class FeedService {
       feed_id,
       user_id,
     );
-    console.log(isFeedLike);
+
     if (!isFeedLike) {
       await this.feedRepository.createFeedLike(feed_id, user_id);
       return false;
