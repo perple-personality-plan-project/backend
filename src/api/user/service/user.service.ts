@@ -77,7 +77,6 @@ export class UserService {
         nickname,
       );
 
-      console.log(isDupNickname);
       if (isDupNickname) {
         throw new ConflictException('중복되는 닉네임이 존재합니다.');
       }
