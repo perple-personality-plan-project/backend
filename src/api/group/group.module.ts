@@ -13,6 +13,7 @@ import { User } from '../../db/models/user.models';
 import { Like } from '../../db/models/like.models';
 import { Comment } from '../../db/models/comment.models';
 import { AwsS3Service } from '../../common/utils/asw.s3.service';
+import { CommentRepository } from '../comment/comment.repository';
 
 @Module({
   imports: [

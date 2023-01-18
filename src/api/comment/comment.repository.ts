@@ -21,6 +21,9 @@ export class CommentRepository {
       raw: true,
       where: { comment_id },
       attributes: [
+        'comment_id',
+        'user_id',
+        'feed_id',
         [Sequelize.col('user.nickname'), 'nickanme'],
         'comment',
         'updated_at',

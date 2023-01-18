@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { AuthModule } from './auth/auth.module';
 import { CommentModule } from './api/comment/comment.module';
+import { GroupCommentModule } from './api/group.comment/group.comment.module';
 import * as redisStore from 'cache-manager-ioredis';
 
 @Module({
@@ -15,6 +16,7 @@ import * as redisStore from 'cache-manager-ioredis';
     AuthModule,
     FeedModule,
     GroupModule,
+    GroupCommentModule,
     SequelizeModule.forRoot({
       dialect: 'mysql',
       host: process.env.DATABASE_HOST,
@@ -34,6 +36,7 @@ import * as redisStore from 'cache-manager-ioredis';
       ttl: +process.env.REFRESH_TOKEN_EXP,
     }),
     CommentModule,
+    GroupCommentModule,
   ],
   controllers: [],
   providers: [],
