@@ -7,6 +7,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { AuthModule } from './auth/auth.module';
 import { CommentModule } from './api/comment/comment.module';
 import { GroupCommentModule } from './api/group.comment/group.comment.module';
+import { MapModule } from './api/map/map.module';
 import * as redisStore from 'cache-manager-ioredis';
 
 @Module({
@@ -37,6 +38,7 @@ import * as redisStore from 'cache-manager-ioredis';
     }),
     CommentModule,
     GroupCommentModule,
+    MapModule,
   ],
   controllers: [],
   providers: [],

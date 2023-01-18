@@ -37,23 +37,15 @@ export class Map extends Model {
 
   @AllowNull(false)
   @Column
-  thumbnail: string;
+  place_group: string;
 
   @AllowNull(false)
   @Column
-  description: string;
-
-  @AllowNull(false)
-  @Column
-  marker: string;
-
-  @AllowNull(false)
-  @Column
-  location_group: string;
+  place_group_name: string;
 
   @CreatedAt
-  createdAt: Date;
+  created_at: Date;
 
   @UpdatedAt
-  updatedAt: Date;
+  updated_at: Date;
 }
