@@ -92,10 +92,11 @@ export class UserController {
   }
 
   // 찜하기
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
   @Put('/feeds/:feedId/pick')
   async pickedFeed(@Req() req, @Param('feedId', ParseIntPipe) feed_id: number) {
-    const user_id = req.user as number;
+    // const user_id = req.user as number;
+    const user_id = 1;
 
     // 합쳐지면 feed service 확인 후 존재하는 게시물인지
     // 확인하는 로직 추가
