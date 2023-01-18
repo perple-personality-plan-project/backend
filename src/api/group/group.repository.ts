@@ -220,6 +220,24 @@ export class GroupRepository {
     return this.feed.create({ ...feedData });
   }
 
+  async findFeedLike(userId, feed_id) {
+    return this.like.findOne({
+      where: {
+        ...userId,
+        feed_id,
+      },
+      raw: true,
+    });
+  }
+
+  async createGroupFeedLike(userId, feed_id) {
+    return this.like.create({ ...userId, feed_id });
+  }
+
+  async deleteGroupFeedLike(like_id) {
+    return this.like.destroy({ where: { like_id } });
+  }
+
   async findMyGroupList(user_id) {
     return this.groupModel.findAll({
       include: [
