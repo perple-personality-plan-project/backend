@@ -53,7 +53,10 @@ export class UserController {
     const { accessToken, refreshToken } =
       await this.authService.createAccessTokenRefreshToken(user_id);
 
-    return { accessToken, refreshToken };
+    return {
+      accessToken: `Bearer ${accessToken}`,
+      refreshToken: `Bearer ${refreshToken}`,
+    };
   }
 
   // 카카오 로그인
