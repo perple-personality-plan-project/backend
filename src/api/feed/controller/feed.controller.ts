@@ -7,6 +7,7 @@ import {
   UseInterceptors,
   Param,
   Delete,
+  Put,
   Req,
 } from '@nestjs/common';
 import { GlobalResponseInterceptor } from 'src/common/interceptors/global.response.interceptor';
@@ -84,6 +85,26 @@ export class FeedController {
   @Delete('/:feed_id')
   deleteFeed(@Param('feed_id') feed_id) {
     return this.feedService.deleteFeed(feed_id);
+  }
+
+  @ApiOperation({ summary: '피드 좋아요' })
+  @ApiResponse({
+    status: 200,
+    description: '성공!',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Server Error...',
+  })
+  @Put('/:feed_id/like')
+  async createFeedLike(@Param('feed_id') feed_id) {
+    const user_id = { user_id: 1 };
+    const isFeedLike = await this.feedService.checkFeedLike(feed_id, user_id);
+    console.log(isFeedLike);
+    if (isFeedLike) {
+      return '좋아요를 취소했습니다.';
+    }
+    return '좋아요 했습니다.';
   }
 }
 // @ApiOperation({ summary: '고양이 이미지 업로드' })
