@@ -8,6 +8,8 @@ import {
   Param,
   Delete,
   Put,
+  Query,
+  UploadedFiles,
   Req,
 } from '@nestjs/common';
 import { GlobalResponseInterceptor } from 'src/common/interceptors/global.response.interceptor';
@@ -16,6 +18,7 @@ import { FeedRequestDto } from '../dto/feed.request.dto';
 import { FeedService } from '../service/feed.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { request } from 'http';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('feed')
 @ApiTags('feed')
@@ -39,10 +42,14 @@ export class FeedController {
     description: 'description는 필수값 입니다',
   })
   @Post()
-  async createFeed(@Body() body: FeedRequestDto) {
+  @UseInterceptors(FilesInterceptor('thumbnail', 5))
+  async createFeed(
+    @Body() body: FeedRequestDto,
+    @UploadedFiles() files: Array<Express.Multer.File>,
+  ) {
     const user_id = { user_id: 1 };
 
-    return this.feedService.createFeed(body, user_id);
+    return this.feedService.createFeed(body, user_id, files);
   }
 
   @ApiOperation({ summary: '전체 피드 조회' })

@@ -4,12 +4,34 @@ import { Like } from 'src/db/models/like.models';
 import { FeedRequestDto } from '../dto/feed.request.dto';
 import { FeedRepository } from '../feed.repository';
 import { map } from 'rxjs/operators';
+import { AwsS3Service } from '../../../common/utils/asw.s3.service';
 @Injectable()
 export class FeedService {
-  constructor(private readonly feedRepository: FeedRepository) {}
+  constructor(
+    private readonly feedRepository: FeedRepository,
+    private readonly awsS3Service: AwsS3Service,
+  ) {}
 
-  async createFeed(body: FeedRequestDto, user_id: object) {
+  async createFeed(
+    body: FeedRequestDto,
+    user_id: object,
+    files: Array<Express.Multer.File>,
+  ) {
+    const imageList = [];
+    if (files) {
+      const uploadImage = await this.awsS3Service.uploadFileToS3(files);
+      uploadImage.map((data) => {
+        const key = data['key'].split('/');
+        imageList.push(key[1]);
+      });
+    } else {
+      //디폴트 이미지로 바꿔 줘야함!
+      imageList.push('');
+    }
+    body['thumbnail'] = imageList.join(',');
+
     const feed = await this.feedRepository.createFeed(body, user_id);
+
     if (feed) {
       return '피드가 생성 되었습니다.';
     }
@@ -28,7 +50,6 @@ export class FeedService {
   }
 
   async checkFeedLike(feed_id, user_id) {
-    console.log('log');
     const isFeedLike = await this.feedRepository.checkFeedLike(
       feed_id,
       user_id,
