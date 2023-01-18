@@ -5,6 +5,7 @@ import { User } from 'src/db/models/user.models';
 import { Like } from 'src/db/models/like.models';
 import { Sequelize } from 'sequelize-typescript';
 import { Comment } from '../../db/models/comment.models';
+import { Op } from 'sequelize';
 @Injectable()
 export class FeedRepository {
   constructor(
@@ -59,43 +60,56 @@ export class FeedRepository {
   }
 
   async findFeedById(feed_id) {
-    return this.feedModel.findOne({
-      where: { feed_id },
-      attributes: [
-        'thumbnail',
-        'description',
-        [Sequelize.col('user.user_id'), 'user_id'],
-        [Sequelize.col('user.mbti'), 'mbti'],
-        'created_at',
-        'updated_at',
-      ],
+    const feed = await this.feedModel.findOne({
       include: [
         {
           model: User,
-          required: false,
           as: 'user',
           attributes: [],
         },
-        {
-          model: Comment,
-          required: false,
-          as: 'comment',
-          include: [{ model: User, as: 'user', attributes: ['nickname'] }],
-          // attributes: [],
-        },
-        // {
-        //   model: Like,
-        //   as: 'like',
-        //   attributes: [
-        //     [
-        //       Sequelize.fn('COUNT', Sequelize.col('like.like_id')),
-        //       'like_count',
-        //     ],
-        //   ],
-        // },
+        { model: Like, as: 'like', attributes: [] },
       ],
-      // group: ['feed_id'],
+      where: {
+        feed_id,
+      },
+      attributes: [
+        'feed_id',
+        [Sequelize.col('user.user_id'), 'user_id'],
+        'thumbnail',
+        'description',
+        'location',
+        [Sequelize.col('user.nickname'), 'nickname'],
+        [Sequelize.fn('COUNT', Sequelize.col('like.like_id')), 'likeCount'],
+        'created_at',
+        'updated_at',
+      ],
+      raw: true,
     });
+
+    const commentResult = await this.commentModel.findAll({
+      where: { feed_id },
+      include: [
+        {
+          model: User,
+          as: 'user',
+          required: false,
+          attributes: [],
+        },
+      ],
+      attributes: [
+        'comment_id',
+        [Sequelize.col('user.user_id'), 'user_id'],
+        'feed_id',
+        'comment',
+        [Sequelize.col('user.nickname'), 'nickname'],
+        'created_at',
+        'updated_at',
+      ],
+      raw: true,
+    });
+
+    feed.comment = commentResult;
+    return feed;
   }
 
   async deleteFeed(feed_id) {
@@ -104,19 +118,45 @@ export class FeedRepository {
     });
   }
 
-  async findComment(feed_id) {
-    return this.commentModel.findAll({
-      raw: true,
-      where: { feed_id },
-      attributes: [[Sequelize.col('comment.nickname'), 'nickname']],
-      include: [
-        {
-          model: User,
-          as: 'user',
-          attributes: [],
-        },
-      ],
-      order: [['created_at', 'DESC']],
+  // async findComment(feed_id) {
+  //   return this.commentModel.findAll({
+  //     raw: true,
+  //     where: { feed_id },
+  //     attributes: [[Sequelize.col('comment.nickname'), 'nickname']],
+  //     include: [
+  //       {
+  //         model: User,
+  //         as: 'user',
+  //         attributes: [],
+  //       },
+  //     ],
+  //     order: [['created_at', 'DESC']],
+  //   });
+  // }
+
+  async checkFeedLike(feed_id, user_id) {
+    return this.likeModel.findOne({
+      where: {
+        [Op.and]: [{ feed_id }, { ...user_id }],
+      },
+    });
+  }
+
+  async createFeedLike(feed_id, user_id) {
+    console.log('log3');
+    const like = await this.likeModel.create({
+      feed_id,
+      ...user_id,
+    });
+    console.log('log4');
+    return like;
+  }
+
+  async deleteFeedLike(feed_id, user_id) {
+    return this.likeModel.destroy({
+      where: {
+        [Op.and]: [{ feed_id }, { ...user_id }],
+      },
     });
   }
 }

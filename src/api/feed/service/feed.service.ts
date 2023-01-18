@@ -26,6 +26,22 @@ export class FeedService {
   async deleteFeed(feed_id) {
     return this.feedRepository.deleteFeed(feed_id);
   }
+
+  async checkFeedLike(feed_id, user_id) {
+    console.log('log');
+    const isFeedLike = await this.feedRepository.checkFeedLike(
+      feed_id,
+      user_id,
+    );
+    console.log(isFeedLike);
+    if (!isFeedLike) {
+      await this.feedRepository.createFeedLike(feed_id, user_id);
+      return false;
+    } else {
+      await this.feedRepository.deleteFeedLike(feed_id, user_id);
+      return true;
+    }
+  }
 }
 // async uploadImg(cat: Cat, files: Express.Multer.File[]) {
 //     const fileName = `cats/${files[0].filename}`;
