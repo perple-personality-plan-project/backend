@@ -36,9 +36,6 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
       user = newUser;
     }
 
-    const { accessToken, refreshToken } =
-      await this.authService.createAccessTokenRefreshToken(user.user_id);
-
-    return { accessToken, refreshToken };
+    return await this.authService.createAccessTokenRefreshToken(user.user_id);
   }
 }

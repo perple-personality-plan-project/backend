@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-
 import { QueryTypes } from 'sequelize';
 import { Sequelize } from 'sequelize-typescript';
 import { Pick } from 'src/db/models/pick.models';
@@ -20,15 +19,7 @@ export class UserRepository {
 
   async createUser(user: CreateUserDto): Promise<User> {
     try {
-      const { login_id, password, nickname, provider, mbti } = user;
-
-      return await this.userModel.create({
-        login_id,
-        password,
-        nickname,
-        provider,
-        mbti,
-      });
+      return await this.userModel.create({ user });
     } catch (error) {
       return error.message;
     }
@@ -73,10 +64,6 @@ export class UserRepository {
     return this.sequelize.query(query, { type: QueryTypes.SELECT });
   }
 
-  /*
-   * 컬럼명을 매개변수로 받아
-   * 동적으로 해당 컬럼에 중복 데이터가 있는지 확인
-   */
   async IsDuplicatedInputData(column: string, data: string): Promise<User> {
     try {
       return this.userModel.findOne({ where: { [column]: data } });
