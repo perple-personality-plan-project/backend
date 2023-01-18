@@ -55,7 +55,7 @@ export class FeedRepository {
       group: ['feed_id'],
       order: [['created_at', 'DESC']],
     });
-    console.log(feeds);
+
     return feeds;
   }
 
@@ -74,7 +74,7 @@ export class FeedRepository {
       },
       attributes: [
         'feed_id',
-        [Sequelize.col('user.user_id'), 'user_id'],
+        'user_id',
         'thumbnail',
         'description',
         'location',
@@ -98,7 +98,7 @@ export class FeedRepository {
       ],
       attributes: [
         'comment_id',
-        [Sequelize.col('user.user_id'), 'user_id'],
+        'user_id',
         'feed_id',
         'comment',
         [Sequelize.col('user.nickname'), 'nickname'],
@@ -143,12 +143,11 @@ export class FeedRepository {
   }
 
   async createFeedLike(feed_id, user_id) {
-    console.log('log3');
     const like = await this.likeModel.create({
       feed_id,
       ...user_id,
     });
-    console.log('log4');
+
     return like;
   }
 
