@@ -16,8 +16,6 @@ import { GroupUser } from '../../db/models/groupUser.models';
 import { GroupHashtag } from '../../db/models/groupHahtag.models';
 import { Hashtag } from '../../db/models/hashtag.models';
 import { Map } from '../../db/models/map.models';
-import { Feed } from '../../db/models/feed.models';
-import { Like } from '../../db/models/like.models';
 import { Comment } from '../../db/models/comment.models';
 
 @Module({
