@@ -100,7 +100,7 @@ export class FeedController {
   async createFeedLike(@Param('feed_id') feed_id) {
     const user_id = { user_id: 1 };
     const isFeedLike = await this.feedService.checkFeedLike(feed_id, user_id);
-    console.log(isFeedLike);
+
     if (isFeedLike) {
       return '좋아요를 취소했습니다.';
     }
