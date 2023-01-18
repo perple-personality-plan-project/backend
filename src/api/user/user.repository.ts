@@ -4,6 +4,8 @@ import { QueryTypes } from 'sequelize';
 import { Sequelize } from 'sequelize-typescript';
 import { Pick } from 'src/db/models/pick.models';
 import { User } from 'src/db/models/user.models';
+import { Feed } from 'src/db/models/feed.models';
+import { Like } from 'src/db/models/like.models';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
@@ -14,6 +16,10 @@ export class UserRepository {
     private userModel: typeof User,
     @InjectModel(Pick)
     private pickModel: typeof Pick,
+    @InjectModel(Feed)
+    private feedModel: typeof Feed,
+    @InjectModel(Like)
+    private likeModel: typeof Like,
     private sequelize: Sequelize,
   ) {}
 
@@ -70,5 +76,42 @@ export class UserRepository {
     } catch (error) {
       return error.message;
     }
+  }
+
+  async getUserFeed(user_id) {
+    const feeds = await this.feedModel.findAll({
+      raw: true,
+      where: { user_id },
+      attributes: [
+        'feed_id',
+        'thumbnail',
+        'description',
+        [Sequelize.col('user.user_id'), 'user_id'],
+        [Sequelize.col('user.mbti'), 'mbti'],
+        'created_at',
+        'updated_at',
+      ],
+      include: [
+        {
+          model: User,
+          as: 'user',
+          attributes: [],
+        },
+        {
+          model: Like,
+          as: 'like',
+          attributes: [
+            [
+              Sequelize.fn('COUNT', Sequelize.col('like.like_id')),
+              'like_count',
+            ],
+          ],
+        },
+      ],
+      group: ['feed_id'],
+      order: [['created_at', 'DESC']],
+    });
+    console.log(feeds);
+    return feeds;
   }
 }

@@ -22,6 +22,7 @@ import { AuthService } from 'src/auth/auth.service';
 import { KakaoAuthGuard } from 'src/auth/kakao/kaka-auth.guard';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { ParseIntPipe } from '@nestjs/common/pipes';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('user')
 @UseInterceptors(GlobalResponseInterceptor)
@@ -143,5 +144,20 @@ export class UserController {
     return {
       accessToken: `Bearer ${newAccessToken}`,
     };
+  }
+
+  // 유저 피드 조회
+  @ApiOperation({ summary: '유저 피드 조회' })
+  @ApiResponse({
+    status: 200,
+    description: '성공!',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Server Error...',
+  })
+  @Get('/:user_id')
+  getUserFeed(@Param('user_id') user_id) {
+    return this.userService.getUserFeed(user_id);
   }
 }

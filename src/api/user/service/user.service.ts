@@ -106,4 +106,8 @@ export class UserService {
   async findUserByUserId(user_id: number) {
     return this.userRepository.findUserByUserId(user_id);
   }
+
+  async getUserFeed(user_id) {
+    return this.userRepository.getUserFeed(user_id);
+  }
 }
