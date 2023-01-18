@@ -54,6 +54,10 @@ export class UserService {
 
     const createUser = await this.userRepository.createUser(user);
 
+    if (!createUser) {
+      throw new BadRequestException('회원가입에 실패했습니다.');
+    }
+
     return createUser;
   }
 

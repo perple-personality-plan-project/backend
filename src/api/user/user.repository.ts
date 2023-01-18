@@ -19,7 +19,7 @@ export class UserRepository {
 
   async createUser(user: CreateUserDto): Promise<User> {
     try {
-      return await this.userModel.create({ user });
+      return await this.userModel.create({ ...user });
     } catch (error) {
       return error.message;
     }
