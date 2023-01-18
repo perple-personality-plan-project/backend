@@ -11,12 +11,14 @@ import * as bcrypt from 'bcrypt';
 import { UserRepository } from '../user.repository';
 import { Cache } from 'cache-manager';
 import { UpdateUserDto } from '../dto/update-user.dto';
+import { GroupRepository } from '../../group/group.repository';
 
 @Injectable()
 export class UserService {
   constructor(
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
     private readonly userRepository: UserRepository,
+    private readonly groupRepository: GroupRepository,
   ) {}
 
   async signUp(createUserDto: CreateUserDto): Promise<User> {
@@ -105,5 +107,9 @@ export class UserService {
 
   async findUserByUserId(user_id: number) {
     return this.userRepository.findUserByUserId(user_id);
+  }
+
+  async getMyGroupList(user_id) {
+    return this.groupRepository.findMyGroupList(user_id);
   }
 }

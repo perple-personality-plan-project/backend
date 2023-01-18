@@ -144,4 +144,11 @@ export class UserController {
       accessToken: `Bearer ${newAccessToken}`,
     };
   }
+
+  // @UseGuards(AuthGuard('jwt'))
+  @Get('my-group-list')
+  async getMyGroupList() {
+    const user_id = { user_id: 2 };
+    return await this.userService.getMyGroupList(user_id);
+  }
 }

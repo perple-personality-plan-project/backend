@@ -8,13 +8,39 @@ import { AuthModule } from 'src/auth/auth.module';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { Pick } from '../../db/models/pick.models';
+import { GroupRepository } from '../group/group.repository';
+import { Group } from '../../db/models/group.models';
+import { GroupUser } from '../../db/models/groupUser.models';
+import { GroupHashtag } from '../../db/models/groupHahtag.models';
+import { Hashtag } from '../../db/models/hashtag.models';
+import { Map } from '../../db/models/map.models';
+import { Feed } from '../../db/models/feed.models';
+import { Like } from '../../db/models/like.models';
+import { Comment } from '../../db/models/comment.models';
 
 @Module({
   imports: [
-    SequelizeModule.forFeature([User, Pick]),
+    SequelizeModule.forFeature([
+      User,
+      Pick,
+      Group,
+      GroupUser,
+      GroupHashtag,
+      Hashtag,
+      Map,
+      Feed,
+      Like,
+      Comment,
+    ]),
     forwardRef(() => AuthModule),
   ],
-  providers: [UserService, AuthService, UserRepository, JwtService],
+  providers: [
+    UserService,
+    AuthService,
+    UserRepository,
+    JwtService,
+    GroupRepository,
+  ],
   controllers: [UserController],
   exports: [UserRepository, UserService],
 })
