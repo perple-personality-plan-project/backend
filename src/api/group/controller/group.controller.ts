@@ -95,4 +95,13 @@ export class GroupController {
     const userId = { user_id: 2 };
     return this.groupService.createGroupFeed(body, group_id, userId, files);
   }
+
+  @Put('/:group_id/feed/:feed_id/like')
+  async groupFeedLike(
+    @Param('group_id', ParseIntPipe, PositiveIntPipe) group_id: number,
+    @Param('feed_id', ParseIntPipe, PositiveIntPipe) feed_id: number,
+  ) {
+    const userId = { user_id: 2 };
+    return this.groupService.groupFeedLike(userId, group_id, feed_id);
+  }
 }

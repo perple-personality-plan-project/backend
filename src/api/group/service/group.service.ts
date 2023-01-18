@@ -153,4 +153,16 @@ export class GroupService {
     feedData.group_user_id = groupUser.group_user_id;
     return this.groupRepository.createGroupFeed(feedData);
   }
+
+  async groupFeedLike(userId, group_id, feed_id) {
+    const likeResult = await this.groupRepository.findFeedLike(userId, feed_id);
+
+    if (!likeResult) {
+      await this.groupRepository.createGroupFeedLike(userId, feed_id);
+      return '좋아요를 눌렀습니다.';
+    } else {
+      await this.groupRepository.deleteGroupFeedLike(likeResult.like_id);
+      return '좋아요를 취소 했습니다.';
+    }
+  }
 }
