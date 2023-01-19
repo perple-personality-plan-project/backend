@@ -16,20 +16,20 @@ export class GroupService {
 
   async createGroup(
     body: GroupRequestDto,
-    user_id: object,
+    userId: object,
     files: Array<Express.Multer.File>,
   ) {
     const { group_name, description, hashtag } = body;
+    const thumbnail = {};
 
-    const result = await this.groupRepository.findGroup({
-      group_name: body['group_name'],
-    });
+    const result = await this.groupRepository.findGroup({ group_name });
 
     if (result) {
       throw new BadRequestException('이미 생성된 그룹명 입니다.');
     }
 
     const imageList = [];
+
     if (files) {
       const uploadImage = await this.awsS3Service.uploadFileToS3(files);
       uploadImage.map((data) => {
@@ -40,9 +40,11 @@ export class GroupService {
       //디폴트 이미지로 바꿔 줘야함!
       imageList.push('');
     }
-    body['thumbnail'] = imageList.join(',');
 
-    const createGroup = await this.groupRepository.createGroup(body, user_id);
+    thumbnail['thumbnail'] = imageList.join(',');
+    const createGroupObj = { group_name, description, ...thumbnail, ...userId };
+
+    const createGroup = await this.groupRepository.createGroup(createGroupObj);
 
     if (hashtag.length > 0) {
       const hashtagArr = JSON.parse(hashtag.replace(/'/g, '"'));
@@ -71,7 +73,7 @@ export class GroupService {
 
     const groupAdmin = {
       group_id: createGroup.dataValues['group_id'],
-      ...user_id,
+      ...userId,
       admin_flag: true,
     };
 

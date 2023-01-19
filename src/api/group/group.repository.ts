@@ -31,8 +31,8 @@ export class GroupRepository {
     private comment: typeof Comment,
   ) {}
 
-  async createGroup(body, userId) {
-    return this.groupModel.create({ ...body, ...userId });
+  async createGroup(createGroup: object) {
+    return this.groupModel.create({ ...createGroup });
   }
 
   async findGroup(findData: object) {

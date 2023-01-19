@@ -10,6 +10,8 @@ import {
   Put,
   ParseIntPipe,
   UploadedFiles,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { GlobalResponseInterceptor } from 'src/common/interceptors/global.response.interceptor';
 import { GlobalExceptionFilter } from '../../../common/filter/global.exception.filter';
@@ -49,13 +51,15 @@ export class GroupController {
     description: 'groupname or description는 필수값 입니다',
   })
   @Post()
+  @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(FilesInterceptor('thumbnail', 5))
   async createGroup(
     @Body() body: GroupRequestDto,
     @UploadedFiles() files: Array<Express.Multer.File>,
+    @Req() req: Request,
   ) {
-    const user_id = { user_id: 1 };
-    return this.groupService.createGroup(body, user_id, files);
+    const userId = { user_id: req.user };
+    return this.groupService.createGroup(body, userId, files);
   }
 
   @Put('/:groupId')
