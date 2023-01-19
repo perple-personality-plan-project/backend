@@ -153,7 +153,7 @@ export class UserController {
     const user_id = { user_id: 2 };
     return await this.userService.getMyGroupList(user_id);
   }
-  
+
   // 유저 피드 조회
   @ApiOperation({ summary: '유저 피드 조회' })
   @ApiResponse({
@@ -164,8 +164,10 @@ export class UserController {
     status: 500,
     description: 'Server Error...',
   })
-  @Get('/:user_id')
-  getUserFeed(@Param('user_id') user_id) {
+  @UseGuards(AuthGuard('jwt'))
+  @Get()
+  getUserFeed(@Req() req) {
+    const user_id = req.user;
     return this.userService.getUserFeed(user_id);
   }
 }

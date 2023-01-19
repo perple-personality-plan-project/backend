@@ -20,7 +20,7 @@ export class FeedRepository {
   ) {}
 
   async createFeed(body, user_id) {
-    return this.feedModel.create({ ...body, ...user_id });
+    return this.feedModel.create({ ...body, user_id });
   }
 
   async getAllFeed() {
@@ -108,16 +108,16 @@ export class FeedRepository {
     return feed;
   }
 
-  async deleteFeed(feed_id) {
+  async deleteFeed(feed_id, user_id) {
     return this.feedModel.destroy({
-      where: { feed_id },
+      where: { feed_id, user_id },
     });
   }
 
   async getUserFeed(user_id) {
     const feeds = await this.feedModel.findAll({
       raw: true,
-      where: { ...user_id },
+      where: { user_id },
       attributes: [
         'feed_id',
         'thumbnail',
@@ -150,7 +150,7 @@ export class FeedRepository {
   async checkFeedLike(feed_id, user_id) {
     return this.likeModel.findOne({
       where: {
-        [Op.and]: [{ feed_id }, { ...user_id }],
+        [Op.and]: [{ feed_id }, { user_id }],
       },
     });
   }
@@ -158,7 +158,7 @@ export class FeedRepository {
   async createFeedLike(feed_id, user_id) {
     const like = await this.likeModel.create({
       feed_id,
-      ...user_id,
+      user_id,
     });
 
     return like;
@@ -167,7 +167,7 @@ export class FeedRepository {
   async deleteFeedLike(feed_id, user_id) {
     return this.likeModel.destroy({
       where: {
-        [Op.and]: [{ feed_id }, { ...user_id }],
+        [Op.and]: [{ feed_id }, { user_id }],
       },
     });
   }

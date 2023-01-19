@@ -38,13 +38,13 @@ export class CommentRepository {
     });
   }
 
-  async createComment(body, user_id, req) {
-    return this.commentModel.create({ ...body, ...user_id, ...req });
+  async createComment(user_id: number, feed_id: number, body: object) {
+    return this.commentModel.create({ user_id, feed_id, ...body });
   }
 
-  async deleteComment(comment_id) {
+  async deleteComment(comment_id, user_id) {
     return this.commentModel.destroy({
-      where: { comment_id },
+      where: { comment_id, user_id },
     });
   }
 }

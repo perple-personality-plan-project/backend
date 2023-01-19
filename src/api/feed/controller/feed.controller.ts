@@ -10,6 +10,7 @@ import {
   Put,
   Query,
   UploadedFiles,
+  UseGuards,
   Req,
 } from '@nestjs/common';
 import { GlobalResponseInterceptor } from 'src/common/interceptors/global.response.interceptor';
@@ -19,6 +20,7 @@ import { FeedService } from '../service/feed.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { request } from 'http';
 import { FilesInterceptor } from '@nestjs/platform-express';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('feed')
 @ApiTags('feed')
@@ -55,14 +57,16 @@ export class FeedController {
     status: 412,
     description: 'description는 필수값 입니다',
   })
+  @UseGuards(AuthGuard('jwt'))
   @Post()
   @UseInterceptors(FilesInterceptor('thumbnail', 5))
   async createFeed(
     @Body() body: FeedRequestDto,
     @UploadedFiles() files: Array<Express.Multer.File>,
+    @Req() req,
   ) {
-    const user_id = { user_id: 2 };
-
+    const user_id = req.user;
+    console.log(user_id);
     return this.feedService.createFeed(body, user_id, files);
   }
 
@@ -103,9 +107,11 @@ export class FeedController {
     status: 500,
     description: 'Server Error...',
   })
+  @UseGuards(AuthGuard('jwt'))
   @Delete('/:feed_id')
-  deleteFeed(@Param('feed_id') feed_id) {
-    return this.feedService.deleteFeed(feed_id);
+  deleteFeed(@Param('feed_id') feed_id, @Req() req) {
+    const user_id = req.user;
+    return this.feedService.deleteFeed(feed_id, user_id);
   }
 
   @ApiOperation({ summary: '피드 좋아요' })
@@ -117,9 +123,10 @@ export class FeedController {
     status: 500,
     description: 'Server Error...',
   })
+  @UseGuards(AuthGuard('jwt'))
   @Put('/:feed_id/like')
-  async createFeedLike(@Param('feed_id') feed_id) {
-    const user_id = { user_id: 1 };
+  async createFeedLike(@Param('feed_id') feed_id, @Req() req) {
+    const user_id = req.user;
     const isFeedLike = await this.feedService.checkFeedLike(feed_id, user_id);
 
     if (isFeedLike) {

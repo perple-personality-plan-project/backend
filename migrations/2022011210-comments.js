@@ -10,14 +10,14 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.DataTypes.INTEGER,
       },
-      parent_id: {
-        allowNull: true,
-        type: Sequelize.DataTypes.INTEGER,
-        references: {
-          model: 'comments',
-          key: 'comment_id',
-        },
-      },
+      // parent_id: {
+      //   allowNull: true,
+      //   type: Sequelize.DataTypes.INTEGER,
+      //   references: {
+      //     model: 'comments',
+      //     key: 'comment_id',
+      //   },
+      // },
       user_id: {
         type: Sequelize.DataTypes.INTEGER,
         allowNull: false,
