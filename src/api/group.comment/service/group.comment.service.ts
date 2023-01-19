@@ -40,6 +40,7 @@ export class GroupCommentService {
     }
 
     const deleteComment = await this.commentRepository.deleteComment(
+      user_id,
       comment_id,
     );
 
