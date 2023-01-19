@@ -32,6 +32,7 @@ export class FeedRepository {
         'description',
         [Sequelize.col('user.user_id'), 'user_id'],
         [Sequelize.col('user.mbti'), 'mbti'],
+        [Sequelize.fn('COUNT', Sequelize.col('like.like_id')), 'likeCount'],
         'created_at',
         'updated_at',
       ],
@@ -44,12 +45,7 @@ export class FeedRepository {
         {
           model: Like,
           as: 'like',
-          attributes: [
-            [
-              Sequelize.fn('COUNT', Sequelize.col('like.like_id')),
-              'like_count',
-            ],
-          ],
+          attributes: [],
         },
       ],
       group: ['feed_id'],
@@ -128,6 +124,7 @@ export class FeedRepository {
         'description',
         [Sequelize.col('user.user_id'), 'user_id'],
         [Sequelize.col('user.mbti'), 'mbti'],
+        [Sequelize.fn('COUNT', Sequelize.col('like.like_id')), 'likeCount'],
         'created_at',
         'updated_at',
       ],
@@ -140,12 +137,7 @@ export class FeedRepository {
         {
           model: Like,
           as: 'like',
-          attributes: [
-            [
-              Sequelize.fn('COUNT', Sequelize.col('like.like_id')),
-              'like_count',
-            ],
-          ],
+          attributes: [],
         },
       ],
       group: ['feed_id'],
@@ -154,22 +146,6 @@ export class FeedRepository {
     console.log(feeds);
     return feeds;
   }
-
-  // async findComment(feed_id) {
-  //   return this.commentModel.findAll({
-  //     raw: true,
-  //     where: { feed_id },
-  //     attributes: [[Sequelize.col('comment.nickname'), 'nickname']],
-  //     include: [
-  //       {
-  //         model: User,
-  //         as: 'user',
-  //         attributes: [],
-  //       },
-  //     ],
-  //     order: [['created_at', 'DESC']],
-  //   });
-  // }
 
   async checkFeedLike(feed_id, user_id) {
     return this.likeModel.findOne({
@@ -195,15 +171,40 @@ export class FeedRepository {
       },
     });
   }
+
+  async getFeedMbti(mbti) {
+    const feeds = await this.feedModel.findAll({
+      raw: true,
+      attributes: [
+        'feed_id',
+        'thumbnail',
+        'description',
+        [Sequelize.col('user.user_id'), 'user_id'],
+        [Sequelize.col('user.mbti'), 'mbti'],
+        [Sequelize.fn('COUNT', Sequelize.col('like.like_id')), 'likeCount'],
+        'created_at',
+        'updated_at',
+      ],
+      include: [
+        {
+          model: User,
+          as: 'user',
+          where: {
+            mbti,
+          },
+          attributes: [],
+        },
+        {
+          model: Like,
+          as: 'like',
+          attributes: [],
+        },
+      ],
+
+      group: ['feed_id'],
+      order: [['created_at', 'DESC']],
+    });
+
+    return feeds;
+  }
 }
-
-// async findByIdAndUpdateImg(id: string, fileName: string) {
-//   const cat = await this.catModel.findById(id);
-
-//   cat.imgUrl = `http://localhost:8000/media/${fileName}`;
-
-//   const newCat = await cat.save();
-
-//   console.log(newCat);
-//   return newCat.readOnlyData;
-// }

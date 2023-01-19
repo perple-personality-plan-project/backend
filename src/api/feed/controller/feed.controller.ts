@@ -27,6 +27,20 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 export class FeedController {
   constructor(private readonly feedService: FeedService) {}
 
+  @ApiOperation({ summary: 'mbti별 피드 조회' })
+  @ApiResponse({
+    status: 200,
+    description: '성공!',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Server Error...',
+  })
+  @Get('/search')
+  async getFeedMbti(@Query('mbti') mbti: string) {
+    return this.feedService.getFeedMbti(mbti);
+  }
+
   @ApiOperation({ summary: '피드 생성' })
   @ApiResponse({
     status: 200,
@@ -47,7 +61,7 @@ export class FeedController {
     @Body() body: FeedRequestDto,
     @UploadedFiles() files: Array<Express.Multer.File>,
   ) {
-    const user_id = { user_id: 1 };
+    const user_id = { user_id: 2 };
 
     return this.feedService.createFeed(body, user_id, files);
   }
@@ -114,13 +128,3 @@ export class FeedController {
     return '좋아요 했습니다.';
   }
 }
-// @ApiOperation({ summary: '고양이 이미지 업로드' })
-// @UseInterceptors(FilesInterceptor('image', 10, multerOptions('cats')))
-// @UseGuards(JwtAuthGuard)
-// @Post('upload')
-// uploadCatImg(
-//   @UploadedFiles() files: Array<Express.Multer.File>,
-//   @CurrentUser() cat: Cat,
-// ) {
-//   return this.catsService.uploadImg(cat, files);
-// }
