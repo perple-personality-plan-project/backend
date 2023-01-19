@@ -92,23 +92,22 @@ export class GroupService {
     return this.groupRepository.getGroup(this.GROUPSORT[sort]);
   }
 
-  async groupSignUp(user_id: object, req: object) {
+  async groupSignUp(userId: object, groupId: object) {
     const groupAdmin = {
-      group_id: req['groupId'],
-      ...user_id,
+      ...groupId,
+      ...userId,
       admin_flag: false,
     };
+
     const findGroupUser = await this.groupRepository.findGroupUser(groupAdmin);
-    let result;
 
     if (findGroupUser) {
-      const data = await this.groupRepository.destroyGroupUser(groupAdmin);
-      result = '그룹 구독을 취소하였습니다.';
+      await this.groupRepository.destroyGroupUser(groupAdmin);
+      return '그룹 구독을 취소하였습니다.';
     } else {
-      const data = await this.groupRepository.groupUserSignUp(groupAdmin);
-      result = '그룹을 구독 하였습니다.';
+      await this.groupRepository.groupUserSignUp(groupAdmin);
+      return '그룹을 구독 하였습니다.';
     }
-    return result;
   }
 
   async getGroupFeed(req: number) {

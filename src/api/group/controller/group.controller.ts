@@ -62,14 +62,21 @@ export class GroupController {
     return this.groupService.createGroup(body, userId, files);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Put('/:groupId')
-  async signUpGroup(@Param() req) {
-    const user_id = { user_id: 2 };
-    return this.groupService.groupSignUp(user_id, req);
+  async signUpGroup(
+    @Param('groupId', ParseIntPipe, PositiveIntPipe) group_id: number,
+    @Req() req: Request,
+  ) {
+    const userId = { user_id: req.user };
+    const groupId = { group_id };
+    return this.groupService.groupSignUp(userId, groupId);
   }
 
   @Get('/:groupId')
-  async getSubscription(@Param() req) {
+  async getSubscription(
+    @Param('groupId', ParseIntPipe, PositiveIntPipe) req: number,
+  ) {
     const user_id = { user_id: 2 };
     return this.groupService.getSubscription(user_id, req);
   }
