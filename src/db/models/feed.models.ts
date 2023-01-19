@@ -14,59 +14,56 @@ import {
 import { User } from './user.models';
 import { Comment } from './comment.models';
 import { Like } from './like.models';
-import { Group } from './group.models';
+import { GroupUser } from './groupUser.models';
+
 @Table({
   modelName: 'Feed',
-  freezeTableName: true,
+  tableName: 'feeds',
+  freezeTableName: false,
   timestamps: true,
 })
 export class Feed extends Model {
   @HasMany(() => Comment)
-  Comment: Comment[];
+  comment: Comment[];
 
   @HasMany(() => Like)
-  Like: Like[];
+  like: Like[];
 
   @BelongsTo(() => User)
   user: User;
 
-  @BelongsTo(() => Group)
-  group: Group;
+  @BelongsTo(() => GroupUser)
+  groupUser: GroupUser;
 
   @PrimaryKey
   @AutoIncrement
   @AllowNull(false)
   @Column
-  feedId: number;
+  feed_id: number;
 
   @ForeignKey(() => User)
-  @AllowNull(false)
+  @AllowNull(true)
   @Column
-  userId: number;
+  user_id: number;
 
-  @ForeignKey(() => Group)
-  @AllowNull(false)
+  @ForeignKey(() => GroupUser)
+  @AllowNull(true)
   @Column
-  groupId: number;
+  group_user_id: number;
 
   @Column
   thumbnail: string;
 
   @AllowNull(false)
   @Column
-  title: string;
-
-  @AllowNull(false)
-  @Column
   description: string;
 
-  @AllowNull(false)
   @Column
   location: string;
 
   @CreatedAt
-  createdAt: Date;
+  created_at: Date;
 
   @UpdatedAt
-  updatedAt: Date;
+  updated_at: Date;
 }

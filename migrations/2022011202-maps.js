@@ -3,32 +3,36 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Like', {
-      likeId: {
+    await queryInterface.createTable('maps', {
+      map_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.DataTypes.INTEGER,
       },
-      userId: {
-        allowNull: false,
-        type: Sequelize.DataTypes.INTEGER,
-      },
-      feedId: {
+      user_id: {
         type: Sequelize.DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'Feed',
-          key: 'feedId',
+          model: 'users',
+          key: 'user_id',
         },
         onDelete: 'cascade',
       },
-      createdAt: {
+      place_group: {
+        allowNull: false,
+        type: Sequelize.DataTypes.TEXT,
+      },
+      place_group_name: {
+        type: Sequelize.DataTypes.STRING,
+        allowNull: false,
+      },
+      created_at: {
         allowNull: false,
         type: Sequelize.DataTypes.DATE,
         defaultValue: Sequelize.DataTypes.NOW,
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DataTypes.DATE,
         defaultValue: Sequelize.DataTypes.NOW,
@@ -37,6 +41,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Like');
+    await queryInterface.dropTable('maps');
   },
 };

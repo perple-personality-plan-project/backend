@@ -3,43 +3,38 @@ import {
   Column,
   Model,
   PrimaryKey,
-  ForeignKey,
   CreatedAt,
   UpdatedAt,
-  BelongsTo,
   HasMany,
   AutoIncrement,
   AllowNull,
   Unique,
 } from 'sequelize-typescript';
-import { User } from './user.models';
 import { GroupHashtag } from './groupHahtag.models';
 import { GroupUser } from './groupUser.models';
 
 @Table({
   modelName: 'Group',
-  freezeTableName: true,
+  tableName: 'groups',
+  freezeTableName: false,
   timestamps: true,
 })
 export class Group extends Model {
   @HasMany(() => GroupHashtag)
-  groupHashtag: GroupHashtag[];
+  groupHashTag: GroupHashtag[];
 
   @HasMany(() => GroupUser)
   groupUser: GroupUser[];
 
-  @BelongsTo(() => User)
-  user: User;
-
   @PrimaryKey
   @AutoIncrement
   @Column
-  groupId: number;
+  group_id: number;
 
   @AllowNull(false)
   @Unique
   @Column
-  groupname: string;
+  group_name: string;
 
   @AllowNull(false)
   @Column
@@ -49,14 +44,9 @@ export class Group extends Model {
   @Column
   description: string;
 
-  @ForeignKey(() => User)
-  @AllowNull(false)
-  @Column
-  userId: number;
-
   @CreatedAt
-  createdAt: Date;
+  created_at: Date;
 
   @UpdatedAt
-  updatedAt: Date;
+  updated_at: Date;
 }

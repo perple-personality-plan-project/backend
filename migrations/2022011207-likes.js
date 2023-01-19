@@ -3,39 +3,37 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('GroupUser', {
-      groupUserId: {
+    await queryInterface.createTable('likes', {
+      like_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.DataTypes.INTEGER,
       },
-      groupId: {
-        allowNull: false,
+      user_id: {
         type: Sequelize.DataTypes.INTEGER,
+        allowNull: false,
         references: {
-          model: 'Group',
-          key: 'groupId',
+          model: 'users',
+          key: 'user_id',
         },
+        onDelete: 'cascade',
       },
-      isGroupUser: {
-        allowNull: false,
+      feed_id: {
         type: Sequelize.DataTypes.INTEGER,
-      },
-      userId: {
         allowNull: false,
-        type: Sequelize.DataTypes.INTEGER,
+        references: {
+          model: 'feeds',
+          key: 'feed_id',
+        },
+        onDelete: 'cascade',
       },
-      isAdmin: {
-        allowNull: true,
-        type: Sequelize.DataTypes.BOOLEAN,
-      },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DataTypes.DATE,
         defaultValue: Sequelize.DataTypes.NOW,
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DataTypes.DATE,
         defaultValue: Sequelize.DataTypes.NOW,
@@ -44,6 +42,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('GroupUser');
+    await queryInterface.dropTable('likes');
   },
 };

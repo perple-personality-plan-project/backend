@@ -3,53 +3,41 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Feed', {
-      feedId: {
+    await queryInterface.createTable('group_users', {
+      group_user_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.DataTypes.INTEGER,
       },
-      userId: {
-        type: Sequelize.DataTypes.INTEGER,
+      group_id: {
         allowNull: false,
+        type: Sequelize.DataTypes.INTEGER,
         references: {
-          model: 'User',
-          key: 'userId',
+          model: 'groups',
+          key: 'group_id',
         },
         onDelete: 'cascade',
       },
-      groupId: {
-        type: Sequelize.DataTypes.INTEGER,
+      user_id: {
         allowNull: false,
+        type: Sequelize.DataTypes.INTEGER,
         references: {
-          model: 'Group',
-          key: 'groupId',
+          model: 'users',
+          key: 'user_id',
         },
         onDelete: 'cascade',
       },
-      thumbnail: {
-        type: Sequelize.DataTypes.STRING,
-        allowNull: false,
+      admin_flag: {
+        allowNull: true,
+        type: Sequelize.DataTypes.BOOLEAN,
       },
-      title: {
-        type: Sequelize.DataTypes.STRING,
-        allowNull: false,
-      },
-      description: {
-        type: Sequelize.DataTypes.STRING,
-        allowNull: false,
-      },
-      location: {
-        type: Sequelize.DataTypes.STRING,
-        allowNull: false,
-      },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DataTypes.DATE,
         defaultValue: Sequelize.DataTypes.NOW,
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DataTypes.DATE,
         defaultValue: Sequelize.DataTypes.NOW,
@@ -58,6 +46,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Feed');
+    await queryInterface.dropTable('group_users');
   },
 };

@@ -12,46 +12,48 @@ import {
 } from 'sequelize-typescript';
 import { User } from './user.models';
 import { Feed } from './feed.models';
-
 @Table({
   modelName: 'Comment',
-  freezeTableName: true,
+  tableName: 'comments',
+  freezeTableName: false,
   timestamps: true,
 })
 export class Comment extends Model {
-  @PrimaryKey
-  @AutoIncrement
-  @AllowNull(false)
-  @Column
-  commentId: number;
-
-  @ForeignKey(() => Comment)
-  @AllowNull(false)
-  @Column
-  parentId: number;
-
-  @BelongsTo(() => Comment)
-  comment: Comment;
-
-  @ForeignKey(() => User)
-  @AllowNull(false)
-  @Column
-  userId: number;
-
   @BelongsTo(() => User)
   user: User;
-
-  @ForeignKey(() => Feed)
-  @AllowNull(false)
-  @Column
-  feedId: number;
 
   @BelongsTo(() => Feed)
   feed: Feed;
 
+  // @BelongsTo(() => Comment)
+  // comment: Comment;
+
+  @PrimaryKey
+  @AutoIncrement
+  @AllowNull(false)
+  @Column
+  comment_id: number;
+
+  // @ForeignKey(() => Comment)
+  // @Column
+  // parent_id: number;
+
+  @ForeignKey(() => User)
+  @AllowNull(false)
+  @Column
+  user_id: number;
+
+  @ForeignKey(() => Feed)
+  @AllowNull(false)
+  @Column
+  feed_id: number;
+
+  @Column
+  comment: string;
+
   @CreatedAt
-  createdAt: Date;
+  created_at: Date;
 
   @UpdatedAt
-  updatedAt: Date;
+  updated_at: Date;
 }

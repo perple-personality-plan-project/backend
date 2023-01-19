@@ -2,9 +2,9 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
-    await queryInterface.createTable('Hashtag', {
-      hashtagId: {
+  async up(queryInterface, Sequelize) {
+    await queryInterface.createTable('hashtags', {
+      hashtag_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
@@ -14,12 +14,12 @@ module.exports = {
         type: Sequelize.DataTypes.STRING,
         allowNull: false,
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DataTypes.DATE,
         defaultValue: Sequelize.DataTypes.NOW,
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DataTypes.DATE,
         defaultValue: Sequelize.DataTypes.NOW,
@@ -27,7 +27,7 @@ module.exports = {
     });
   },
 
-  async down (queryInterface, Sequelize) {
-    await queryInterface.dropTable('Hashtag');
-  }
+  async down(queryInterface, Sequelize) {
+    await queryInterface.dropTable('hashtags');
+  },
 };

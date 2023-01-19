@@ -14,7 +14,8 @@ import { User } from './user.models';
 import { Feed } from './feed.models';
 @Table({
   modelName: 'Like',
-  freezeTableName: true,
+  tableName: 'likes',
+  freezeTableName: false,
   timestamps: true,
 })
 export class Like extends Model {
@@ -28,21 +29,21 @@ export class Like extends Model {
   @AllowNull(false)
   @AutoIncrement
   @Column
-  likeId: number;
+  like_id: number;
 
   @ForeignKey(() => User)
   @AllowNull(false)
   @Column
-  userId: number;
+  user_id: number;
 
   @ForeignKey(() => Feed)
   @AllowNull(false)
   @Column
-  feedId: number;
+  feed_id: number;
 
   @CreatedAt
-  createdAt: Date;
+  created_at: Date;
 
   @UpdatedAt
-  updatedAt: Date;
+  updated_at: Date;
 }

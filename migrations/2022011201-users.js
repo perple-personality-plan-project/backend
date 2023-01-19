@@ -3,19 +3,14 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('User', {
-      userId: {
+    await queryInterface.createTable('users', {
+      user_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.DataTypes.INTEGER,
       },
-      loginId: {
-        type: Sequelize.DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-      },
-      nickName: {
+      login_id: {
         type: Sequelize.DataTypes.STRING,
         allowNull: false,
         unique: true,
@@ -24,24 +19,25 @@ module.exports = {
         type: Sequelize.DataTypes.STRING,
         allowNull: false,
       },
+      nickname: {
+        type: Sequelize.DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+      },
       mbti: {
         type: Sequelize.DataTypes.STRING,
         allowNull: true,
       },
-      platformType: {
+      provider: {
         type: Sequelize.DataTypes.STRING,
         allowNull: true,
       },
-      pick: {
-        type: Sequelize.DataTypes.STRING,
-        allowNull: true,
-      },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DataTypes.DATE,
         defaultValue: Sequelize.DataTypes.NOW,
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DataTypes.DATE,
         defaultValue: Sequelize.DataTypes.NOW,
@@ -50,6 +46,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('User');
+    await queryInterface.dropTable('users');
   },
 };
