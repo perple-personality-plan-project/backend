@@ -136,10 +136,10 @@ export class UserController {
     };
   }
 
-  // @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'))
   @Get('my-group-list')
-  async getMyGroupList() {
-    const user_id = { user_id: 2 };
+  async getMyGroupList(@Req() req) {
+    const user_id = req.user;
     return await this.userService.getMyGroupList(user_id);
   }
 
