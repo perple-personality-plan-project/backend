@@ -166,4 +166,7 @@ export class GroupService {
       return '좋아요를 취소 했습니다.';
     }
   }
+  async getHashTag() {
+    return await this.groupRepository.getHashTag();
+  }
 }
