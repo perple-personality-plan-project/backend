@@ -111,7 +111,6 @@ export class UserRepository {
       group: ['feed_id'],
       order: [['created_at', 'DESC']],
     });
-    console.log(feeds);
     return feeds;
   }
 
