@@ -32,10 +32,12 @@ export class GroupCommentController {
     @Req() req: Request,
   ) {
     const userId = { user_id: req.user };
+    const groupId = { group_id };
+    const feedId = { feed_id };
     return this.groupCommentService.createGroupComment(
       comment,
-      group_id,
-      feed_id,
+      groupId,
+      feedId,
       userId,
     );
   }

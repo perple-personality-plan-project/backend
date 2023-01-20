@@ -11,7 +11,7 @@ export class GroupCommentService {
 
   async createGroupComment(comment, group_id, feed_id, user_id) {
     const groupUser = {
-      group_id,
+      ...group_id,
       ...user_id,
     };
 
@@ -21,9 +21,7 @@ export class GroupCommentService {
       throw new BadRequestException('구독 되지 않은 유저 입니다.');
     }
 
-    await this.commentRepository.createComment(comment, user_id, {
-      feed_id,
-    });
+    await this.commentRepository.createComment(comment, user_id, feed_id);
 
     return '댓글이 작성 되었습니다.';
   }
