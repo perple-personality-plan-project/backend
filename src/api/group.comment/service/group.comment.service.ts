@@ -23,7 +23,7 @@ export class GroupCommentService {
       throw new BadRequestException('구독 되지 않은 유저 입니다.');
     }
 
-    await this.commentRepository.createComment(user_id, feed_id, comment);
+    await this.commentRepository.createComment(user_id, feed_id, { comment });
 
     return '댓글이 작성 되었습니다.';
   }
