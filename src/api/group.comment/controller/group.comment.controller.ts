@@ -31,15 +31,14 @@ export class GroupCommentController {
     @Param('feed_id', ParseIntPipe, PositiveIntPipe) feed_id: number,
     @Req() req: Request,
   ) {
-    const userId = { user_id: req.user };
-    const groupId = { group_id };
-    const feedId = { feed_id };
-    return this.groupCommentService.createGroupComment(
-      comment,
-      groupId,
-      feedId,
-      userId,
-    );
+    const groupCommentBody = {
+      user_id: req.user,
+      group_id,
+      feed_id,
+      ...comment,
+    };
+
+    return this.groupCommentService.createGroupComment(groupCommentBody);
   }
 
   @UseGuards(AuthGuard('jwt'))
