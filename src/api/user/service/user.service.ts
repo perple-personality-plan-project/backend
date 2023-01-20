@@ -66,7 +66,6 @@ export class UserService {
   }
 
   async updatedProfile(user_id: number, updateUserDto: UpdateUserDto) {
-    console.log(typeof user_id);
     const { nickname } = updateUserDto;
 
     const currentUserInfo = await this.findUserByUserId(user_id);
