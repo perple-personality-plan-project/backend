@@ -139,8 +139,8 @@ export class UserController {
   @UseGuards(AuthGuard('jwt'))
   @Get('my-group-list')
   async getMyGroupList(@Req() req) {
-    const user_id = req.user;
-    return await this.userService.getMyGroupList(user_id);
+    const userId = req.user;
+    return await this.userService.getMyGroupList(userId);
   }
 
   // 유저 피드 조회

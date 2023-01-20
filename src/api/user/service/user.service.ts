@@ -106,8 +106,8 @@ export class UserService {
     return this.userRepository.findUserByUserId(user_id);
   }
 
-  async getMyGroupList(user_id) {
-    return this.groupRepository.findMyGroupList(user_id);
+  async getMyGroupList(userId) {
+    return this.groupRepository.findMyGroupList(userId);
   }
 
   async getUserFeed(user_id) {

@@ -257,7 +257,7 @@ export class GroupRepository {
         {
           model: GroupUser,
           as: 'groupUser',
-          where: { ...user_id },
+          where: { user_id },
           attributes: [],
           include: [
             {
