@@ -59,6 +59,11 @@ export class GroupController {
     @Req() req: Request,
   ) {
     const userId = { user_id: req.user };
+    const createGroupData = {
+      user_id: req.user,
+      thumbnail: '',
+      ...body,
+    };
     return this.groupService.createGroup(body, userId, files);
   }
 
@@ -70,22 +75,27 @@ export class GroupController {
   ) {
     const userId = { user_id: req.user };
     const groupId = { group_id };
+
     return this.groupService.groupSignUp(userId, groupId);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Get('/:groupId')
   async getSubscription(
-    @Param('groupId', ParseIntPipe, PositiveIntPipe) req: number,
+    @Param('groupId', ParseIntPipe, PositiveIntPipe) group_id: number,
+    @Req() req: Request,
   ) {
-    const user_id = { user_id: 2 };
-    return this.groupService.getSubscription(user_id, req);
+    const userId = { user_id: req.user };
+    const groupId = { group_id };
+
+    return this.groupService.getSubscription(userId, groupId);
   }
 
   @Get('/:groupId/feed')
   async getGroupFeed(
-    @Param('groupId', ParseIntPipe, PositiveIntPipe) req: number,
+    @Param('groupId', ParseIntPipe, PositiveIntPipe) groupId: number,
   ) {
-    return this.groupService.getGroupFeed(req);
+    return this.groupService.getGroupFeed(groupId);
   }
 
   @Get('/:groupId/feed/:feedId')
@@ -96,23 +106,27 @@ export class GroupController {
     return this.groupService.getGroupFeedDetail(groupId, feedId);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Post('/:groupId/feed/')
   @UseInterceptors(FilesInterceptor('thumbnail', 5))
   async createGroupFeed(
     @Body() body,
     @Param() group_id,
     @UploadedFiles() files: Array<Express.Multer.File>,
+    @Req() req: Request,
   ) {
-    const userId = { user_id: 2 };
+    const userId = { user_id: req.user };
     return this.groupService.createGroupFeed(body, group_id, userId, files);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Put('/:group_id/feed/:feed_id/like')
   async groupFeedLike(
     @Param('group_id', ParseIntPipe, PositiveIntPipe) group_id: number,
     @Param('feed_id', ParseIntPipe, PositiveIntPipe) feed_id: number,
+    @Req() req: Request,
   ) {
-    const userId = { user_id: 2 };
+    const userId = { user_id: req.user };
     return this.groupService.groupFeedLike(userId, group_id, feed_id);
   }
 }
