@@ -16,13 +16,13 @@ import {
 import { GlobalResponseInterceptor } from '../../../common/interceptors/global.response.interceptor';
 import { UserService } from 'src/api/user/service/user.service';
 import { CreateUserDto } from '../dto/create-user.dto';
-import { AuthGuard } from '@nestjs/passport/dist/auth.guard';
 import { Request, Response } from 'express';
 import { AuthService } from 'src/auth/auth.service';
 import { KakaoAuthGuard } from 'src/auth/kakao/kaka-auth.guard';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { ParseIntPipe } from '@nestjs/common/pipes';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('user')
 @UseInterceptors(GlobalResponseInterceptor)
@@ -32,7 +32,6 @@ export class UserController {
     private readonly authService: AuthService,
   ) {}
 
-  // 회원가입
   @Post('/signup')
   async signup(
     @Body(ValidationPipe) createUserDto: CreateUserDto,
@@ -42,13 +41,12 @@ export class UserController {
     return { message: '회원가입에 성공했습니다.' };
   }
 
-  // 로그인
   @UseGuards(AuthGuard('local'))
   @Post('/login')
   async login(
-    @Req() req: Request,
+    @Req() req,
   ): Promise<{ accessToken: string; refreshToken: string }> {
-    const user_id = req.user as number;
+    const user_id = req.user;
 
     const { accessToken, refreshToken } =
       await this.authService.createAccessTokenRefreshToken(user_id);
@@ -59,14 +57,12 @@ export class UserController {
     };
   }
 
-  // 카카오 로그인
   @UseGuards(KakaoAuthGuard)
   @Get('auth/kakao')
   async kakaoLogin() {
     return HttpStatus.OK;
   }
 
-  // 카카오 로그인 콜백
   @UseGuards(KakaoAuthGuard)
   @Get('/auth/kakao/callback')
   async kakaoLoginCallBack(
@@ -81,7 +77,6 @@ export class UserController {
     return { message: 'ok' };
   }
 
-  // 로그아웃
   @UseGuards(AuthGuard('jwt-refresh'))
   @Post('/logout')
   async logout(@Req() req) {
@@ -92,12 +87,10 @@ export class UserController {
     return { message: '로그아웃 성공' };
   }
 
-  // 찜하기
-  // @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'))
   @Put('/feeds/:feedId/pick')
   async pickedFeed(@Req() req, @Param('feedId', ParseIntPipe) feed_id: number) {
-    // const user_id = req.user as number;
-    const user_id = 1;
+    const user_id = req.user;
 
     // 합쳐지면 feed service 확인 후 존재하는 게시물인지
     // 확인하는 로직 추가
@@ -111,33 +104,29 @@ export class UserController {
     return { message: '찜목록에 추가되었습니다.' };
   }
 
-  // 프로필 수정
-  // @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'))
   @Patch('/edit')
   async updatedProfile(@Req() req, @Body() updateUserDto: UpdateUserDto) {
-    // const user_id = req.user;
-    const user_id = 1;
+    const user_id = req.user;
+    console.log(typeof user_id);
 
     await this.userService.updatedProfile(user_id, updateUserDto);
 
     return { message: '프로필 수정 성공' };
   }
 
-  // // 마이 페이지
-  // @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'))
   @Get('/mypage')
   async myPage(@Req() req) {
-    // const user_id = req.user;
-    const user_id = 1;
+    const user_id = req.user;
 
     return this.userService.getMypageInfo(user_id);
   }
 
-  // 엑세스 토큰 재발급
   @UseGuards(AuthGuard('jwt-refresh'))
   @Get('/refresh-token')
-  async reIssue(@Req() req, @Res({ passthrough: true }) res: Response) {
-    const { user_id }: any = req.user;
+  async reIssue(@Req() req) {
+    const { user_id } = req.user;
     const newAccessToken = await this.authService.createAccessToken({
       user_id,
     });

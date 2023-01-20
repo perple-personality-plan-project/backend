@@ -1,7 +1,6 @@
 import {
-  CACHE_MANAGER,
   ConflictException,
-  Inject,
+  ForbiddenException,
   BadRequestException,
   Injectable,
 } from '@nestjs/common';
@@ -9,14 +8,12 @@ import { User } from 'src/db/models/user.models';
 import { CreateUserDto } from '../dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { UserRepository } from '../user.repository';
-import { Cache } from 'cache-manager';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { GroupRepository } from '../../group/group.repository';
 
 @Injectable()
 export class UserService {
   constructor(
-    @Inject(CACHE_MANAGER) private cacheManager: Cache,
     private readonly userRepository: UserRepository,
     private readonly groupRepository: GroupRepository,
   ) {}
@@ -34,7 +31,7 @@ export class UserService {
 
     // 비밀번호와 confirm 검사
     if (createUserDto.password !== createUserDto.confirm_password) {
-      throw new BadRequestException('비밀번호가 일치하지 않습니다.');
+      throw new ForbiddenException('비밀번호가 일치하지 않습니다.');
     }
 
     // 닉네임 중복검사
@@ -69,6 +66,7 @@ export class UserService {
   }
 
   async updatedProfile(user_id: number, updateUserDto: UpdateUserDto) {
+    console.log(typeof user_id);
     const { nickname } = updateUserDto;
 
     const currentUserInfo = await this.findUserByUserId(user_id);
@@ -111,7 +109,7 @@ export class UserService {
   async getMyGroupList(user_id) {
     return this.groupRepository.findMyGroupList(user_id);
   }
-  
+
   async getUserFeed(user_id) {
     return this.userRepository.getUserFeed(user_id);
   }
