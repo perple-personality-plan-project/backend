@@ -113,4 +113,8 @@ export class UserService {
   async getUserFeed(user_id) {
     return this.userRepository.getUserFeed(user_id);
   }
+
+  async getUserPick(user_id: number) {
+    return this.userRepository.getUserPick(user_id);
+  }
 }
