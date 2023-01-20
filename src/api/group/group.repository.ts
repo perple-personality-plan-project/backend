@@ -31,8 +31,8 @@ export class GroupRepository {
     private comment: typeof Comment,
   ) {}
 
-  async createGroup(body, userId) {
-    return this.groupModel.create({ ...body, ...userId });
+  async createGroup(createGroup: object) {
+    return this.groupModel.create({ ...createGroup });
   }
 
   async findGroup(findData: object) {
@@ -139,14 +139,27 @@ export class GroupRepository {
     this.groupUser.destroy({ where: { ...groupUser } });
   }
 
-  async getGroupFeed(groupId) {
+  async getGroupFeed(groupId: number) {
     return this.feed.findAll({
-      attributes: { exclude: ['user_id'] },
+      attributes: {
+        exclude: ['user_id'],
+        include: [
+          'feed_id',
+          'group_user_id',
+          'thumbnail',
+          'description',
+          'location',
+          [Sequelize.col('groupUser.user.mbti'), 'mbti'],
+          [Sequelize.col('groupUser.user.nickname'), 'nickname'],
+          'created_at',
+          'updated_at',
+        ],
+      },
       include: [
         {
           model: GroupUser,
           attributes: [],
-          include: [{ model: Group, attributes: [] }],
+          include: [{ model: Group }, { model: User }],
         },
       ],
       where: {
