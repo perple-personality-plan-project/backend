@@ -159,4 +159,11 @@ export class UserController {
     const user_id = req.user;
     return this.userService.getUserFeed(user_id);
   }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('/my-pick')
+  getUserPick(@Req() req) {
+    const user_id = req.user;
+    return this.userService.getUserPick(user_id);
+  }
 }

@@ -114,4 +114,42 @@ export class UserRepository {
     console.log(feeds);
     return feeds;
   }
+
+  async getUserPick(user_id: number) {
+    return this.pickModel.findAll({
+      where: { user_id },
+      raw: true,
+      attributes: [
+        [Sequelize.col('feed.user.nickname'), 'nickname'],
+        [Sequelize.col('feed.user.mbti'), 'mbti'],
+        [Sequelize.col('feed.feed_id'), 'feed_id'],
+        [Sequelize.col('feed.thumbnail'), 'thumbnail'],
+        [Sequelize.col('feed.description'), 'description'],
+        [Sequelize.col('feed.location'), 'location'],
+        [Sequelize.col('feed.created_at'), 'created_at'],
+        [Sequelize.col('feed.created_at'), 'updated_at'],
+        [
+          Sequelize.fn('COUNT', Sequelize.col('feed.like.like_id')),
+          'like_count',
+        ],
+      ],
+      include: [
+        {
+          model: Feed,
+          attributes: [],
+          include: [
+            {
+              model: User,
+              attributes: [],
+            },
+            {
+              model: Like,
+              attributes: [],
+            },
+          ],
+        },
+      ],
+      group: ['pick_id'],
+    });
+  }
 }
