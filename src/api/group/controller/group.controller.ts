@@ -30,6 +30,11 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 export class GroupController {
   constructor(private readonly groupService: GroupService) {}
 
+  @Get('/hashtag')
+  async getHashTah() {
+    return this.groupService.getHashTag();
+  }
+
   @ApiOperation({ summary: '전체 그룹 리스트 가져오기' })
   @Get()
   async getGroup(@Query() req: GroupParamDto) {

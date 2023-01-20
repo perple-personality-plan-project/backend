@@ -322,4 +322,8 @@ export class GroupRepository {
       raw: false,
     });
   }
+
+  async getHashTag() {
+    return this.hashtagModel.findAll({});
+  }
 }
