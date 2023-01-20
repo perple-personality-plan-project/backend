@@ -154,7 +154,7 @@ export class UserController {
     description: 'Server Error...',
   })
   @UseGuards(AuthGuard('jwt'))
-  @Get()
+  @Get('/my-feed')
   getUserFeed(@Req() req) {
     const user_id = req.user;
     return this.userService.getUserFeed(user_id);
