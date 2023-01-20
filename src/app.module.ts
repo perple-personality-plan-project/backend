@@ -34,7 +34,6 @@ import * as redisStore from 'cache-manager-ioredis';
       port: process.env.REDIS_PORT,
       password: process.env.REDIS_PASSWORD,
       isGlobal: true,
-      ttl: +process.env.REFRESH_TOKEN_EXP,
     }),
     CommentModule,
     GroupCommentModule,

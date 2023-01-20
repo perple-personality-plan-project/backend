@@ -16,20 +16,20 @@ export class GroupService {
 
   async createGroup(
     body: GroupRequestDto,
-    user_id: object,
+    userId: object,
     files: Array<Express.Multer.File>,
   ) {
     const { group_name, description, hashtag } = body;
+    const thumbnail = {};
 
-    const result = await this.groupRepository.findGroup({
-      group_name: body['group_name'],
-    });
+    const result = await this.groupRepository.findGroup({ group_name });
 
     if (result) {
       throw new BadRequestException('이미 생성된 그룹명 입니다.');
     }
 
     const imageList = [];
+
     if (files) {
       const uploadImage = await this.awsS3Service.uploadFileToS3(files);
       uploadImage.map((data) => {
@@ -40,9 +40,11 @@ export class GroupService {
       //디폴트 이미지로 바꿔 줘야함!
       imageList.push('');
     }
-    body['thumbnail'] = imageList.join(',');
 
-    const createGroup = await this.groupRepository.createGroup(body, user_id);
+    thumbnail['thumbnail'] = imageList.join(',');
+    const createGroupObj = { group_name, description, ...thumbnail, ...userId };
+
+    const createGroup = await this.groupRepository.createGroup(createGroupObj);
 
     if (hashtag.length > 0) {
       const hashtagArr = JSON.parse(hashtag.replace(/'/g, '"'));
@@ -71,7 +73,7 @@ export class GroupService {
 
     const groupAdmin = {
       group_id: createGroup.dataValues['group_id'],
-      ...user_id,
+      ...userId,
       admin_flag: true,
     };
 
@@ -90,36 +92,35 @@ export class GroupService {
     return this.groupRepository.getGroup(this.GROUPSORT[sort]);
   }
 
-  async groupSignUp(user_id: object, req: object) {
+  async groupSignUp(userId: object, groupId: object) {
     const groupAdmin = {
-      group_id: req['groupId'],
-      ...user_id,
+      ...groupId,
+      ...userId,
       admin_flag: false,
     };
+
     const findGroupUser = await this.groupRepository.findGroupUser(groupAdmin);
-    let result;
 
     if (findGroupUser) {
-      const data = await this.groupRepository.destroyGroupUser(groupAdmin);
-      result = '그룹 구독을 취소하였습니다.';
+      await this.groupRepository.destroyGroupUser(groupAdmin);
+      return '그룹 구독을 취소하였습니다.';
     } else {
-      const data = await this.groupRepository.groupUserSignUp(groupAdmin);
-      result = '그룹을 구독 하였습니다.';
+      await this.groupRepository.groupUserSignUp(groupAdmin);
+      return '그룹을 구독 하였습니다.';
     }
-    return result;
   }
 
-  async getGroupFeed(req: number) {
-    return this.groupRepository.getGroupFeed(req);
+  async getGroupFeed(groupId: number) {
+    return this.groupRepository.getGroupFeed(groupId);
   }
 
   async getGroupFeedDetail(groupId, feedId) {
     return this.groupRepository.getGroupFeedDetail(groupId, feedId);
   }
 
-  async getSubscription(userId, req) {
+  async getSubscription(userId, groupId) {
     const groupInfo = {
-      group_id: req['groupId'],
+      ...groupId,
       ...userId,
     };
     return this.groupRepository.findGroupUser(groupInfo);
@@ -164,5 +165,8 @@ export class GroupService {
       await this.groupRepository.deleteGroupFeedLike(likeResult.like_id);
       return '좋아요를 취소 했습니다.';
     }
+  }
+  async getHashTag() {
+    return await this.groupRepository.getHashTag();
   }
 }

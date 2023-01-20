@@ -40,12 +40,15 @@ export class AuthService {
   }
 
   async createAccessTokenRefreshToken(user_id: number) {
+    console.log(typeof user_id);
     const payload = { user_id };
 
     const accessToken = await this.createAccessToken(payload);
     const refreshToken = await this.createRefreshToken();
 
-    await this.cacheManager.set(refreshToken, user_id);
+    await this.cacheManager.set(refreshToken, user_id, {
+      ttl: +process.env.REFRESH_TOKEN_EXP,
+    } as any);
 
     return { accessToken, refreshToken };
   }

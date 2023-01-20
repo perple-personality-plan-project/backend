@@ -14,7 +14,7 @@ export class FeedService {
 
   async createFeed(
     body: FeedRequestDto,
-    user_id: object,
+    user_id: number,
     files: Array<Express.Multer.File>,
   ) {
     const imageList = [];
@@ -30,6 +30,7 @@ export class FeedService {
     }
     body['thumbnail'] = imageList.join(',');
 
+    console.log(user_id);
     const feed = await this.feedRepository.createFeed(body, user_id);
 
     if (feed) {
@@ -45,8 +46,8 @@ export class FeedService {
     return this.feedRepository.findFeedById(feed_id);
   }
 
-  async deleteFeed(feed_id) {
-    return this.feedRepository.deleteFeed(feed_id);
+  async deleteFeed(feed_id, user_id) {
+    return this.feedRepository.deleteFeed(feed_id, user_id);
   }
 
   async checkFeedLike(feed_id, user_id) {
@@ -63,16 +64,8 @@ export class FeedService {
       return true;
     }
   }
+
+  async getFeedMbti(mbti) {
+    return this.feedRepository.getFeedMbti(mbti);
+  }
 }
-// async uploadImg(cat: Cat, files: Express.Multer.File[]) {
-//     const fileName = `cats/${files[0].filename}`;
-
-//     console.log(fileName);
-
-//     const newCat = await this.catsRepository.findByIdAndUpdateImg(
-//       cat.id,
-//       fileName,
-//     );
-//     console.log(newCat);
-//     return newCat;
-//   }

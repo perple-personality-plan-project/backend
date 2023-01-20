@@ -9,6 +9,7 @@ import { Sequelize } from 'sequelize-typescript';
 import { User } from '../../db/models/user.models';
 import { Like } from '../../db/models/like.models';
 import { Comment } from '../../db/models/comment.models';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class GroupRepository {
@@ -31,8 +32,8 @@ export class GroupRepository {
     private comment: typeof Comment,
   ) {}
 
-  async createGroup(body, userId) {
-    return this.groupModel.create({ ...body, ...userId });
+  async createGroup(createGroup: object) {
+    return this.groupModel.create({ ...createGroup });
   }
 
   async findGroup(findData: object) {
@@ -139,14 +140,27 @@ export class GroupRepository {
     this.groupUser.destroy({ where: { ...groupUser } });
   }
 
-  async getGroupFeed(groupId) {
+  async getGroupFeed(groupId: number) {
     return this.feed.findAll({
-      attributes: { exclude: ['user_id'] },
+      attributes: {
+        exclude: ['user_id'],
+        include: [
+          'feed_id',
+          'group_user_id',
+          'thumbnail',
+          'description',
+          'location',
+          [Sequelize.col('groupUser.user.mbti'), 'mbti'],
+          [Sequelize.col('groupUser.user.nickname'), 'nickname'],
+          'created_at',
+          'updated_at',
+        ],
+      },
       include: [
         {
           model: GroupUser,
           attributes: [],
-          include: [{ model: Group, attributes: [] }],
+          include: [{ model: Group }, { model: User }],
         },
       ],
       where: {
@@ -183,7 +197,10 @@ export class GroupRepository {
     });
 
     const commentResult = await this.comment.findAll({
-      where: { feed_id: feedId },
+      where: {
+        feed_id: feedId,
+        '$user.groupUser.group_user_id$': { [Op.ne]: null },
+      },
       include: [
         {
           model: User,
@@ -191,6 +208,7 @@ export class GroupRepository {
           include: [
             {
               model: GroupUser,
+              as: 'groupUser',
               attributes: [],
               include: [{ model: Group, attributes: [] }],
               where: { group_id: groupId },
@@ -303,5 +321,9 @@ export class GroupRepository {
       group: ['group_id'],
       raw: false,
     });
+  }
+
+  async getHashTag() {
+    return this.hashtagModel.findAll({});
   }
 }

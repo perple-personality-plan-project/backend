@@ -37,7 +37,7 @@ export class CreateUserDto {
   @IsNotEmpty({ message: '닉네임을 입력헤주세요' })
   @IsString({ message: '닉네임은 문자열 형식이여야 합니다.' })
   @MaxLength(8, { message: '닉네임은 최대 8글자 입니다.' })
-  @Matches(/^([a-zA-Z0-9ㄱ-ㅎ|ㅏ-ㅣ|가-힣]).{4,8}$/)
+  @Matches(/^[가-힣a-zA-Z]{4,8}$/)
   nickname: string;
 
   @IsOptional()
