@@ -9,6 +9,7 @@ import { Sequelize } from 'sequelize-typescript';
 import { User } from '../../db/models/user.models';
 import { Like } from '../../db/models/like.models';
 import { Comment } from '../../db/models/comment.models';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class GroupRepository {
@@ -196,7 +197,10 @@ export class GroupRepository {
     });
 
     const commentResult = await this.comment.findAll({
-      where: { feed_id: feedId },
+      where: {
+        feed_id: feedId,
+        '$user.groupUser.group_user_id$': { [Op.ne]: null },
+      },
       include: [
         {
           model: User,
@@ -204,6 +208,7 @@ export class GroupRepository {
           include: [
             {
               model: GroupUser,
+              as: 'groupUser',
               attributes: [],
               include: [{ model: Group, attributes: [] }],
               where: { group_id: groupId },
