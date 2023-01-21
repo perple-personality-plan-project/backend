@@ -1,4 +1,10 @@
-import { CacheModule, Module } from '@nestjs/common';
+import {
+  CacheModule,
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  Logger,
+} from '@nestjs/common';
 import { UserModule } from './api/user/user.module';
 import { FeedModule } from './api/feed/feed.module';
 import { GroupModule } from './api/group/group.module';
@@ -9,6 +15,7 @@ import { CommentModule } from './api/comment/comment.module';
 import { GroupCommentModule } from './api/group.comment/group.comment.module';
 import { MapModule } from './api/map/map.module';
 import * as redisStore from 'cache-manager-ioredis';
+import { LoggerMiddleware } from './common/middlewares/logger.meddleware';
 
 @Module({
   imports: [
@@ -40,6 +47,10 @@ import * as redisStore from 'cache-manager-ioredis';
     MapModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [Logger],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): any {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}

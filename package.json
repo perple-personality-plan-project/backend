@@ -38,6 +38,7 @@
     "helmet": "^6.0.1",
     "i": "^0.3.7",
     "mysql2": "^2.3.3",
+    "nest-winston": "^1.8.0",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
     "passport-kakao": "^1.0.1",
@@ -47,7 +48,9 @@
     "sequelize": "^6.28.0",
     "sequelize-cli": "^6.5.2",
     "sequelize-typescript": "^2.1.5",
-    "swagger": "^0.7.5"
+    "swagger": "^0.7.5",
+    "winston": "^3.8.2",
+    "winston-daily-rotate-file": "^4.7.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
