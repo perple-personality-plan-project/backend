@@ -12,6 +12,7 @@ import {
   Put,
   Patch,
   HttpStatus,
+  Query,
 } from '@nestjs/common';
 import { GlobalResponseInterceptor } from '../../../common/interceptors/global.response.interceptor';
 import { UserService } from 'src/api/user/service/user.service';
@@ -59,23 +60,14 @@ export class UserController {
   }
 
   @UseGuards(KakaoAuthGuard)
-  @Get('auth/kakao')
-  async kakaoLogin() {
-    return HttpStatus.OK;
-  }
-
-  @UseGuards(KakaoAuthGuard)
-  @Get('/auth/kakao/callback')
-  async kakaoLoginCallBack(
-    @Req() req,
-    @Res({ passthrough: true }) res: Response,
-  ) {
+  @Get('/auth/kakao')
+  async kakaoLoginCallBack(@Req() req, @Query('code') code: string) {
     const { accessToken, refreshToken } = req.user;
 
-    res.setHeader('accessToken', `Bearer ${accessToken}`);
-    res.setHeader('refreshToken', `Bearer ${refreshToken}`);
-
-    return { message: 'ok' };
+    return {
+      accessToken: `Bearer ${accessToken}`,
+      refreshToken: `Bearer ${refreshToken}`,
+    };
   }
 
   @UseGuards(AuthGuard('jwt-refresh'))
