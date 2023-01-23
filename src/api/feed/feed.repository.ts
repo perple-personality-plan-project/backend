@@ -32,6 +32,7 @@ export class FeedRepository {
         'description',
         'location',
         [Sequelize.col('user.user_id'), 'user_id'],
+        [Sequelize.col('user.nickname'), 'nickname'],
         [Sequelize.col('user.mbti'), 'mbti'],
         [Sequelize.fn('COUNT', Sequelize.col('like.like_id')), 'likeCount'],
         'created_at',
