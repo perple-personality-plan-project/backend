@@ -118,16 +118,27 @@ export class UserController {
     return this.userService.getMypageInfo(user_id);
   }
 
-  // @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'))
   @Post('update-profile')
   @UseInterceptors(FilesInterceptor('profile', 1))
   async updateProfile(
     @Req() req,
     @UploadedFiles() files: Array<Express.Multer.File>,
   ) {
-    // const user_id = req.user;
-    const user_id = 1;
+    const user_id = req.user;
     await this.userService.updateProfile(user_id, files);
+    return { message: '업데이트 성공' };
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('update-background')
+  @UseInterceptors(FilesInterceptor('profile', 1))
+  async updateBackground(
+    @Req() req,
+    @UploadedFiles() files: Array<Express.Multer.File>,
+  ) {
+    const user_id = req.user;
+    await this.userService.updateBackground(user_id, files);
     return { message: '업데이트 성공' };
   }
 

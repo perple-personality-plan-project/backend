@@ -157,4 +157,8 @@ export class UserRepository {
   async updateProfile(user_id: number, profile_img: string) {
     return this.userModel.update({ profile_img }, { where: { user_id } });
   }
+
+  async updateBackground(user_id: number, background_img: string) {
+    return this.userModel.update({ background_img }, { where: { user_id } });
+  }
 }

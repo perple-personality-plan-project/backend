@@ -95,6 +95,13 @@ export class UserService {
     return updatedProfile;
   }
 
+  async updateBackground(user_id: number, files: Array<Express.Multer.File>) {
+    const data = await this.awsS3Service.uploadFileToS3(files);
+    const background_img = data[0]['key'].split('/')[1];
+
+    return this.userRepository.updateBackground(user_id, background_img);
+  }
+
   async updateProfile(user_id: number, files: Array<Express.Multer.File>) {
     const data = await this.awsS3Service.uploadFileToS3(files);
     const profile_img = data[0]['key'].split('/')[1];
