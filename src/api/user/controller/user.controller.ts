@@ -13,6 +13,7 @@ import {
   Patch,
   HttpStatus,
   Query,
+  UploadedFiles,
 } from '@nestjs/common';
 import { GlobalResponseInterceptor } from '../../../common/interceptors/global.response.interceptor';
 import { UserService } from 'src/api/user/service/user.service';
@@ -24,6 +25,7 @@ import { UpdateUserDto } from '../dto/update-user.dto';
 import { ParseIntPipe } from '@nestjs/common/pipes';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('user')
 @UseInterceptors(GlobalResponseInterceptor)
@@ -114,6 +116,30 @@ export class UserController {
     const user_id = req.user;
 
     return this.userService.getMypageInfo(user_id);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('update-profile')
+  @UseInterceptors(FilesInterceptor('profile', 1))
+  async updateProfile(
+    @Req() req,
+    @UploadedFiles() files: Array<Express.Multer.File>,
+  ) {
+    const user_id = req.user;
+    await this.userService.updateProfile(user_id, files);
+    return { message: '업데이트 성공' };
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('update-background')
+  @UseInterceptors(FilesInterceptor('profile', 1))
+  async updateBackground(
+    @Req() req,
+    @UploadedFiles() files: Array<Express.Multer.File>,
+  ) {
+    const user_id = req.user;
+    await this.userService.updateBackground(user_id, files);
+    return { message: '업데이트 성공' };
   }
 
   @UseGuards(AuthGuard('jwt-refresh'))

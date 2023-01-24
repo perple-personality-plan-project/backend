@@ -60,6 +60,8 @@ export class UserRepository {
     const query = ` SELECT 
                         u.nickname,
                         u.mbti,
+                        u.profile_img,
+                        u.background_img,
                         (SELECT COUNT(*) FROM feeds f WHERE u.user_id = f.user_id) as feeds_cnt,
                         (SELECT COUNT(*) FROM maps m WHERE u.user_id = m.user_id) as routes_cnt,
                         (SELECT COUNT(*) FROM picks p  WHERE u.user_id = p.user_id) as picks_cnt,
@@ -150,5 +152,13 @@ export class UserRepository {
       ],
       group: ['pick_id'],
     });
+  }
+
+  async updateProfile(user_id: number, profile_img: string) {
+    return this.userModel.update({ profile_img }, { where: { user_id } });
+  }
+
+  async updateBackground(user_id: number, background_img: string) {
+    return this.userModel.update({ background_img }, { where: { user_id } });
   }
 }
