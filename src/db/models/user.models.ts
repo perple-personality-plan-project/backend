@@ -71,6 +71,12 @@ export class User extends Model {
   @Column
   provider: string;
 
+  @Column
+  profile_img: string;
+
+  @Column
+  background_img: string;
+
   @CreatedAt
   created_at: Date;
 

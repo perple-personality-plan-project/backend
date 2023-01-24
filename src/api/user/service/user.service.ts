@@ -10,12 +10,14 @@ import * as bcrypt from 'bcrypt';
 import { UserRepository } from '../user.repository';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { GroupRepository } from '../../group/group.repository';
+import { AwsS3Service } from 'src/common/utils/asw.s3.service';
 
 @Injectable()
 export class UserService {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly groupRepository: GroupRepository,
+    private readonly awsS3Service: AwsS3Service,
   ) {}
 
   async signUp(createUserDto: CreateUserDto): Promise<User> {
@@ -91,6 +93,13 @@ export class UserService {
     }
 
     return updatedProfile;
+  }
+
+  async updateProfile(user_id: number, files: Array<Express.Multer.File>) {
+    const data = await this.awsS3Service.uploadFileToS3(files);
+    const profile_img = data[0]['key'].split('/')[1];
+
+    return this.userRepository.updateProfile(user_id, profile_img);
   }
 
   async getMypageInfo(user_id: number) {

@@ -17,6 +17,7 @@ import { GroupHashtag } from '../../db/models/groupHahtag.models';
 import { Hashtag } from '../../db/models/hashtag.models';
 import { Map } from '../../db/models/map.models';
 import { Comment } from '../../db/models/comment.models';
+import { AwsS3Service } from 'src/common/utils/asw.s3.service';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { Comment } from '../../db/models/comment.models';
     AuthService,
     UserRepository,
     JwtService,
+    AwsS3Service,
     GroupRepository,
   ],
   controllers: [UserController],
