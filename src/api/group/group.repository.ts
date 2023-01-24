@@ -43,7 +43,7 @@ export class GroupRepository {
     });
   }
 
-  async getGroup(sort) {
+  async getGroup(sort, search) {
     return this.groupModel.findAll({
       include: [
         {
@@ -106,6 +106,13 @@ export class GroupRepository {
         'updated_at',
       ],
       group: ['group_id'],
+      where: {
+        [Op.or]: [
+          { group_name: { [Op.like]: `%${search}%` } },
+          { description: { [Op.like]: `%${search}%` } },
+          { '$groupHashTag.hashtag.title$': { [Op.like]: `%${search}` } },
+        ],
+      },
       order: [[sort, 'DESC']],
       raw: false,
     });
