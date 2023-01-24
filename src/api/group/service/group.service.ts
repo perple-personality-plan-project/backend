@@ -84,12 +84,19 @@ export class GroupService {
 
   async getGroup(req: GroupParamDto) {
     const { sort, search } = req;
+    let searchData = '';
 
     if (sort !== 'rank' && sort !== 'date') {
       throw new BadRequestException('정렬은 인기순/생성순만 있습니다.');
     }
 
-    return this.groupRepository.getGroup(this.GROUPSORT[sort], search);
+    if (!search) {
+      searchData = '';
+    } else {
+      searchData = search;
+    }
+
+    return this.groupRepository.getGroup(this.GROUPSORT[sort], searchData);
   }
 
   async groupSignUp(userId: object, groupId: object) {
