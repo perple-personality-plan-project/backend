@@ -66,7 +66,6 @@ export class UserService {
   }
 
   async updatedProfile(user_id: number, updateUserDto: UpdateUserDto) {
-    console.log(typeof user_id);
     const { nickname } = updateUserDto;
 
     const currentUserInfo = await this.findUserByUserId(user_id);
@@ -106,8 +105,8 @@ export class UserService {
     return this.userRepository.findUserByUserId(user_id);
   }
 
-  async getMyGroupList(user_id) {
-    return this.groupRepository.findMyGroupList(user_id);
+  async getMyGroupList(userId) {
+    return this.groupRepository.findMyGroupList(userId);
   }
 
   async getUserFeed(user_id) {

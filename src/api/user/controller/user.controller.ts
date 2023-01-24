@@ -43,10 +43,10 @@ export class UserController {
 
   @UseGuards(AuthGuard('local'))
   @Post('/login')
-  async login(
-    @Req() req,
-  ): Promise<{ accessToken: string; refreshToken: string }> {
+  async login(@Req() req) {
     const user_id = req.user;
+
+    const { mbti } = await this.userService.findUserByUserId(user_id);
 
     const { accessToken, refreshToken } =
       await this.authService.createAccessTokenRefreshToken(user_id);
@@ -54,6 +54,7 @@ export class UserController {
     return {
       accessToken: `Bearer ${accessToken}`,
       refreshToken: `Bearer ${refreshToken}`,
+      mbti,
     };
   }
 
@@ -139,8 +140,8 @@ export class UserController {
   @UseGuards(AuthGuard('jwt'))
   @Get('my-group-list')
   async getMyGroupList(@Req() req) {
-    const user_id = req.user;
-    return await this.userService.getMyGroupList(user_id);
+    const userId = req.user;
+    return await this.userService.getMyGroupList(userId);
   }
 
   // 유저 피드 조회

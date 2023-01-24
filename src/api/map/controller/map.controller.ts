@@ -10,11 +10,15 @@ import {
   Put,
   ParseIntPipe,
   UploadedFiles,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { GlobalResponseInterceptor } from '../../../common/interceptors/global.response.interceptor';
 import { GlobalExceptionFilter } from '../../../common/filter/global.exception.filter';
 import { MapService } from '../service/map.service';
 import { PositiveIntPipe } from '../../../common/pipes/positiveInt.pipe';
+import { AuthGuard } from '@nestjs/passport/dist/auth.guard';
+import { Request } from 'express';
 
 @Controller('map')
 @UseInterceptors(GlobalResponseInterceptor)
@@ -23,23 +27,27 @@ export class MapController {
   constructor(private readonly mapService: MapService) {}
 
   @Post()
-  async createMap(@Body() body) {
-    const user_id = { user_id: 1 };
-    return this.mapService.createMap(body, user_id);
+  @UseGuards(AuthGuard('jwt'))
+  async createMap(@Body() body, @Req() req: Request) {
+    const userId = { user_id: req.user };
+    return this.mapService.createMap(body, userId);
   }
 
   @Get()
-  async getMapList() {
-    const user_id = { user_id: 1 };
-    return this.mapService.getMapList(user_id);
+  @UseGuards(AuthGuard('jwt'))
+  async getMapList(@Req() req: Request) {
+    const userId = { user_id: req.user };
+    return this.mapService.getMapList(userId);
   }
 
   @Get('/:map_id')
+  @UseGuards(AuthGuard('jwt'))
   async findMap(
     @Param('map_id', ParseIntPipe, PositiveIntPipe) map_id: number,
+    @Req() req: Request,
   ) {
-    const user_id = { user_id: 1 };
+    const userId = { user_id: req.user };
     const mapId = { map_id };
-    return this.mapService.getMap(user_id, mapId);
+    return this.mapService.getMap(userId, mapId);
   }
 }
