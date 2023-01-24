@@ -33,4 +33,7 @@ export class GroupParamDto {
   @IsNotEmpty()
   @IsString()
   sort: string;
+
+  @IsString()
+  search: string;
 }
