@@ -8,7 +8,7 @@ const dailyOptions = (level: string) => {
   return {
     level,
     datePattern: 'YYYY-MM-DD',
-    dirname: __dirname + `/../../logs/${level}`,
+    dirname: `src/logs/${level}`,
     filename: `%DATE%.${level}.log`,
     maxFiles: 7, // 7일치 파일로그 저장
     zippedArchive: true, // 로그가 쌓이면 압축
