@@ -38,7 +38,7 @@ export class GroupService {
       });
     } else {
       //디폴트 이미지로 바꿔 줘야함!
-      imageList.push('');
+      imageList.push('default-group.png');
     }
 
     thumbnail['thumbnail'] = imageList.join(',');
