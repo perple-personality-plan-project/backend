@@ -12,6 +12,13 @@ const dailyOptions = (level: string) => {
     filename: `%DATE%.${level}.log`,
     maxFiles: 7, // 7일치 파일로그 저장
     zippedArchive: true, // 로그가 쌓이면 압축
+    format: winston.format.combine(
+      winston.format.timestamp(),
+      utilities.format.nestLike('Platter', {
+        colors: false,
+        prettyPrint: true,
+      }),
+    ),
   };
 };
 
