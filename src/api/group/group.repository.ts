@@ -53,6 +53,20 @@ export class GroupRepository {
     });
   }
 
+  async groupHashTag(groupId) {
+    return this.groupHashtagModel.findAll({
+      where: { ...groupId },
+      include: [
+        {
+          model: Hashtag,
+          required: true,
+          attributes: ['title'],
+        },
+      ],
+      raw: true,
+    });
+  }
+
   async getGroup(sort, search) {
     return this.groupModel.findAll({
       include: [
@@ -358,5 +372,13 @@ export class GroupRepository {
 
   async deleteGroup(groupId) {
     return this.groupModel.destroy({ where: { ...groupId } });
+  }
+
+  async editGroup(edit, groupId) {
+    await this.groupModel.update({ ...edit }, { where: { ...groupId } });
+  }
+
+  async deleteGroupHashtag(groupId) {
+    return await this.groupHashtagModel.destroy({ where: { ...groupId } });
   }
 }

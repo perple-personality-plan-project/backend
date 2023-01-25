@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { GroupParamDto, GroupRequestDto } from '../dto/group.request.dto';
 import { GroupRepository } from '../group.repository';
 import { AwsS3Service } from '../../../common/utils/asw.s3.service';
+import { GroupEditDto } from '../dto/group.edit.dto';
 
 @Injectable()
 export class GroupService {
@@ -48,6 +49,7 @@ export class GroupService {
 
     if (hashtag.length > 0) {
       const hashtagArr = JSON.parse(hashtag.replace(/'/g, '"'));
+      console.log(hashtagArr);
 
       //해쉬태그 입력
 
@@ -182,12 +184,61 @@ export class GroupService {
     const group = await this.groupRepository.findGroup(groupId);
 
     if (!group['user_id'] == user_id) {
-      return '본인 게시물만 삭제 할 수 있습니다.';
+      return '본인 그룹만 삭제 할 수 있습니다.';
     }
 
     const deleteGroup = this.groupRepository.deleteGroup(groupId);
     if (deleteGroup) {
       return '삭제 되었습니다.';
     }
+  }
+
+  async editGroup(userId, groupId, files, editGroup) {
+    const { user_id } = userId;
+    const imageList = [];
+    const group = await this.groupRepository.findGroup(groupId);
+
+    if (!group['user_id'] == user_id) {
+      return '본인 그룹만 수정 할 수 있습니다.';
+    }
+
+    if (files) {
+      const image = group.thumbnail;
+      if (image !== 'default-group.png') {
+        await this.awsS3Service.deleteS3Object(image);
+      }
+      const uploadImage = await this.awsS3Service.uploadFileToS3(files);
+      uploadImage.map((data) => {
+        const key = data['key'].split('/');
+        imageList.push(key[1]);
+      });
+    }
+    editGroup.thumbnail = imageList.join(',');
+
+    const groupHashtag = await this.groupRepository.groupHashTag(groupId);
+
+    if (editGroup.hashtag.length > 0) {
+      const hashtagArr = JSON.parse(editGroup.hashtag.replace(/'/g, '"'));
+      const result = await this.groupRepository.deleteGroupHashtag(groupId);
+      if (result) {
+        await Promise.all(
+          hashtagArr.map(async (tag) => {
+            const title = { title: tag };
+            const result = await this.groupRepository.findHashtag(title);
+
+            if (!result) {
+              const hashtag = await this.groupRepository.createHashtag(title);
+              groupHashtag['hashtag_id'] = hashtag.dataValues['hashtag_id'];
+            } else {
+              groupHashtag['hashtag_id'] = result.hashtag_id;
+            }
+
+            await this.groupRepository.createGroupHashtag(groupId);
+          }),
+        );
+      }
+    }
+
+    return '수정 되었습니다.';
   }
 }
