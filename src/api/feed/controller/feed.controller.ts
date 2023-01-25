@@ -137,7 +137,7 @@ export class FeedController {
     return '좋아요 했습니다.';
   }
   @UseGuards(AuthGuard('jwt'))
-  @Get('/like/:feed_id')
+  @Get('/:feed_id/like')
   async getLikeCheck(
     @Param('feed_id', ParseIntPipe, PositiveIntPipe) feed_id: number,
     @Req() req,
