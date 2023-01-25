@@ -184,7 +184,7 @@ export class GroupRepository {
       where: {
         '$groupUser.group.group_id$': groupId,
       },
-      group: ['like_id'],
+      group: ['feed_id'],
     });
   }
 
@@ -345,4 +345,6 @@ export class GroupRepository {
   async getHashTag() {
     return this.hashtagModel.findAll({});
   }
+
+  async deleteGroup() {}
 }
