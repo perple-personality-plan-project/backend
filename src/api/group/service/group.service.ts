@@ -182,7 +182,7 @@ export class GroupService {
     const { user_id } = userId;
     const group = await this.groupRepository.findGroup(groupId);
 
-    if (!group['user_id'] == user_id) {
+    if (group['user_id'] !== user_id) {
       return '본인 그룹만 삭제 할 수 있습니다.';
     }
 
