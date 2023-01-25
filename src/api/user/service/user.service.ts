@@ -11,6 +11,9 @@ import { UserRepository } from '../user.repository';
 import { UpdateUserDto } from '../dto/request/update-user.dto';
 import { GroupRepository } from '../../group/group.repository';
 import { AwsS3Service } from 'src/common/utils/asw.s3.service';
+import { Group } from 'src/db/models/group.models';
+import { Feed } from 'src/db/models/feed.models';
+import { Pick } from 'src/db/models/pick.models';
 
 @Injectable()
 export class UserService {
@@ -62,12 +65,15 @@ export class UserService {
     return createUser;
   }
 
-  async chkPicked(user_id: number, feed_id: number) {
+  async chkPicked(user_id: number, feed_id: number): Promise<boolean> {
     const isPicked = await this.userRepository.chkPicked(user_id, feed_id);
     return isPicked ? true : false;
   }
 
-  async updatedProfile(user_id: number, updateUserDto: UpdateUserDto) {
+  async updatedProfile(
+    user_id: number,
+    updateUserDto: UpdateUserDto,
+  ): Promise<[affectedCount: number]> {
     const { nickname } = updateUserDto;
 
     const currentUserInfo = await this.findUserByUserId(user_id);
@@ -95,41 +101,47 @@ export class UserService {
     return updatedProfile;
   }
 
-  async updateBackground(user_id: number, files: Array<Express.Multer.File>) {
+  async updateBackground(
+    user_id: number,
+    files: Array<Express.Multer.File>,
+  ): Promise<[affectedCount: number]> {
     const data = await this.awsS3Service.uploadFileToS3(files);
     const background_img = data[0]['key'].split('/')[1];
 
     return this.userRepository.updateBackground(user_id, background_img);
   }
 
-  async updateProfile(user_id: number, files: Array<Express.Multer.File>) {
+  async updateProfile(
+    user_id: number,
+    files: Array<Express.Multer.File>,
+  ): Promise<[affectedCount: number]> {
     const data = await this.awsS3Service.uploadFileToS3(files);
     const profile_img = data[0]['key'].split('/')[1];
 
     return this.userRepository.updateProfile(user_id, profile_img);
   }
 
-  async getMypageInfo(user_id: number) {
+  async getMypageInfo(user_id: number): Promise<object[]> {
     return this.userRepository.getMypageInfo(user_id);
   }
 
-  async findUserByLoginId(login_id: string) {
+  async findUserByLoginId(login_id: string): Promise<User> {
     return this.userRepository.findUserByLoginId(login_id);
   }
 
-  async findUserByUserId(user_id: number) {
+  async findUserByUserId(user_id: number): Promise<User> {
     return this.userRepository.findUserByUserId(user_id);
   }
 
-  async getMyGroupList(userId) {
-    return this.groupRepository.findMyGroupList(userId);
+  async getMyGroupList(user_id: number): Promise<Group[]> {
+    return this.groupRepository.findMyGroupList(user_id);
   }
 
-  async getUserFeed(user_id) {
+  async getUserFeed(user_id: number): Promise<Feed[]> {
     return this.userRepository.getUserFeed(user_id);
   }
 
-  async getUserPick(user_id: number) {
+  async getUserPick(user_id: number): Promise<Pick[]> {
     return this.userRepository.getUserPick(user_id);
   }
 }

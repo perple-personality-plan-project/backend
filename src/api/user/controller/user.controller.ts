@@ -167,8 +167,8 @@ export class UserController {
   @UseGuards(AuthGuard('jwt'))
   @Get('my-group-list')
   async getMyGroupList(@Req() req): Promise<Group[]> {
-    const userId = req.user;
-    return await this.userService.getMyGroupList(userId);
+    const user_id = req.user;
+    return await this.userService.getMyGroupList(user_id);
   }
 
   @UseGuards(AuthGuard('jwt'))
