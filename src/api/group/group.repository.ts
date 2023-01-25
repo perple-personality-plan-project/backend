@@ -38,8 +38,18 @@ export class GroupRepository {
 
   async findGroup(findData: object) {
     return this.groupModel.findOne({
+      include: [{ model: GroupUser, attributes: [] }],
       raw: true,
       where: { ...findData },
+      attributes: [
+        'group_id',
+        'group_name',
+        'thumbnail',
+        'description',
+        [Sequelize.col('groupUser.user_id'), 'user_id'],
+        'created_at',
+        'updated_at',
+      ],
     });
   }
 
@@ -346,5 +356,7 @@ export class GroupRepository {
     return this.hashtagModel.findAll({});
   }
 
-  async deleteGroup() {}
+  async deleteGroup(groupId) {
+    return this.groupModel.destroy({ where: { ...groupId } });
+  }
 }

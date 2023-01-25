@@ -176,4 +176,18 @@ export class GroupService {
   async getHashTag() {
     return await this.groupRepository.getHashTag();
   }
+
+  async deleteGroup(userId, groupId) {
+    const { user_id } = userId;
+    const group = await this.groupRepository.findGroup(groupId);
+
+    if (!group['user_id'] == user_id) {
+      return '본인 게시물만 삭제 할 수 있습니다.';
+    }
+
+    const deleteGroup = this.groupRepository.deleteGroup(groupId);
+    if (deleteGroup) {
+      return '삭제 되었습니다.';
+    }
+  }
 }
