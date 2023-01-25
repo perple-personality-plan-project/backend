@@ -371,7 +371,7 @@ export class GroupRepository {
   }
 
   async deleteGroup(groupId) {
-    return this.groupModel.destroy({ where: { ...groupId } });
+    return this.groupModel.destroy({ where: { [Op.and]: { ...groupId } } });
   }
 
   async editGroup(edit, groupId) {
