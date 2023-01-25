@@ -136,16 +136,17 @@ export class GroupController {
     return this.groupService.groupFeedLike(userId, group_id, feed_id);
   }
 
-  // @UseGuards(AuthGuard('jwt'))
-  // @Delete('/:group_id')
-  // async deleteGroup(
-  //   @Param('group_id', ParseIntPipe, PositiveIntPipe) group_id: number,
-  //   @Req() req: Request,
-  // ) {
-  //   const userId = { user_id: req.user };
-  //
-  //   return '삭제';
-  // }
+  @UseGuards(AuthGuard('jwt'))
+  @Delete('/:group_id')
+  async deleteGroup(
+    @Param('group_id', ParseIntPipe, PositiveIntPipe) group_id: number,
+    @Req() req: Request,
+  ) {
+    const userId = { user_id: req.user };
+    const groupId = { group_id };
+    console.log(userId, groupId);
+    return this.groupService.deleteGroup(userId, groupId);
+  }
   //
   // @UseGuards(AuthGuard('jwt'))
   // @Put('/:group_id')
