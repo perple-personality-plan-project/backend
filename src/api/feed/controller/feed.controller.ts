@@ -12,6 +12,7 @@ import {
   UploadedFiles,
   UseGuards,
   Req,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { GlobalResponseInterceptor } from 'src/common/interceptors/global.response.interceptor';
 import { GlobalExceptionFilter } from '../../../common/filter/global.exception.filter';
@@ -21,6 +22,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { request } from 'http';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';
+import { PositiveIntPipe } from '../../../common/pipes/positiveInt.pipe';
 
 @Controller('feed')
 @ApiTags('feed')
@@ -133,5 +135,14 @@ export class FeedController {
       return '좋아요를 취소했습니다.';
     }
     return '좋아요 했습니다.';
+  }
+  @UseGuards(AuthGuard('jwt'))
+  @Get('/like/:feed_id')
+  async getLikeCheck(
+    @Param('feed_id', ParseIntPipe, PositiveIntPipe) feed_id: number,
+    @Req() req,
+  ) {
+    const user_id = req.user;
+    return this.feedService.getLikeCheck(feed_id, user_id);
   }
 }

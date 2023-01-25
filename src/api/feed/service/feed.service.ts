@@ -68,4 +68,13 @@ export class FeedService {
   async getFeedMbti(mbti) {
     return this.feedRepository.getFeedMbti(mbti);
   }
+
+  async getLikeCheck(feed_id, user_id) {
+    const isFeedLike = await this.feedRepository.checkFeedLike(
+      feed_id,
+      user_id,
+    );
+
+    return isFeedLike ? true : false;
+  }
 }

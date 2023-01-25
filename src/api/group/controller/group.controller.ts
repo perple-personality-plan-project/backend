@@ -12,6 +12,7 @@ import {
   UploadedFiles,
   UseGuards,
   Req,
+  Delete,
 } from '@nestjs/common';
 import { GlobalResponseInterceptor } from 'src/common/interceptors/global.response.interceptor';
 import { GlobalExceptionFilter } from '../../../common/filter/global.exception.filter';
@@ -134,4 +135,27 @@ export class GroupController {
     const userId = { user_id: req.user };
     return this.groupService.groupFeedLike(userId, group_id, feed_id);
   }
+
+  // @UseGuards(AuthGuard('jwt'))
+  // @Delete('/:group_id')
+  // async deleteGroup(
+  //   @Param('group_id', ParseIntPipe, PositiveIntPipe) group_id: number,
+  //   @Req() req: Request,
+  // ) {
+  //   const userId = { user_id: req.user };
+  //
+  //   return '삭제';
+  // }
+  //
+  // @UseGuards(AuthGuard('jwt'))
+  // @Put('/:group_id')
+  // async editGroup(
+  //   @Param('group_id', ParseIntPipe, PositiveIntPipe) group_id: number,
+  //   @Req() req: Request,
+  // ) {
+  //   const userId = { user_id: req.user };
+  //   const groupId = { group_id };
+  //
+  //   return this.groupService.deleteGroup(userId, groupId);
+  // }
 }

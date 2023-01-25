@@ -159,6 +159,13 @@ export class GroupRepository {
           'location',
           [Sequelize.col('groupUser.user.mbti'), 'mbti'],
           [Sequelize.col('groupUser.user.nickname'), 'nickname'],
+          [
+            Sequelize.fn(
+              'COUNT',
+              Sequelize.fn('DISTINCT', Sequelize.col('like.like_id')),
+            ),
+            'likeCount',
+          ],
           'created_at',
           'updated_at',
         ],
@@ -169,10 +176,15 @@ export class GroupRepository {
           attributes: [],
           include: [{ model: Group }, { model: User }],
         },
+        {
+          model: Like,
+          attributes: [],
+        },
       ],
       where: {
         '$groupUser.group.group_id$': groupId,
       },
+      group: ['like_id'],
     });
   }
 
