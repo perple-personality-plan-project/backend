@@ -150,7 +150,7 @@ export class GroupController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Put('/:group_id')
+  @Put('/edit/:group_id')
   @UseInterceptors(FilesInterceptor('thumbnail', 5))
   async editGroup(
     @Param('group_id', ParseIntPipe, PositiveIntPipe) group_id: number,
