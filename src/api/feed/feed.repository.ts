@@ -50,6 +50,7 @@ export class FeedRepository {
           attributes: [],
         },
       ],
+      where: { group_user_id: { [Op.eq]: null } },
       group: ['feed_id'],
       order: [['created_at', 'DESC']],
     });
