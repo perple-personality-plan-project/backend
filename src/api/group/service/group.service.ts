@@ -31,7 +31,7 @@ export class GroupService {
 
     const imageList = [];
 
-    if (files) {
+    if (files.length > 0) {
       const uploadImage = await this.awsS3Service.uploadFileToS3(files);
       uploadImage.map((data) => {
         const key = data['key'].split('/');
@@ -49,7 +49,6 @@ export class GroupService {
 
     if (hashtag.length > 0) {
       const hashtagArr = JSON.parse(hashtag.replace(/'/g, '"'));
-      console.log(hashtagArr);
 
       //해쉬태그 입력
 
@@ -241,4 +240,6 @@ export class GroupService {
 
     return '수정 되었습니다.';
   }
+
+  // async hashtagSearch() {}
 }
