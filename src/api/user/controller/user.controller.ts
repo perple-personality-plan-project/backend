@@ -20,7 +20,6 @@ import { AuthService } from 'src/auth/auth.service';
 import { KakaoAuthGuard } from 'src/auth/kakao/kaka-auth.guard';
 import { UpdateUserDto } from '../dto/request/update-user.dto';
 import { ParseIntPipe } from '@nestjs/common/pipes';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { Group } from 'src/db/models/group.models';
@@ -172,16 +171,6 @@ export class UserController {
     return await this.userService.getMyGroupList(userId);
   }
 
-  // 유저 피드 조회
-  @ApiOperation({ summary: '유저 피드 조회' })
-  @ApiResponse({
-    status: 200,
-    description: '성공!',
-  })
-  @ApiResponse({
-    status: 500,
-    description: 'Server Error...',
-  })
   @UseGuards(AuthGuard('jwt'))
   @Get('/my-feed')
   getUserFeed(@Req() req): Promise<Feed[]> {
