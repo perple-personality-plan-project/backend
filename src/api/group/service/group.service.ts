@@ -182,12 +182,37 @@ export class GroupService {
     const group = await this.groupRepository.findGroup(groupId);
 
     if (!group['user_id'] == user_id) {
-      return '본인 게시물만 삭제 할 수 있습니다.';
+      return '본인 그룹만 삭제 할 수 있습니다.';
     }
 
     const deleteGroup = this.groupRepository.deleteGroup(groupId);
     if (deleteGroup) {
       return '삭제 되었습니다.';
     }
+  }
+
+  async editGroup(userId, groupId, files, editGroup) {
+    const { user_id } = userId;
+    const imageList = [];
+    const group = await this.groupRepository.findGroup(groupId);
+
+    if (!group['user_id'] == user_id) {
+      return '본인 그룹만 수정 할 수 있습니다.';
+    }
+
+    if (files) {
+      const image = group.thumbnail;
+      if (image !== 'default-group.png') {
+        await this.awsS3Service.deleteS3Object(image);
+      }
+      const uploadImage = await this.awsS3Service.uploadFileToS3(files);
+      uploadImage.map((data) => {
+        const key = data['key'].split('/');
+        imageList.push(key[1]);
+      });
+    }
+    editGroup.thumbnail = imageList.join(',');
+
+    await this.groupRepository.editGroup(editGroup, groupId);
   }
 }

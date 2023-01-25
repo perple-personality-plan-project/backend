@@ -17,6 +17,7 @@ import {
 import { GlobalResponseInterceptor } from 'src/common/interceptors/global.response.interceptor';
 import { GlobalExceptionFilter } from '../../../common/filter/global.exception.filter';
 import { GroupParamDto, GroupRequestDto } from '../dto/group.request.dto';
+import { GroupEditDto } from '../dto/group.edit.dto';
 import { GroupService } from '../service/group.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport/dist/auth.guard';
@@ -144,19 +145,22 @@ export class GroupController {
   ) {
     const userId = { user_id: req.user };
     const groupId = { group_id };
-    console.log(userId, groupId);
+
     return this.groupService.deleteGroup(userId, groupId);
   }
-  //
-  // @UseGuards(AuthGuard('jwt'))
-  // @Put('/:group_id')
-  // async editGroup(
-  //   @Param('group_id', ParseIntPipe, PositiveIntPipe) group_id: number,
-  //   @Req() req: Request,
-  // ) {
-  //   const userId = { user_id: req.user };
-  //   const groupId = { group_id };
-  //
-  //   return this.groupService.deleteGroup(userId, groupId);
-  // }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Put('/:group_id')
+  @UseInterceptors(FilesInterceptor('thumbnail', 5))
+  async editGroup(
+    @Param('group_id', ParseIntPipe, PositiveIntPipe) group_id: number,
+    @Req() req: Request,
+    @Body() editData: GroupEditDto,
+    @UploadedFiles() files: Array<Express.Multer.File>,
+  ) {
+    const userId = { user_id: req.user };
+    const groupId = { group_id };
+
+    return this.groupService.editGroup(userId, groupId, files, editData);
+  }
 }
