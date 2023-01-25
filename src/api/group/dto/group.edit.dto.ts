@@ -11,4 +11,9 @@ export class GroupEditDto {
   @IsNotEmpty()
   @IsOptional()
   thumbnail: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @IsOptional()
+  hashtag: string;
 }

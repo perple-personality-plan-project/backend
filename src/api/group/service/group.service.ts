@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { GroupParamDto, GroupRequestDto } from '../dto/group.request.dto';
 import { GroupRepository } from '../group.repository';
 import { AwsS3Service } from '../../../common/utils/asw.s3.service';
+import { GroupEditDto } from '../dto/group.edit.dto';
 
 @Injectable()
 export class GroupService {
@@ -48,6 +49,7 @@ export class GroupService {
 
     if (hashtag.length > 0) {
       const hashtagArr = JSON.parse(hashtag.replace(/'/g, '"'));
+      console.log(hashtagArr);
 
       //해쉬태그 입력
 
@@ -213,6 +215,30 @@ export class GroupService {
     }
     editGroup.thumbnail = imageList.join(',');
 
-    await this.groupRepository.editGroup(editGroup, groupId);
+    const groupHashtag = await this.groupRepository.groupHashTag(groupId);
+
+    if (editGroup.hashtag.length > 0) {
+      const hashtagArr = JSON.parse(editGroup.hashtag.replace(/'/g, '"'));
+      const result = await this.groupRepository.deleteGroupHashtag(groupId);
+      if (result) {
+        await Promise.all(
+          hashtagArr.map(async (tag) => {
+            const title = { title: tag };
+            const result = await this.groupRepository.findHashtag(title);
+
+            if (!result) {
+              const hashtag = await this.groupRepository.createHashtag(title);
+              groupHashtag['hashtag_id'] = hashtag.dataValues['hashtag_id'];
+            } else {
+              groupHashtag['hashtag_id'] = result.hashtag_id;
+            }
+
+            await this.groupRepository.createGroupHashtag(groupId);
+          }),
+        );
+      }
+    }
+
+    return '수정 되었습니다.';
   }
 }
