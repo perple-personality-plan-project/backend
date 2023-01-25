@@ -6,8 +6,8 @@ import { Pick } from 'src/db/models/pick.models';
 import { User } from 'src/db/models/user.models';
 import { Feed } from 'src/db/models/feed.models';
 import { Like } from 'src/db/models/like.models';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateUserDto } from './dto/request/create-user.dto';
+import { UpdateUserDto } from './dto/request/update-user.dto';
 
 @Injectable()
 export class UserRepository {

@@ -5,10 +5,10 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { User } from 'src/db/models/user.models';
-import { CreateUserDto } from '../dto/create-user.dto';
+import { CreateUserDto } from '../dto/request/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { UserRepository } from '../user.repository';
-import { UpdateUserDto } from '../dto/update-user.dto';
+import { UpdateUserDto } from '../dto/request/update-user.dto';
 import { GroupRepository } from '../../group/group.repository';
 import { AwsS3Service } from 'src/common/utils/asw.s3.service';
 
