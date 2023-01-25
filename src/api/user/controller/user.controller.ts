@@ -61,7 +61,7 @@ export class UserController {
 
   @UseGuards(KakaoAuthGuard)
   @Get('/auth/kakao')
-  async kakaoLoginCallBack(@Req() req, @Query('code') code: string) {
+  async kakaoLogin(@Req() req, @Query('code') code: string) {
     const { accessToken, refreshToken } = req.user;
 
     return {
