@@ -3,10 +3,10 @@ import {
   ForbiddenException,
   BadRequestException,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { User } from 'src/db/models/user.models';
 import { CreateUserDto } from '../dto/request/create-user.dto';
-import * as bcrypt from 'bcrypt';
 import { UserRepository } from '../user.repository';
 import { UpdateUserDto } from '../dto/request/update-user.dto';
 import { GroupRepository } from '../../group/group.repository';
@@ -49,14 +49,7 @@ export class UserService {
       throw new ConflictException('중복되는 닉네임이 존재합니다.');
     }
 
-    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
-
-    const user = {
-      ...createUserDto,
-      password: hashedPassword,
-    };
-
-    const createUser = await this.userRepository.createUser(user);
+    const createUser = await this.userRepository.createUser(createUserDto);
 
     if (!createUser) {
       throw new BadRequestException('회원가입에 실패했습니다.');
@@ -66,8 +59,7 @@ export class UserService {
   }
 
   async checkPicked(user_id: number, feed_id: number): Promise<boolean> {
-    const isPicked = await this.userRepository.checkPicked(user_id, feed_id);
-    return isPicked ? true : false;
+    return this.userRepository.checkPicked(user_id, feed_id);
   }
 
   async updatedProfile(
@@ -94,7 +86,7 @@ export class UserService {
       updateUserDto,
     );
 
-    if (!updatedProfile) {
+    if (updatedProfile[0] === 0) {
       throw new BadRequestException('프로필 수정에 실패하였습니다.');
     }
 
@@ -126,11 +118,23 @@ export class UserService {
   }
 
   async findUserByLoginId(login_id: string): Promise<User> {
-    return this.userRepository.findUserByLoginId(login_id);
+    const existsUser = this.userRepository.findUserByLoginId(login_id);
+
+    if (!existsUser) {
+      throw new NotFoundException('존재하지 않는 회원입니다.');
+    }
+
+    return existsUser;
   }
 
   async findUserByUserId(user_id: number): Promise<User> {
-    return this.userRepository.findUserByUserId(user_id);
+    const existsUser = this.userRepository.findUserByUserId(user_id);
+
+    if (!existsUser) {
+      throw new NotFoundException('존재하지 않는 회원입니다.');
+    }
+
+    return existsUser;
   }
 
   async getMyGroupList(user_id: number): Promise<Group[]> {

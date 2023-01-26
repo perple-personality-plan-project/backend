@@ -19,6 +19,7 @@ import { Map } from '../../db/models/map.models';
 import { Comment } from '../../db/models/comment.models';
 import { AwsS3Service } from 'src/common/utils/asw.s3.service';
 import { FeedService } from '../feed/service/feed.service';
+import { FeedRepository } from '../feed/feed.repository';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { FeedService } from '../feed/service/feed.service';
     UserService,
     AuthService,
     FeedService,
+    FeedRepository,
     UserRepository,
     JwtService,
     AwsS3Service,

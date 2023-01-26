@@ -21,8 +21,8 @@ export class UserRepository {
     private readonly sequelize: Sequelize,
   ) {}
 
-  async createUser(user: CreateUserDto): Promise<User> {
-    return await this.userModel.create({ ...user });
+  async createUser(createUserDto: CreateUserDto): Promise<User> {
+    return await this.userModel.create({ ...createUserDto });
   }
 
   async findUserByLoginId(login_id: string): Promise<User | null> {

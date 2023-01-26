@@ -97,12 +97,12 @@ export class UserController {
   ): Promise<{ message: string }> {
     const user_id = req.user;
 
-    const existsFeed = await this.feedService.findFeedById(feed_id);
+    // const existsFeed = await this.feedService.findFeedById(feed_id);
 
-    // Feed 서비스에 예외처리 추가되면 삭제
-    if (!existsFeed) {
-      throw new NotFoundException('존재하지 않는 게시물입니다.');
-    }
+    // // Feed 서비스에 예외처리 추가되면 삭제
+    // if (!existsFeed) {
+    //   throw new NotFoundException('존재하지 않는 게시물입니다.');
+    // }
 
     const chkPicked = await this.userService.checkPicked(user_id, feed_id);
 

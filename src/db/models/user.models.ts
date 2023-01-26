@@ -18,6 +18,7 @@ import { Comment } from './comment.models';
 import { Map } from './map.models';
 import { Pick } from './pick.models';
 import { GroupUser } from './groupUser.models';
+import * as bcrypt from 'bcrypt';
 
 @Table({
   modelName: 'User',
@@ -82,6 +83,11 @@ export class User extends Model {
 
   @UpdatedAt
   updated_at: Date;
+
+  @BeforeCreate
+  static async hashedPassword(user: User) {
+    user.password = await bcrypt.hash(user.password, 10);
+  }
 
   @BeforeCreate
   static mbtiConvertToUpperCaseBeforeCreate(user: User) {
