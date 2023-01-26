@@ -41,7 +41,7 @@ export class FeedRepository {
             Sequelize.where(Sequelize.col('pick.user_id'), user_id),
             'boolean',
           ),
-          'isPicked',
+          'isPick',
         ],
         [
           Sequelize.cast(
@@ -106,7 +106,7 @@ export class FeedRepository {
             Sequelize.where(Sequelize.col('pick.user_id'), user_id),
             'boolean',
           ),
-          'isPicked',
+          'isPick',
         ],
         [
           Sequelize.cast(
@@ -228,7 +228,7 @@ export class FeedRepository {
             Sequelize.where(Sequelize.col('pick.user_id'), user_id),
             'boolean',
           ),
-          'isPicked',
+          'isPick',
         ],
         [
           Sequelize.cast(
