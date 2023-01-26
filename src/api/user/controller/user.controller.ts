@@ -12,6 +12,7 @@ import {
   Patch,
   Query,
   UploadedFiles,
+  NotFoundException,
 } from '@nestjs/common';
 import { GlobalResponseInterceptor } from '../../../common/interceptors/global.response.interceptor';
 import { UserService } from 'src/api/user/service/user.service';
@@ -25,6 +26,7 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { Group } from 'src/db/models/group.models';
 import { Feed } from 'src/db/models/feed.models';
 import { Pick } from 'src/db/models/pick.models';
+import { FeedService } from 'src/api/feed/service/feed.service';
 
 @Controller('user')
 @UseInterceptors(GlobalResponseInterceptor)
@@ -32,6 +34,7 @@ export class UserController {
   constructor(
     private readonly userService: UserService,
     private readonly authService: AuthService,
+    private readonly feedService: FeedService,
   ) {}
 
   @Post('/signup')
@@ -94,8 +97,12 @@ export class UserController {
   ): Promise<{ message: string }> {
     const user_id = req.user;
 
-    // 합쳐지면 feed service 확인 후 존재하는 게시물인지
-    // 확인하는 로직 추가
+    const existsFeed = await this.feedService.findFeedById(feed_id);
+
+    // Feed 서비스에 예외처리 추가되면 삭제
+    if (!existsFeed) {
+      throw new NotFoundException('존재하지 않는 게시물입니다.');
+    }
 
     const chkPicked = await this.userService.checkPicked(user_id, feed_id);
 

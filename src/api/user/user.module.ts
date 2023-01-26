@@ -18,6 +18,7 @@ import { Hashtag } from '../../db/models/hashtag.models';
 import { Map } from '../../db/models/map.models';
 import { Comment } from '../../db/models/comment.models';
 import { AwsS3Service } from 'src/common/utils/asw.s3.service';
+import { FeedService } from '../feed/service/feed.service';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { AwsS3Service } from 'src/common/utils/asw.s3.service';
   providers: [
     UserService,
     AuthService,
+    FeedService,
     UserRepository,
     JwtService,
     AwsS3Service,

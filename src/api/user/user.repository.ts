@@ -25,11 +25,11 @@ export class UserRepository {
     return await this.userModel.create({ ...user });
   }
 
-  async findUserByLoginId(login_id: string): Promise<User> {
+  async findUserByLoginId(login_id: string): Promise<User | null> {
     return this.userModel.findOne({ raw: true, where: { login_id } });
   }
 
-  async findUserByUserId(user_id: number): Promise<User> {
+  async findUserByUserId(user_id: number): Promise<User | null> {
     return this.userModel.findOne({ raw: true, where: { user_id } });
   }
 
