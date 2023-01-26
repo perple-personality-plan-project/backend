@@ -118,8 +118,9 @@ export class GroupService {
     }
   }
 
-  async getGroupFeed(groupId: number) {
-    return this.groupRepository.getGroupFeed(groupId);
+  async getGroupFeed(groupId: number, userId) {
+    const { user_id } = userId;
+    return this.groupRepository.getGroupFeed(groupId, user_id);
   }
 
   async getGroupFeedDetail(groupId, feedId) {

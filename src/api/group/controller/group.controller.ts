@@ -101,8 +101,9 @@ export class GroupController {
   @Get('/:groupId/feed')
   async getGroupFeed(
     @Param('groupId', ParseIntPipe, PositiveIntPipe) groupId: number,
+    @Query() userId,
   ) {
-    return this.groupService.getGroupFeed(groupId);
+    return this.groupService.getGroupFeed(groupId, userId);
   }
 
   @Get('/:groupId/feed/:feedId')

@@ -171,7 +171,7 @@ export class GroupRepository {
     this.groupUser.destroy({ where: { ...groupUser } });
   }
 
-  async getGroupFeed(groupId: number) {
+  async getGroupFeed(groupId: number, userId: number) {
     return this.feed.findAll({
       attributes: {
         exclude: ['user_id'],
@@ -183,6 +183,13 @@ export class GroupRepository {
           'location',
           [Sequelize.col('groupUser.user.mbti'), 'mbti'],
           [Sequelize.col('groupUser.user.nickname'), 'nickname'],
+          [
+            Sequelize.cast(
+              Sequelize.where(Sequelize.col('like.user_id'), userId),
+              'boolean',
+            ),
+            'isLike',
+          ],
           [
             Sequelize.fn(
               'COUNT',
