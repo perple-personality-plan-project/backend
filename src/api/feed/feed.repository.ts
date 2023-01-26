@@ -6,6 +6,7 @@ import { Like } from 'src/db/models/like.models';
 import { Sequelize } from 'sequelize-typescript';
 import { Comment } from '../../db/models/comment.models';
 import { Op } from 'sequelize';
+import { Pick } from 'src/db/models/pick.models';
 @Injectable()
 export class FeedRepository {
   constructor(
@@ -23,7 +24,7 @@ export class FeedRepository {
     return this.feedModel.create({ ...body, user_id });
   }
 
-  async getAllFeed() {
+  async getAllFeed(user_id: number) {
     const feeds = await this.feedModel.findAll({
       raw: true,
       attributes: [
@@ -35,6 +36,20 @@ export class FeedRepository {
         [Sequelize.col('user.nickname'), 'nickname'],
         [Sequelize.col('user.mbti'), 'mbti'],
         [Sequelize.fn('COUNT', Sequelize.col('like.like_id')), 'likeCount'],
+        [
+          Sequelize.cast(
+            Sequelize.where(Sequelize.col('pick.user_id'), user_id),
+            'boolean',
+          ),
+          'isPick',
+        ],
+        [
+          Sequelize.cast(
+            Sequelize.where(Sequelize.col('like.user_id'), user_id),
+            'boolean',
+          ),
+          'isLike',
+        ],
         'created_at',
         'updated_at',
       ],
@@ -49,6 +64,12 @@ export class FeedRepository {
           as: 'like',
           attributes: [],
         },
+        {
+          required: false,
+          model: Pick,
+          as: 'pick',
+          attributes: [],
+        },
       ],
       where: { group_user_id: { [Op.eq]: null } },
       group: ['feed_id'],
@@ -58,7 +79,7 @@ export class FeedRepository {
     return feeds;
   }
 
-  async findFeedById(feed_id) {
+  async findFeedById(feed_id, user_id) {
     const feed = await this.feedModel.findOne({
       include: [
         {
@@ -67,6 +88,7 @@ export class FeedRepository {
           attributes: [],
         },
         { model: Like, as: 'like', attributes: [] },
+        { model: Pick, as: 'pick', attributes: [], required: false },
       ],
       where: {
         feed_id,
@@ -79,6 +101,20 @@ export class FeedRepository {
         'location',
         [Sequelize.col('user.nickname'), 'nickname'],
         [Sequelize.fn('COUNT', Sequelize.col('like.like_id')), 'likeCount'],
+        [
+          Sequelize.cast(
+            Sequelize.where(Sequelize.col('pick.user_id'), user_id),
+            'boolean',
+          ),
+          'isPick',
+        ],
+        [
+          Sequelize.cast(
+            Sequelize.where(Sequelize.col('like.user_id'), user_id),
+            'boolean',
+          ),
+          'isLike',
+        ],
         'created_at',
         'updated_at',
       ],
@@ -176,7 +212,7 @@ export class FeedRepository {
     });
   }
 
-  async getFeedMbti(mbti) {
+  async getFeedMbti(mbti, user_id) {
     const feeds = await this.feedModel.findAll({
       raw: true,
       attributes: [
@@ -187,6 +223,20 @@ export class FeedRepository {
         [Sequelize.col('user.user_id'), 'user_id'],
         [Sequelize.col('user.mbti'), 'mbti'],
         [Sequelize.fn('COUNT', Sequelize.col('like.like_id')), 'likeCount'],
+        [
+          Sequelize.cast(
+            Sequelize.where(Sequelize.col('pick.user_id'), user_id),
+            'boolean',
+          ),
+          'isPick',
+        ],
+        [
+          Sequelize.cast(
+            Sequelize.where(Sequelize.col('like.user_id'), user_id),
+            'boolean',
+          ),
+          'isLike',
+        ],
         'created_at',
         'updated_at',
       ],
@@ -203,6 +253,12 @@ export class FeedRepository {
           model: Like,
           as: 'like',
           attributes: [],
+        },
+        {
+          model: Pick,
+          as: 'pick',
+          attributes: [],
+          required: false,
         },
       ],
 

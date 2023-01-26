@@ -29,8 +29,11 @@ export class FeedController {
   constructor(private readonly feedService: FeedService) {}
 
   @Get('/search')
-  async getFeedMbti(@Query('mbti') mbti: string) {
-    return this.feedService.getFeedMbti(mbti);
+  async getFeedMbti(
+    @Query('mbti') mbti: string,
+    @Query('userId', ParseIntPipe) user_id,
+  ) {
+    return this.feedService.getFeedMbti(mbti, user_id);
   }
 
   @UseGuards(AuthGuard('jwt'))
@@ -47,13 +50,16 @@ export class FeedController {
   }
 
   @Get()
-  getAllFeed() {
-    return this.feedService.getAllFeed();
+  getAllFeed(@Query('userId', ParseIntPipe) user_id) {
+    return this.feedService.getAllFeed(user_id);
   }
 
   @Get('/:feed_id')
-  findFeedById(@Param('feed_id') feed_id) {
-    return this.feedService.findFeedById(feed_id);
+  findFeedById(
+    @Param('feed_id') feed_id,
+    @Query('userId', ParseIntPipe) user_id,
+  ) {
+    return this.feedService.findFeedById(feed_id, user_id);
   }
 
   @UseGuards(AuthGuard('jwt'))
