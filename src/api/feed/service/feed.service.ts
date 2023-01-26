@@ -38,8 +38,8 @@ export class FeedService {
     }
   }
 
-  async getAllFeed() {
-    return this.feedRepository.getAllFeed();
+  async getAllFeed(user_id: number) {
+    return this.feedRepository.getAllFeed(user_id);
   }
 
   async findFeedById(feed_id) {

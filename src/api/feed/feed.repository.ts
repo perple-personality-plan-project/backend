@@ -6,6 +6,7 @@ import { Like } from 'src/db/models/like.models';
 import { Sequelize } from 'sequelize-typescript';
 import { Comment } from '../../db/models/comment.models';
 import { Op } from 'sequelize';
+import { Pick } from 'src/db/models/pick.models';
 @Injectable()
 export class FeedRepository {
   constructor(
@@ -23,7 +24,7 @@ export class FeedRepository {
     return this.feedModel.create({ ...body, user_id });
   }
 
-  async getAllFeed() {
+  async getAllFeed(user_id: number) {
     const feeds = await this.feedModel.findAll({
       raw: true,
       attributes: [

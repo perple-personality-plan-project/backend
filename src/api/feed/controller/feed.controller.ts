@@ -82,8 +82,8 @@ export class FeedController {
     description: 'Server Error...',
   })
   @Get()
-  getAllFeed() {
-    return this.feedService.getAllFeed();
+  getAllFeed(@Query('id', ParseIntPipe) user_id) {
+    return this.feedService.getAllFeed(user_id);
   }
 
   @ApiOperation({ summary: '피드 상세조회' })
