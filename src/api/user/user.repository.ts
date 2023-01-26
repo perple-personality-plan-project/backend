@@ -88,6 +88,7 @@ export class UserRepository {
         'feed_id',
         'thumbnail',
         'description',
+        'location',
         [Sequelize.col('user.user_id'), 'user_id'],
         [Sequelize.col('user.mbti'), 'mbti'],
         'created_at',
