@@ -74,12 +74,13 @@ export class UserController {
   async kakaoLogin(
     @Req() req,
     @Query('code') code: string,
-  ): Promise<{ accessToken: string; refreshToken: string }> {
-    const { accessToken, refreshToken } = req.user;
+  ): Promise<{ accessToken: string; refreshToken: string; user_id: number }> {
+    const { accessToken, refreshToken, user_id } = req.user;
 
     return {
       accessToken: `Bearer ${accessToken}`,
       refreshToken: `Bearer ${refreshToken}`,
+      user_id,
     };
   }
 
