@@ -6,40 +6,34 @@ import { Pick } from 'src/db/models/pick.models';
 import { User } from 'src/db/models/user.models';
 import { Feed } from 'src/db/models/feed.models';
 import { Like } from 'src/db/models/like.models';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateUserDto } from './dto/request/create-user.dto';
+import { UpdateUserDto } from './dto/request/update-user.dto';
 
 @Injectable()
 export class UserRepository {
   constructor(
     @InjectModel(User)
-    private userModel: typeof User,
+    private readonly userModel: typeof User,
     @InjectModel(Pick)
-    private pickModel: typeof Pick,
+    private readonly pickModel: typeof Pick,
     @InjectModel(Feed)
-    private feedModel: typeof Feed,
-    @InjectModel(Like)
-    private likeModel: typeof Like,
-    private sequelize: Sequelize,
+    private readonly feedModel: typeof Feed,
+    private readonly sequelize: Sequelize,
   ) {}
 
-  async createUser(user: CreateUserDto): Promise<User> {
-    try {
-      return await this.userModel.create({ ...user });
-    } catch (error) {
-      return error.message;
-    }
+  async createUser(createUserDto: CreateUserDto): Promise<User> {
+    return await this.userModel.create({ ...createUserDto });
   }
 
-  async findUserByLoginId(login_id: string): Promise<User> {
+  async findUserByLoginId(login_id: string): Promise<User | null> {
     return this.userModel.findOne({ raw: true, where: { login_id } });
   }
 
-  async findUserByUserId(user_id: number): Promise<User> {
+  async findUserByUserId(user_id: number): Promise<User | null> {
     return this.userModel.findOne({ raw: true, where: { user_id } });
   }
 
-  async chkPicked(user_id: number, feed_id: number) {
+  async checkPicked(user_id: number, feed_id: number): Promise<boolean> {
     const [_, isPicked] = await this.pickModel.findOrCreate({
       where: { user_id, feed_id },
       defaults: { user_id, feed_id },
@@ -52,11 +46,14 @@ export class UserRepository {
     return isPicked;
   }
 
-  async updatedProfile(user_id: number, updateUserDto: UpdateUserDto) {
+  async updatedProfile(
+    user_id: number,
+    updateUserDto: UpdateUserDto,
+  ): Promise<[affectedCount: number]> {
     return this.userModel.update({ ...updateUserDto }, { where: { user_id } });
   }
 
-  async getMypageInfo(user_id: number) {
+  async getMypageInfo(user_id: number): Promise<object[]> {
     const query = ` SELECT 
                         u.nickname,
                         u.mbti,
@@ -73,15 +70,11 @@ export class UserRepository {
   }
 
   async IsDuplicatedInputData(column: string, data: string): Promise<User> {
-    try {
-      return this.userModel.findOne({ where: { [column]: data } });
-    } catch (error) {
-      return error.message;
-    }
+    return this.userModel.findOne({ where: { [column]: data } });
   }
 
-  async getUserFeed(user_id) {
-    const feeds = await this.feedModel.findAll({
+  async getUserFeed(user_id: number): Promise<Feed[]> {
+    return this.feedModel.findAll({
       raw: true,
       where: { user_id },
       attributes: [
@@ -114,10 +107,9 @@ export class UserRepository {
       group: ['feed_id'],
       order: [['created_at', 'DESC']],
     });
-    return feeds;
   }
 
-  async getUserPick(user_id: number) {
+  async getUserPick(user_id: number): Promise<Pick[]> {
     return this.pickModel.findAll({
       where: { user_id },
       raw: true,
@@ -155,11 +147,17 @@ export class UserRepository {
     });
   }
 
-  async updateProfile(user_id: number, profile_img: string) {
+  async updateProfile(
+    user_id: number,
+    profile_img: string,
+  ): Promise<[affectedCount: number]> {
     return this.userModel.update({ profile_img }, { where: { user_id } });
   }
 
-  async updateBackground(user_id: number, background_img: string) {
+  async updateBackground(
+    user_id: number,
+    background_img: string,
+  ): Promise<[affectedCount: number]> {
     return this.userModel.update({ background_img }, { where: { user_id } });
   }
 }
