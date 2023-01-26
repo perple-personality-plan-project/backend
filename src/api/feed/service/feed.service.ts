@@ -38,11 +38,13 @@ export class FeedService {
     }
   }
 
-  async getAllFeed(user_id: number) {
+  async getAllFeed(userId) {
+    const { user_id } = userId;
     return this.feedRepository.getAllFeed(user_id);
   }
 
-  async findFeedById(feed_id, user_id) {
+  async findFeedById(feed_id, userId) {
+    const { user_id } = userId;
     return this.feedRepository.findFeedById(feed_id, user_id);
   }
 
@@ -65,7 +67,8 @@ export class FeedService {
     }
   }
 
-  async getFeedMbti(mbti, user_id) {
+  async getFeedMbti(mbti, userId) {
+    const { user_id } = userId;
     return this.feedRepository.getFeedMbti(mbti, user_id);
   }
 
