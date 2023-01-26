@@ -48,9 +48,12 @@ export class UserController {
 
   @UseGuards(AuthGuard('local'))
   @Post('/login')
-  async login(
-    @Req() req,
-  ): Promise<{ accessToken: string; refreshToken: string; mbti: string }> {
+  async login(@Req() req): Promise<{
+    accessToken: string;
+    refreshToken: string;
+    mbti: string;
+    user_id: string;
+  }> {
     const user_id = req.user;
 
     const { mbti } = await this.userService.findUserByUserId(user_id);
@@ -62,6 +65,7 @@ export class UserController {
       accessToken: `Bearer ${accessToken}`,
       refreshToken: `Bearer ${refreshToken}`,
       mbti,
+      user_id,
     };
   }
 
