@@ -42,8 +42,8 @@ export class FeedService {
     return this.feedRepository.getAllFeed(user_id);
   }
 
-  async findFeedById(feed_id) {
-    return this.feedRepository.findFeedById(feed_id);
+  async findFeedById(feed_id, user_id) {
+    return this.feedRepository.findFeedById(feed_id, user_id);
   }
 
   async deleteFeed(feed_id, user_id) {
@@ -65,8 +65,8 @@ export class FeedService {
     }
   }
 
-  async getFeedMbti(mbti) {
-    return this.feedRepository.getFeedMbti(mbti);
+  async getFeedMbti(mbti, user_id) {
+    return this.feedRepository.getFeedMbti(mbti, user_id);
   }
 
   async getLikeCheck(feed_id, user_id) {
