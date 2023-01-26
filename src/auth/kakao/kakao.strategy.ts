@@ -20,7 +20,7 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
     _: string,
     __: string,
     profile: any,
-  ): Promise<{ accessToken: string; refreshToken: string }> {
+  ): Promise<{ accessToken: string; refreshToken: string; user_id: number }> {
     if (!profile._json) {
       throw new UnauthorizedException('카카오 인증에 실패하였습니다.');
     }
@@ -42,6 +42,9 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
       user = newUser;
     }
 
-    return await this.authService.createAccessTokenRefreshToken(user.user_id);
+    const { accessToken, refreshToken } =
+      await this.authService.createAccessTokenRefreshToken(user.user_id);
+
+    return { accessToken, refreshToken, user_id: user.user_id };
   }
 }
