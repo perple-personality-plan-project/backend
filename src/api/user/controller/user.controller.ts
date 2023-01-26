@@ -97,7 +97,7 @@ export class UserController {
     // 합쳐지면 feed service 확인 후 존재하는 게시물인지
     // 확인하는 로직 추가
 
-    const chkPicked = await this.userService.chkPicked(user_id, feed_id);
+    const chkPicked = await this.userService.checkPicked(user_id, feed_id);
 
     if (!chkPicked) {
       return { message: '찜하기가 취소되었습니다.' };

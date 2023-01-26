@@ -65,8 +65,8 @@ export class UserService {
     return createUser;
   }
 
-  async chkPicked(user_id: number, feed_id: number): Promise<boolean> {
-    const isPicked = await this.userRepository.chkPicked(user_id, feed_id);
+  async checkPicked(user_id: number, feed_id: number): Promise<boolean> {
+    const isPicked = await this.userRepository.checkPicked(user_id, feed_id);
     return isPicked ? true : false;
   }
 
