@@ -94,25 +94,42 @@
 
 ## 🛠 기술스택
 
-기술스택 | 설명
+<table class="type05">
+  <tr>
+    <th scope="row">Node.js</th>
+    <td>자바스크립트 런타임</td>
+  </tr>
+  <tr>
+    <th scope="row">Nest.js</th>
+    <td>웹 프레임워크</td>
+  </tr>
+  <tr>
+    <th scope="row">TypeScript</th>
+    <td>타입 스크립트</td>
+  </tr>
+  <tr>
+    <th scope="row">MySQL</th>
+    <td>MySQL</td>
+  </tr>
+  <tr>
+    <th scope="row">Redis</th>
+    <td>Redis</td>
+  </tr>
+  <tr>
+    <th scope="row">Git Action</th>
+    <td>CI/CD</td>
+  </tr>
+  <tr>
+    <th scope="row">Nginx</th>
+    <td>프록시 서버</td>
+  </tr>
+  <tr>
+    <th scope="row">Docker</th>
+    <td>Docker</td>
+  </tr>
+</table>
 
----|:---:
-
-Node.js | 자바스크립트 런타임
-
-Nest.js | 웹 프레임워크
-
-TypeScript | 타입스크립트
-
-MySQL | MySQL
-
-Redis | Redis
-
-Git Action | CI/CD 툴
-
-Nginx | Proxy 서버
-
-Docker | Docker
+<br>
 
 ## 🛠 Tools
 
