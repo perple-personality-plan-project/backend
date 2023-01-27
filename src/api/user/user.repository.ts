@@ -33,19 +33,6 @@ export class UserRepository {
     return this.userModel.findOne({ raw: true, where: { user_id } });
   }
 
-  async checkPicked(user_id: number, feed_id: number): Promise<boolean> {
-    const [_, isPicked] = await this.pickModel.findOrCreate({
-      where: { user_id, feed_id },
-      defaults: { user_id, feed_id },
-    });
-
-    if (!isPicked) {
-      await this.pickModel.destroy({ where: { user_id, feed_id } });
-    }
-
-    return isPicked;
-  }
-
   async updatedProfile(
     user_id: number,
     updateUserDto: UpdateUserDto,

@@ -95,30 +95,6 @@ export class UserController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Put('/feeds/:feedId/pick')
-  async pickedFeed(
-    @Req() req,
-    @Param('feedId', ParseIntPipe) feed_id: number,
-  ): Promise<{ message: string }> {
-    const user_id = req.user;
-
-    // const existsFeed = await this.feedService.findFeedById(feed_id);
-
-    // // Feed 서비스에 예외처리 추가되면 삭제
-    // if (!existsFeed) {
-    //   throw new NotFoundException('존재하지 않는 게시물입니다.');
-    // }
-
-    const chkPicked = await this.userService.checkPicked(user_id, feed_id);
-
-    if (!chkPicked) {
-      return { message: '찜하기가 취소되었습니다.' };
-    }
-
-    return { message: '찜목록에 추가되었습니다.' };
-  }
-
-  @UseGuards(AuthGuard('jwt'))
   @Patch('/edit')
   async updatedProfile(
     @Req() req,
