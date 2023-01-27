@@ -185,7 +185,9 @@ export class GroupRepository {
           [Sequelize.col('groupUser.user.nickname'), 'nickname'],
           [
             Sequelize.cast(
-              Sequelize.where(Sequelize.col('like.user_id'), userId),
+              Sequelize.where(Sequelize.col('like.user_id'), {
+                [Op.and]: { user_id: userId },
+              }),
               'boolean',
             ),
             'isLike',
