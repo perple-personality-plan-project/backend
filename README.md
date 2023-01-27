@@ -226,3 +226,7 @@
 <hr>
 
 <br>
+
+## 🧱 서비스 아키텍처
+
+![architecture](https://user-images.githubusercontent.com/103123550/215034664-953f4c59-ab82-48f9-a8e3-53932714e22a.png)
