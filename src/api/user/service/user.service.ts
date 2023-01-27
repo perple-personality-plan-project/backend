@@ -58,10 +58,6 @@ export class UserService {
     return createUser;
   }
 
-  async checkPicked(user_id: number, feed_id: number): Promise<boolean> {
-    return this.userRepository.checkPicked(user_id, feed_id);
-  }
-
   async updatedProfile(
     user_id: number,
     updateUserDto: UpdateUserDto,

@@ -67,6 +67,10 @@ export class FeedService {
     }
   }
 
+  async checkPicked(user_id: number, feed_id: number): Promise<boolean> {
+    return this.feedRepository.checkPicked(user_id, feed_id);
+  }
+
   async getFeedMbti(mbti, userId) {
     const { user_id } = userId;
     return this.feedRepository.getFeedMbti(mbti, user_id);

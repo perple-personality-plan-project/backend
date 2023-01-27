@@ -18,6 +18,8 @@ export class FeedRepository {
     private likeModel: typeof Like,
     @InjectModel(Comment)
     private commentModel: typeof Comment,
+    @InjectModel(Pick)
+    private readonly pickModel: typeof Pick,
   ) {}
 
   async createFeed(body, user_id) {
@@ -210,6 +212,19 @@ export class FeedRepository {
         [Op.and]: [{ feed_id }, { user_id }],
       },
     });
+  }
+
+  async checkPicked(user_id: number, feed_id: number): Promise<boolean> {
+    const [_, isPicked] = await this.pickModel.findOrCreate({
+      where: { user_id, feed_id },
+      defaults: { user_id, feed_id },
+    });
+
+    if (!isPicked) {
+      await this.pickModel.destroy({ where: { user_id, feed_id } });
+    }
+
+    return isPicked;
   }
 
   async getFeedMbti(mbti, userId) {

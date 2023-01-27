@@ -13,6 +13,7 @@ import {
   UseGuards,
   Req,
   ParseIntPipe,
+  NotFoundException,
 } from '@nestjs/common';
 import { GlobalResponseInterceptor } from 'src/common/interceptors/global.response.interceptor';
 import { GlobalExceptionFilter } from '../../../common/filter/global.exception.filter';
@@ -61,6 +62,23 @@ export class FeedController {
   deleteFeed(@Param('feed_id') feed_id, @Req() req) {
     const user_id = req.user;
     return this.feedService.deleteFeed(feed_id, user_id);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Put('/:feedId/pick')
+  async pickedFeed(
+    @Req() req,
+    @Param('feedId', ParseIntPipe) feed_id: number,
+  ): Promise<{ message: string }> {
+    const user_id = req.user;
+
+    const chkPicked = await this.feedService.checkPicked(user_id, feed_id);
+
+    if (!chkPicked) {
+      return { message: '찜하기가 취소되었습니다.' };
+    }
+
+    return { message: '찜목록에 추가되었습니다.' };
   }
 
   @UseGuards(AuthGuard('jwt'))
