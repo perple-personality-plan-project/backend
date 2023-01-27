@@ -164,4 +164,14 @@ export class GroupController {
 
     return this.groupService.editGroup(userId, groupId, files, editData);
   }
+
+  @Delete('/:group_id/feed/:feed_id')
+  @UseGuards(AuthGuard('jwt'))
+  async deleteGroupFeed(
+    @Req() req: Request,
+    @Param('group_id', ParseIntPipe, PositiveIntPipe) group_id: number,
+    @Param('feed_id', ParseIntPipe, PositiveIntPipe) feed_id: number,
+  ) {
+    return this.groupService.deleteGroupFeed(req.user, group_id, feed_id);
+  }
 }

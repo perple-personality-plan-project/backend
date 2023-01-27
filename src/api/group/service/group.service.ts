@@ -3,6 +3,7 @@ import { GroupParamDto, GroupRequestDto } from '../dto/group.request.dto';
 import { GroupRepository } from '../group.repository';
 import { AwsS3Service } from '../../../common/utils/asw.s3.service';
 import { GroupEditDto } from '../dto/group.edit.dto';
+import { FeedRepository } from '../../feed/feed.repository';
 
 @Injectable()
 export class GroupService {
@@ -12,6 +13,7 @@ export class GroupService {
   };
   constructor(
     private readonly groupRepository: GroupRepository,
+    private readonly feedRepository: FeedRepository,
     private readonly awsS3Service: AwsS3Service,
   ) {}
 
@@ -242,5 +244,34 @@ export class GroupService {
     return '수정 되었습니다.';
   }
 
-  // async hashtagSearch() {}
+  async deleteGroupFeed(userId, groupId, feedId) {
+    const findData = {
+      user_id: userId,
+      group_id: groupId,
+    };
+    const groupUser = await this.groupRepository.findGroupUser(findData);
+    if (!groupUser) {
+      throw new BadRequestException('그룹에 가입한 유저가 아닙니다.');
+    }
+    console.log(groupUser);
+
+    const feed = await this.feedRepository.getGroupFeed(
+      groupUser['group_user_id'],
+      feedId,
+    );
+
+    console.log(feed);
+
+    if (feed) {
+      const isFeedOwner = feed['group_user_id'] === groupUser['group_user_id'];
+      if (groupUser['admin_flag'] || isFeedOwner) {
+        await this.feedRepository.deleteGroupFeed(feedId);
+        return '삭제 되었습니다.';
+      } else {
+        return '게시글 작성자 혹은 그룹장만 삭제 할 수 있습니다.';
+      }
+    } else {
+      throw new BadRequestException('게시글이 존재하지 않습니다.');
+    }
+  }
 }
