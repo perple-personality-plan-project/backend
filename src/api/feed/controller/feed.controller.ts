@@ -30,8 +30,8 @@ export class FeedController {
   constructor(private readonly feedService: FeedService) {}
 
   @Get('/search')
-  async getFeedMbti(@Query('mbti') mbti: string, @Query() userId) {
-    return this.feedService.getFeedMbti(mbti, userId);
+  async getFeedMbti(@Query('mbti') mbti: string, @Query() user_id) {
+    return this.feedService.getFeedMbti(mbti, user_id);
   }
 
   @UseGuards(AuthGuard('jwt'))
@@ -43,18 +43,17 @@ export class FeedController {
     @Req() req,
   ) {
     const user_id = req.user;
-    console.log(user_id);
     return this.feedService.createFeed(body, user_id, files);
   }
 
   @Get()
-  getAllFeed(@Query() userId) {
-    return this.feedService.getAllFeed(userId);
+  getAllFeed(@Query() user_id) {
+    return this.feedService.getAllFeed(user_id);
   }
 
   @Get('/:feed_id')
-  findFeedById(@Param('feed_id') feed_id, @Query() userId) {
-    return this.feedService.findFeedById(feed_id, userId);
+  findFeedById(@Param('feed_id') feed_id, @Query() user_id) {
+    return this.feedService.findFeedById(feed_id, user_id);
   }
 
   @UseGuards(AuthGuard('jwt'))

@@ -26,7 +26,7 @@ export class FeedRepository {
     return this.feedModel.create({ ...body, user_id });
   }
 
-  async getAllFeed(userId: number) {
+  async getAllFeed(user_id: number) {
     const feeds = await this.feedModel.findAll({
       raw: true,
       attributes: [
@@ -40,14 +40,14 @@ export class FeedRepository {
         [Sequelize.fn('COUNT', Sequelize.col('like.like_id')), 'likeCount'],
         [
           Sequelize.cast(
-            Sequelize.where(Sequelize.col('pick.user_id'), userId),
+            Sequelize.where(Sequelize.col('pick.user_id'), user_id),
             'boolean',
           ),
           'isPick',
         ],
         [
           Sequelize.cast(
-            Sequelize.where(Sequelize.col('like.user_id'), userId),
+            Sequelize.where(Sequelize.col('like.user_id'), user_id),
             'boolean',
           ),
           'isLike',
@@ -81,7 +81,7 @@ export class FeedRepository {
     return feeds;
   }
 
-  async findFeedById(feed_id, userId) {
+  async findFeedById(feed_id, user_id) {
     const feed = await this.feedModel.findOne({
       include: [
         {
@@ -105,14 +105,14 @@ export class FeedRepository {
         [Sequelize.fn('COUNT', Sequelize.col('like.like_id')), 'likeCount'],
         [
           Sequelize.cast(
-            Sequelize.where(Sequelize.col('pick.user_id'), userId),
+            Sequelize.where(Sequelize.col('pick.user_id'), user_id),
             'boolean',
           ),
           'isPick',
         ],
         [
           Sequelize.cast(
-            Sequelize.where(Sequelize.col('like.user_id'), userId),
+            Sequelize.where(Sequelize.col('like.user_id'), user_id),
             'boolean',
           ),
           'isLike',
@@ -227,7 +227,7 @@ export class FeedRepository {
     return isPicked;
   }
 
-  async getFeedMbti(mbti, userId) {
+  async getFeedMbti(mbti, user_id) {
     const feeds = await this.feedModel.findAll({
       raw: true,
       attributes: [
@@ -240,14 +240,14 @@ export class FeedRepository {
         [Sequelize.fn('COUNT', Sequelize.col('like.like_id')), 'likeCount'],
         [
           Sequelize.cast(
-            Sequelize.where(Sequelize.col('pick.user_id'), userId),
+            Sequelize.where(Sequelize.col('pick.user_id'), user_id),
             'boolean',
           ),
           'isPick',
         ],
         [
           Sequelize.cast(
-            Sequelize.where(Sequelize.col('like.user_id'), userId),
+            Sequelize.where(Sequelize.col('like.user_id'), user_id),
             'boolean',
           ),
           'isLike',

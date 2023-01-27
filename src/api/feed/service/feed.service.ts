@@ -40,6 +40,7 @@ export class FeedService {
 
   async getAllFeed(userId) {
     const { user_id } = userId;
+
     return this.feedRepository.getAllFeed(user_id);
   }
 
