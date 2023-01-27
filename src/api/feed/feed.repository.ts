@@ -268,4 +268,15 @@ export class FeedRepository {
 
     return feeds;
   }
+
+  async getGroupFeed(groupUserId, feedId) {
+    return this.feedModel.findOne({
+      where: { feed_id: feedId },
+      raw: true,
+    });
+  }
+
+  async deleteGroupFeed(feedId) {
+    return this.feedModel.destroy({ where: { feed_id: feedId } });
+  }
 }
