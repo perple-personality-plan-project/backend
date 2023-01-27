@@ -32,15 +32,63 @@
 
 ## 🧑‍💻 팀 구성
 
-|Backend|FrontEnd|Designer|
+<table>
 
-|-------|--------|--------|
+<tr>
 
-|김희석|김재민|구교연|
+<td  align="center"><b><a  href="https://github.com/asiansam">김재민</a></b></td>
 
-|송지수|변진아||
+<td  align="center"><b><a  href="https://github.com/Seongbae94">이성배</a></b></td>
 
-|한요셉|이성배||
+<td  align="center"><b><a  href="https://github.com/jinah-byun">변진아</a></b></td>
+
+<td  align="center"><b><a  href="https://github.com/HeeSeok-kim">김희석</a></b></td>
+
+<td  align="center"><b><a  href="https://github.com/Yoseb-Han">한요셉</a></b></td>
+
+<td  align="center"><b><a  href="https://github.com/SongJisoo1">송지수</a></b></td>
+
+<td  align="center"><b><a  href="https://github.com/SongJisoo1">구교연</a></b></td>
+
+</tr>
+
+<tr>
+
+<td  align="center"><a  href="https://github.com/asiansam"><img  src="https://user-images.githubusercontent.com/103123550/215027914-8d43a990-cee7-4d85-9b5b-231e39ac8508.svg"  width="100px"  /></a></td>
+
+<td  align="center"><a  href="https://github.com/Seongbae94"><img  src="https://user-images.githubusercontent.com/103123550/215028256-9d027ba2-a46d-40f5-8051-a1c31f3c0048.svg"  width="100px"  /></a></td>
+
+<td  align="center"><a  href="https://github.com/jinah-byun"><img  src="https://user-images.githubusercontent.com/103123550/215028523-6cd5e9b5-cc0b-4c7a-934c-65d6dacec7a6.svg"  width="100px"  /></a></td>
+
+<td  align="center"><a  href="https://github.com/HeeSeok-kim"><img  src="https://user-images.githubusercontent.com/103123550/215028534-d7dc490e-764c-4373-a0de-7416db722a4d.svg"  width="100px"  /></a></td>
+
+<td  align="center"><a  href="https://github.com/Yoseb-Han"><img  src="https://user-images.githubusercontent.com/103123550/215028878-8005e943-1bd4-4b3f-af8a-2a52b5b292c8.svg"  width="100px"  /></a></td>
+
+<td  align="center"><a  href="https://github.com/HeeSeok-kim"><img  src="https://user-images.githubusercontent.com/103123550/215028885-0c9a9ba3-0580-4442-8572-6b0b92983422.svg"  width="100px"  /></a></td>
+
+<td  align="center"><a  href="https://github.com/Yoseb-Han"><img  src="https://user-images.githubusercontent.com/103123550/215028892-20eb7a1c-736a-4a75-9dbd-5e91a3a907f5.svg"  width="100px"  /></a></td>
+
+</tr>
+
+<tr>
+
+<td  align="center"><b>Frontend</b></td>
+
+<td  align="center"><b>Frontend</b></td>
+
+<td  align="center"><b>Frontend</b></td>
+
+<td  align="center"><b>Backend</b></td>
+
+<td  align="center"><b>Backend</b></td>
+
+<td  align="center"><b>Backend</b></td>
+
+<td  align="center"><b>Designer</b></td>
+
+</tr>
+
+</table>
 
 <br>
 
