@@ -15,6 +15,7 @@ import { Comment } from '../../db/models/comment.models';
 import { AwsS3Service } from '../../common/utils/asw.s3.service';
 import { CommentRepository } from '../comment/comment.repository';
 import { FeedRepository } from '../feed/feed.repository';
+import { Pick } from '../../db/models/pick.models';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { FeedRepository } from '../feed/feed.repository';
       User,
       Like,
       Comment,
+      Pick,
     ]),
   ],
   controllers: [GroupController],
