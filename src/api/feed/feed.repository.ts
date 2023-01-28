@@ -39,18 +39,16 @@ export class FeedRepository {
         [Sequelize.col('user.mbti'), 'mbti'],
         [Sequelize.fn('COUNT', Sequelize.col('like.like_id')), 'likeCount'],
         [
-          Sequelize.cast(
-            Sequelize.where(Sequelize.col('pick.user_id'), user_id),
-            'boolean',
-          ),
-          'isPick',
-        ],
-        [
-          Sequelize.cast(
-            Sequelize.where(Sequelize.col('like.user_id'), user_id),
-            'boolean',
+          Sequelize.literal(
+            `(SELECT COUNT(*) FROM likes WHERE likes.user_id = ${user_id} AND likes.feed_id = Feed.feed_id)`,
           ),
           'isLike',
+        ],
+        [
+          Sequelize.literal(
+            `(SELECT COUNT(*) FROM picks WHERE picks.user_id = ${user_id} AND picks.feed_id = Feed.feed_id)`,
+          ),
+          'isPick',
         ],
         'created_at',
         'updated_at',
@@ -104,18 +102,16 @@ export class FeedRepository {
         [Sequelize.col('user.nickname'), 'nickname'],
         [Sequelize.fn('COUNT', Sequelize.col('like.like_id')), 'likeCount'],
         [
-          Sequelize.cast(
-            Sequelize.where(Sequelize.col('pick.user_id'), user_id),
-            'boolean',
-          ),
-          'isPick',
-        ],
-        [
-          Sequelize.cast(
-            Sequelize.where(Sequelize.col('like.user_id'), user_id),
-            'boolean',
+          Sequelize.literal(
+            `(SELECT COUNT(*) FROM likes WHERE likes.user_id = ${user_id} AND likes.feed_id = Feed.feed_id)`,
           ),
           'isLike',
+        ],
+        [
+          Sequelize.literal(
+            `(SELECT COUNT(*) FROM picks WHERE picks.user_id = ${user_id} AND picks.feed_id = Feed.feed_id)`,
+          ),
+          'isPick',
         ],
         'created_at',
         'updated_at',
@@ -239,18 +235,16 @@ export class FeedRepository {
         [Sequelize.col('user.mbti'), 'mbti'],
         [Sequelize.fn('COUNT', Sequelize.col('like.like_id')), 'likeCount'],
         [
-          Sequelize.cast(
-            Sequelize.where(Sequelize.col('pick.user_id'), user_id),
-            'boolean',
-          ),
-          'isPick',
-        ],
-        [
-          Sequelize.cast(
-            Sequelize.where(Sequelize.col('like.user_id'), user_id),
-            'boolean',
+          Sequelize.literal(
+            `(SELECT COUNT(*) FROM likes WHERE likes.user_id = ${user_id} AND likes.feed_id = Feed.feed_id)`,
           ),
           'isLike',
+        ],
+        [
+          Sequelize.literal(
+            `(SELECT COUNT(*) FROM picks WHERE picks.user_id = ${user_id} AND picks.feed_id = Feed.feed_id)`,
+          ),
+          'isPick',
         ],
         'created_at',
         'updated_at',
