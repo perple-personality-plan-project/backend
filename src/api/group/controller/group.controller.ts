@@ -43,20 +43,6 @@ export class GroupController {
     return this.groupService.getGroup(req);
   }
 
-  @ApiOperation({ summary: '그룹 만들기' })
-  @ApiResponse({
-    status: 200,
-    description: '성공!',
-    type: GroupRequestDto,
-  })
-  @ApiResponse({
-    status: 500,
-    description: 'Server Error...',
-  })
-  @ApiResponse({
-    status: 412,
-    description: 'groupname or description는 필수값 입니다',
-  })
   @Post()
   @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(FilesInterceptor('thumbnail', 5))
