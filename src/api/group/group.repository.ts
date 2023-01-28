@@ -181,12 +181,12 @@ export class GroupRepository {
           'thumbnail',
           'description',
           'location',
+          [Sequelize.col('groupUser.user_id'), 'user_id'],
           [Sequelize.col('groupUser.user.mbti'), 'mbti'],
           [Sequelize.col('groupUser.user.nickname'), 'nickname'],
           [
-            Sequelize.cast(
-              Sequelize.where(Sequelize.col('like.user_id'), userId),
-              'boolean',
+            Sequelize.literal(
+              `(SELECT COUNT(*) FROM likes WHERE likes.user_id = ${userId} AND likes.feed_id = Feed.feed_id)`,
             ),
             'isLike',
           ],
@@ -210,6 +210,7 @@ export class GroupRepository {
         {
           model: Like,
           attributes: [],
+          required: false,
         },
       ],
       where: {
