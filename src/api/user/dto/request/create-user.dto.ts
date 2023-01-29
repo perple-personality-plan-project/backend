@@ -6,6 +6,8 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
+import { IsMbti } from 'src/common/decorators/validateMbti';
+
 export class CreateUserDto {
   @IsNotEmpty({ message: '아이디를 입력해주세요' })
   @IsString({ message: '아이디는 문자열 형식이여야 합니다' })
@@ -46,6 +48,7 @@ export class CreateUserDto {
   @IsNotEmpty({ message: 'mbti를 입력해주세요' })
   @MaxLength(4, { message: 'mbti는 최대 4글자 입니다.' })
   @IsString({ message: 'mbti는 문자열 형식이여야 합니다.' })
+  @IsMbti('mbti')
   mbti: string;
 
   @IsString()

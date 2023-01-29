@@ -11,6 +11,7 @@ import {
   AutoIncrement,
   BeforeUpdate,
   BeforeCreate,
+  BeforeBulkUpdate,
 } from 'sequelize-typescript';
 import { Like } from './like.models';
 import { Feed } from './feed.models';
@@ -91,15 +92,12 @@ export class User extends Model {
 
   @BeforeCreate
   static mbtiConvertToUpperCaseBeforeCreate(user: User) {
-    if (user.mbti !== '') {
-      user.mbti = user.mbti.toUpperCase();
-    }
+    user.mbti = user.mbti.toUpperCase();
   }
 
-  @BeforeUpdate
+  @BeforeBulkUpdate
   static mbtiConvertToUpperCaseBeforeUpdate(user: User) {
-    if (user.mbti !== '') {
-      user.mbti = user.mbti.toUpperCase();
-    }
+    const { mbti } = user['attributes'];
+    user['attributes']['mbti'] = mbti.toUpperCase();
   }
 }
