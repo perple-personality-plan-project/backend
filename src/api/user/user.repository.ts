@@ -121,13 +121,13 @@ export class UserRepository {
         ],
         [
           Sequelize.literal(
-            `(SELECT COUNT(*) FROM likes WHERE likes.user_id = ${user_id} AND likes.feed_id = Feed.feed_id)`,
+            `(SELECT COUNT(*) FROM likes WHERE likes.user_id = ${user_id} AND likes.feed_id = feed.feed_id)`,
           ),
           'isLike',
         ],
         [
           Sequelize.literal(
-            `(SELECT COUNT(*) FROM picks WHERE picks.user_id = ${user_id} AND picks.feed_id = Feed.feed_id)`,
+            `(SELECT COUNT(*) FROM picks WHERE picks.user_id = ${user_id} AND picks.feed_id = feed.feed_id)`,
           ),
           'isPick',
         ],
