@@ -64,12 +64,6 @@ export class FeedRepository {
           as: 'like',
           attributes: [],
         },
-        {
-          required: false,
-          model: Pick,
-          as: 'pick',
-          attributes: [],
-        },
       ],
       where: { group_user_id: { [Op.eq]: null } },
       group: ['feed_id'],
@@ -88,7 +82,6 @@ export class FeedRepository {
           attributes: [],
         },
         { model: Like, as: 'like', attributes: [] },
-        { model: Pick, as: 'pick', attributes: [], required: false },
       ],
       where: {
         feed_id,
@@ -262,12 +255,6 @@ export class FeedRepository {
           model: Like,
           as: 'like',
           attributes: [],
-        },
-        {
-          model: Pick,
-          as: 'pick',
-          attributes: [],
-          required: false,
         },
       ],
 
