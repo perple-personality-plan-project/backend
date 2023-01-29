@@ -71,6 +71,7 @@ export class UserRepository {
         'location',
         [Sequelize.col('user.user_id'), 'user_id'],
         [Sequelize.col('user.mbti'), 'mbti'],
+        [Sequelize.fn('COUNT', Sequelize.col('like.like_id')), 'like_count'],
         'created_at',
         'updated_at',
       ],
@@ -83,12 +84,7 @@ export class UserRepository {
         {
           model: Like,
           as: 'like',
-          attributes: [
-            [
-              Sequelize.fn('COUNT', Sequelize.col('like.like_id')),
-              'like_count',
-            ],
-          ],
+          attributes: [],
         },
       ],
       group: ['feed_id'],
