@@ -12,6 +12,7 @@ import {
   UploadedFiles,
   UseGuards,
   Req,
+  Delete,
 } from '@nestjs/common';
 import { GlobalResponseInterceptor } from '../../../common/interceptors/global.response.interceptor';
 import { GlobalExceptionFilter } from '../../../common/filter/global.exception.filter';
@@ -49,5 +50,16 @@ export class MapController {
     const userId = { user_id: req.user };
     const mapId = { map_id };
     return this.mapService.getMap(userId, mapId);
+  }
+
+  @Delete('/:map_id')
+  @UseGuards(AuthGuard('jwt'))
+  async deleteMap(
+    @Param('map_id', ParseIntPipe, PositiveIntPipe) map_id: number,
+    @Req() req: Request,
+  ) {
+    const userId = { user_id: req.user };
+    const mapId = { map_id };
+    return this.mapService.deleteMap(userId, mapId);
   }
 }

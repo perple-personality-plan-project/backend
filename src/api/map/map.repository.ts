@@ -22,4 +22,8 @@ export class MapRepository {
   async getMap(mapId) {
     return this.mapModel.findOne({ where: { ...mapId } });
   }
+
+  async deleteMap(mapId) {
+    return this.mapModel.destroy({ where: { ...mapId } });
+  }
 }
