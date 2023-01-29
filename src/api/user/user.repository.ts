@@ -72,6 +72,18 @@ export class UserRepository {
         [Sequelize.col('user.user_id'), 'user_id'],
         [Sequelize.col('user.mbti'), 'mbti'],
         [Sequelize.fn('COUNT', Sequelize.col('like.like_id')), 'like_count'],
+        [
+          Sequelize.literal(
+            `(SELECT COUNT(*) FROM likes WHERE likes.user_id = ${user_id} AND likes.feed_id = Feed.feed_id)`,
+          ),
+          'isLike',
+        ],
+        [
+          Sequelize.literal(
+            `(SELECT COUNT(*) FROM picks WHERE picks.user_id = ${user_id} AND picks.feed_id = Feed.feed_id)`,
+          ),
+          'isPick',
+        ],
         'created_at',
         'updated_at',
       ],
@@ -103,12 +115,24 @@ export class UserRepository {
         [Sequelize.col('feed.thumbnail'), 'thumbnail'],
         [Sequelize.col('feed.description'), 'description'],
         [Sequelize.col('feed.location'), 'location'],
-        [Sequelize.col('feed.created_at'), 'created_at'],
-        [Sequelize.col('feed.created_at'), 'updated_at'],
         [
           Sequelize.fn('COUNT', Sequelize.col('feed.like.like_id')),
           'like_count',
         ],
+        [
+          Sequelize.literal(
+            `(SELECT COUNT(*) FROM likes WHERE likes.user_id = ${user_id} AND likes.feed_id = Feed.feed_id)`,
+          ),
+          'isLike',
+        ],
+        [
+          Sequelize.literal(
+            `(SELECT COUNT(*) FROM picks WHERE picks.user_id = ${user_id} AND picks.feed_id = Feed.feed_id)`,
+          ),
+          'isPick',
+        ],
+        [Sequelize.col('feed.created_at'), 'created_at'],
+        [Sequelize.col('feed.created_at'), 'updated_at'],
       ],
       include: [
         {
