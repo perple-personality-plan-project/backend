@@ -131,6 +131,7 @@ export class FeedRepository {
         'created_at',
         'updated_at',
       ],
+      order: [['created_at', 'DESC']],
       raw: true,
     });
 
