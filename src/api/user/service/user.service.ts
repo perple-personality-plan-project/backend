@@ -93,6 +93,12 @@ export class UserService {
     user_id: number,
     files: Array<Express.Multer.File>,
   ): Promise<[affectedCount: number]> {
+    const user = await this.userRepository.findUserByUserId(user_id);
+
+    if (user.background_img) {
+      await this.awsS3Service.deleteS3Object(user.background_img);
+    }
+
     const data = await this.awsS3Service.uploadFileToS3(files);
     const background_img = data[0]['key'].split('/')[1];
 
@@ -103,6 +109,12 @@ export class UserService {
     user_id: number,
     files: Array<Express.Multer.File>,
   ): Promise<[affectedCount: number]> {
+    const user = await this.userRepository.findUserByUserId(user_id);
+
+    if (user.profile_img) {
+      await this.awsS3Service.deleteS3Object(user.profile_img);
+    }
+
     const data = await this.awsS3Service.uploadFileToS3(files);
     const profile_img = data[0]['key'].split('/')[1];
 

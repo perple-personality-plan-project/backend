@@ -98,6 +98,9 @@ export class User extends Model {
   @BeforeBulkUpdate
   static mbtiConvertToUpperCaseBeforeUpdate(user: User) {
     const { mbti } = user['attributes'];
-    user['attributes']['mbti'] = mbti.toUpperCase();
+
+    if (mbti) {
+      user['attributes']['mbti'] = mbti.toUpperCase();
+    }
   }
 }
