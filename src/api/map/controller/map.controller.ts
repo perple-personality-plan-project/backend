@@ -20,6 +20,7 @@ import { MapService } from '../service/map.service';
 import { PositiveIntPipe } from '../../../common/pipes/positiveInt.pipe';
 import { AuthGuard } from '@nestjs/passport/dist/auth.guard';
 import { Request } from 'express';
+import { MapRequestDto } from '../dto/map.request.dto';
 
 @Controller('map')
 @UseInterceptors(GlobalResponseInterceptor)
@@ -29,7 +30,7 @@ export class MapController {
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
-  async createMap(@Body() body, @Req() req: Request) {
+  async createMap(@Body() body: MapRequestDto, @Req() req: Request) {
     const userId = { user_id: req.user };
     return this.mapService.createMap(body, userId);
   }

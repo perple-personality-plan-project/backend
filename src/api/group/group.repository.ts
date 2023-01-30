@@ -181,6 +181,7 @@ export class GroupRepository {
           'thumbnail',
           'description',
           'location',
+          [Sequelize.col('groupUser.user.profile_img'), 'profile_img'],
           [Sequelize.col('groupUser.user_id'), 'user_id'],
           [Sequelize.col('groupUser.user.mbti'), 'mbti'],
           [Sequelize.col('groupUser.user.nickname'), 'nickname'],
