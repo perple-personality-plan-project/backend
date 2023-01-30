@@ -128,7 +128,7 @@ export class FeedRepository {
         'feed_id',
         'comment',
         [Sequelize.col('user.nickname'), 'nickname'],
-        [Sequelize.col('user.profile_img,'), 'profile_img'],
+        [Sequelize.col('user.profile_img'), 'profile_img'],
         'created_at',
         'updated_at',
       ],
