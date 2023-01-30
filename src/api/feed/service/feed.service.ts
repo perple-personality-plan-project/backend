@@ -38,12 +38,15 @@ export class FeedService {
     }
   }
 
-  async getAllFeed() {
-    return this.feedRepository.getAllFeed();
+  async getAllFeed(userId) {
+    const { user_id } = userId;
+
+    return this.feedRepository.getAllFeed(user_id);
   }
 
-  async findFeedById(feed_id) {
-    return this.feedRepository.findFeedById(feed_id);
+  async findFeedById(feed_id, userId) {
+    const { user_id } = userId;
+    return this.feedRepository.findFeedById(feed_id, user_id);
   }
 
   async deleteFeed(feed_id, user_id) {
@@ -65,7 +68,21 @@ export class FeedService {
     }
   }
 
-  async getFeedMbti(mbti) {
-    return this.feedRepository.getFeedMbti(mbti);
+  async checkPicked(user_id: number, feed_id: number): Promise<boolean> {
+    return this.feedRepository.checkPicked(user_id, feed_id);
+  }
+
+  async getFeedMbti(mbti, userId) {
+    const { user_id } = userId;
+    return this.feedRepository.getFeedMbti(mbti, user_id);
+  }
+
+  async getLikeCheck(feed_id, user_id) {
+    const isFeedLike = await this.feedRepository.checkFeedLike(
+      feed_id,
+      user_id,
+    );
+
+    return isFeedLike ? true : false;
   }
 }

@@ -1,7 +1,6 @@
 import {
   Body,
   Controller,
-  Get,
   Post,
   UseFilters,
   UseInterceptors,
@@ -14,18 +13,15 @@ import {
 import { GlobalResponseInterceptor } from 'src/common/interceptors/global.response.interceptor';
 import { GlobalExceptionFilter } from '../../../common/filter/global.exception.filter';
 import { CommentService } from '../service/comment.service';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CommentRequestDto } from '../dto/comment.request.dto';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('comment')
-@ApiTags('comment')
 @UseInterceptors(GlobalResponseInterceptor)
 @UseFilters(GlobalExceptionFilter)
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
-  @ApiOperation({ summary: '댓글 생성' })
   @UseGuards(AuthGuard('jwt'))
   @Post('/:feed_id')
   async createComment(
@@ -39,7 +35,6 @@ export class CommentController {
     return this.commentService.createComment(user_id, feed_id, body);
   }
 
-  @ApiOperation({ summary: '댓글 삭제' })
   @UseGuards(AuthGuard('jwt'))
   @Delete('/:feed_id/:comment_id')
   deleteComment(

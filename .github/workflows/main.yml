@@ -1,0 +1,67 @@
+name: deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.14.2
+          cache: npm
+          
+      - run: npm install
+      - run: npm run build
+      
+      - name: create env file
+        working-directory: ./
+        run: |
+          pwd
+          touch .env
+          echo PORT=${{ secrets.PORT }} >> .env
+          echo DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }} >> .env
+          echo DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }} >> .env
+          echo DATABASE_SCHEMA=${{ secrets.DATABASE_SCHEMA }} >> .env
+          echo DATABASE_HOST=${{ secrets.DATABASE_HOST }} >> .env
+          echo DATABASE_PORT=${{ secrets.DATABASE_PORT }} >> .env
+          echo ACCESS_TOKEN_KEY=${{ secrets.ACCESS_TOKEN_KEY }} >> .env
+          echo REFRESH_TOKEN_KEY=${{ secrets.REFRESH_TOKEN_KEY }} >> .env
+          echo ACCESS_TOKEN_EXP=${{ secrets.ACCESS_TOKEN_EXP }} >> .env
+          echo REFRESH_TOKEN_EXP=${{ secrets.REFRESH_TOKEN_EXP }} >> .env
+          echo REDIS_HOST=${{ secrets.REDIS_HOST }} >> .env
+          echo REDIS_PORT=${{ secrets.REDIS_PORT }} >> .env
+          echo REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }} >> .env
+          echo KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }} >> .env
+          echo KAKAO_CALLBACK_URL=${{ secrets.KAKAO_CALLBACK_URL }} >> .env
+          echo AWS_S3_ACCESS_KEY=${{ secrets.AWS_S3_ACCESS_KEY }} >> .env
+          echo AWS_S3_SECRET_KEY=${{ secrets.AWS_S3_SECRET_KEY }} >> .env
+          echo AWS_S3_REGION=${{ secrets.AWS_S3_REGION }} >> .env
+          echo AWS_S3_BUCKET_NAME=${{ secrets.AWS_S3_BUCKET_NAME }} >> .env
+          cat .env
+
+      - name: zip file
+        run: zip -r mbti.zip ./dist ./scripts ./appspec.yml ./.env ./package.json
+
+      - name: AWS configure credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
+      - name: upload to S3
+        run: aws s3 cp --region ap-northeast-2 ./mbti.zip s3://16platter.backend/build/
+
+      - name: deploy with AWS codeDeploy
+        run: aws deploy create-deployment
+          --application-name mbti-codeDeploy
+          --deployment-config-name CodeDeployDefault.OneAtATime
+          --deployment-group-name MBTI
+          --s3-location bucket=16platter.backend,bundleType=zip,key=build/mbti.zip

@@ -2,6 +2,8 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { GroupParamDto, GroupRequestDto } from '../dto/group.request.dto';
 import { GroupRepository } from '../group.repository';
 import { AwsS3Service } from '../../../common/utils/asw.s3.service';
+import { GroupEditDto } from '../dto/group.edit.dto';
+import { FeedRepository } from '../../feed/feed.repository';
 
 @Injectable()
 export class GroupService {
@@ -11,6 +13,7 @@ export class GroupService {
   };
   constructor(
     private readonly groupRepository: GroupRepository,
+    private readonly feedRepository: FeedRepository,
     private readonly awsS3Service: AwsS3Service,
   ) {}
 
@@ -30,7 +33,7 @@ export class GroupService {
 
     const imageList = [];
 
-    if (files) {
+    if (files.length > 0) {
       const uploadImage = await this.awsS3Service.uploadFileToS3(files);
       uploadImage.map((data) => {
         const key = data['key'].split('/');
@@ -38,7 +41,7 @@ export class GroupService {
       });
     } else {
       //디폴트 이미지로 바꿔 줘야함!
-      imageList.push('');
+      imageList.push('default-group.jpg');
     }
 
     thumbnail['thumbnail'] = imageList.join(',');
@@ -83,13 +86,20 @@ export class GroupService {
   }
 
   async getGroup(req: GroupParamDto) {
-    const { sort } = req;
+    const { sort, search } = req;
+    let searchData = '';
 
     if (sort !== 'rank' && sort !== 'date') {
       throw new BadRequestException('정렬은 인기순/생성순만 있습니다.');
     }
 
-    return this.groupRepository.getGroup(this.GROUPSORT[sort]);
+    if (!search) {
+      searchData = '';
+    } else {
+      searchData = search;
+    }
+
+    return this.groupRepository.getGroup(this.GROUPSORT[sort], searchData);
   }
 
   async groupSignUp(userId: object, groupId: object) {
@@ -110,8 +120,9 @@ export class GroupService {
     }
   }
 
-  async getGroupFeed(groupId: number) {
-    return this.groupRepository.getGroupFeed(groupId);
+  async getGroupFeed(groupId: number, userId) {
+    const { user_id } = userId;
+    return this.groupRepository.getGroupFeed(groupId, user_id);
   }
 
   async getGroupFeedDetail(groupId, feedId) {
@@ -168,5 +179,99 @@ export class GroupService {
   }
   async getHashTag() {
     return await this.groupRepository.getHashTag();
+  }
+
+  async deleteGroup(userId, groupId) {
+    const { user_id } = userId;
+    const group = await this.groupRepository.findGroup(groupId);
+
+    if (group['user_id'] !== user_id) {
+      return '본인 그룹만 삭제 할 수 있습니다.';
+    }
+
+    const deleteGroup = this.groupRepository.deleteGroup(groupId);
+    if (deleteGroup) {
+      return '삭제 되었습니다.';
+    }
+  }
+
+  async editGroup(userId, groupId, files, editGroup) {
+    const { user_id } = userId;
+    const imageList = [];
+    const group = await this.groupRepository.findGroup(groupId);
+
+    if (!group['user_id'] == user_id) {
+      return '본인 그룹만 수정 할 수 있습니다.';
+    }
+
+    if (files) {
+      const image = group.thumbnail;
+      if (image !== 'default-group.png') {
+        await this.awsS3Service.deleteS3Object(image);
+      }
+      const uploadImage = await this.awsS3Service.uploadFileToS3(files);
+      uploadImage.map((data) => {
+        const key = data['key'].split('/');
+        imageList.push(key[1]);
+      });
+    }
+    editGroup.thumbnail = imageList.join(',');
+
+    const groupHashtag = await this.groupRepository.groupHashTag(groupId);
+
+    if (editGroup.hashtag.length > 0) {
+      const hashtagArr = JSON.parse(editGroup.hashtag.replace(/'/g, '"'));
+      const result = await this.groupRepository.deleteGroupHashtag(groupId);
+      if (result) {
+        await Promise.all(
+          hashtagArr.map(async (tag) => {
+            const title = { title: tag };
+            const result = await this.groupRepository.findHashtag(title);
+
+            if (!result) {
+              const hashtag = await this.groupRepository.createHashtag(title);
+              groupHashtag['hashtag_id'] = hashtag.dataValues['hashtag_id'];
+            } else {
+              groupHashtag['hashtag_id'] = result.hashtag_id;
+            }
+
+            await this.groupRepository.createGroupHashtag(groupId);
+          }),
+        );
+      }
+    }
+
+    return '수정 되었습니다.';
+  }
+
+  async deleteGroupFeed(userId, groupId, feedId) {
+    const findData = {
+      user_id: userId,
+      group_id: groupId,
+    };
+    const groupUser = await this.groupRepository.findGroupUser(findData);
+    if (!groupUser) {
+      throw new BadRequestException('그룹에 가입한 유저가 아닙니다.');
+    }
+    console.log(groupUser);
+
+    const feed = await this.feedRepository.getGroupFeed(
+      groupUser['group_user_id'],
+      feedId,
+    );
+
+    console.log(feed);
+
+    if (feed) {
+      const isFeedOwner = feed['group_user_id'] === groupUser['group_user_id'];
+      if (groupUser['admin_flag'] || isFeedOwner) {
+        await this.feedRepository.deleteGroupFeed(feedId);
+        return '삭제 되었습니다.';
+      } else {
+        return '게시글 작성자 혹은 그룹장만 삭제 할 수 있습니다.';
+      }
+    } else {
+      throw new BadRequestException('게시글이 존재하지 않습니다.');
+    }
   }
 }

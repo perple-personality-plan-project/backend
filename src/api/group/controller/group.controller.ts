@@ -12,10 +12,12 @@ import {
   UploadedFiles,
   UseGuards,
   Req,
+  Delete,
 } from '@nestjs/common';
 import { GlobalResponseInterceptor } from 'src/common/interceptors/global.response.interceptor';
 import { GlobalExceptionFilter } from '../../../common/filter/global.exception.filter';
 import { GroupParamDto, GroupRequestDto } from '../dto/group.request.dto';
+import { GroupEditDto } from '../dto/group.edit.dto';
 import { GroupService } from '../service/group.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport/dist/auth.guard';
@@ -41,20 +43,6 @@ export class GroupController {
     return this.groupService.getGroup(req);
   }
 
-  @ApiOperation({ summary: '그룹 만들기' })
-  @ApiResponse({
-    status: 200,
-    description: '성공!',
-    type: GroupRequestDto,
-  })
-  @ApiResponse({
-    status: 500,
-    description: 'Server Error...',
-  })
-  @ApiResponse({
-    status: 412,
-    description: 'groupname or description는 필수값 입니다',
-  })
   @Post()
   @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(FilesInterceptor('thumbnail', 5))
@@ -99,8 +87,9 @@ export class GroupController {
   @Get('/:groupId/feed')
   async getGroupFeed(
     @Param('groupId', ParseIntPipe, PositiveIntPipe) groupId: number,
+    @Query() user_id,
   ) {
-    return this.groupService.getGroupFeed(groupId);
+    return this.groupService.getGroupFeed(groupId, user_id);
   }
 
   @Get('/:groupId/feed/:feedId')
@@ -133,5 +122,42 @@ export class GroupController {
   ) {
     const userId = { user_id: req.user };
     return this.groupService.groupFeedLike(userId, group_id, feed_id);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Delete('/:group_id')
+  async deleteGroup(
+    @Param('group_id', ParseIntPipe, PositiveIntPipe) group_id: number,
+    @Req() req: Request,
+  ) {
+    const userId = { user_id: req.user };
+    const groupId = { group_id };
+
+    return this.groupService.deleteGroup(userId, groupId);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Put('/edit/:group_id')
+  @UseInterceptors(FilesInterceptor('thumbnail', 5))
+  async editGroup(
+    @Param('group_id', ParseIntPipe, PositiveIntPipe) group_id: number,
+    @Req() req: Request,
+    @Body() editData: GroupEditDto,
+    @UploadedFiles() files: Array<Express.Multer.File>,
+  ) {
+    const userId = { user_id: req.user };
+    const groupId = { group_id };
+
+    return this.groupService.editGroup(userId, groupId, files, editData);
+  }
+
+  @Delete('/:group_id/feed/:feed_id')
+  @UseGuards(AuthGuard('jwt'))
+  async deleteGroupFeed(
+    @Req() req: Request,
+    @Param('group_id', ParseIntPipe, PositiveIntPipe) group_id: number,
+    @Param('feed_id', ParseIntPipe, PositiveIntPipe) feed_id: number,
+  ) {
+    return this.groupService.deleteGroupFeed(req.user, group_id, feed_id);
   }
 }
