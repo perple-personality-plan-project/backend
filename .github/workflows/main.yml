@@ -47,7 +47,7 @@ jobs:
           cat .env
 
       - name: zip file
-        run: zip -r mbti.zip ./dist ./scripts ./appspec.yml ./.env ./package.json
+        run: zip -r mbti.zip ./dist ./scripts ./appspec.yml ./.env ./package.json ./node_modules
 
       - name: AWS configure credentials
         uses: aws-actions/configure-aws-credentials@v1
