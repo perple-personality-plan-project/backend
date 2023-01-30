@@ -80,6 +80,7 @@ export class CommentRepository {
         'comment',
         [Sequelize.col('user.nickname'), 'nickname'],
         [Sequelize.col('user.groupUser.group_user_id'), 'group_user_id'],
+        [Sequelize.col('user.profile_img'), 'profile_img'],
         'created_at',
         'updated_at',
       ],
