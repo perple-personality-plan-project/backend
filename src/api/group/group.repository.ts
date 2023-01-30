@@ -38,12 +38,36 @@ export class GroupRepository {
 
   async findGroup(findData: object) {
     return this.groupModel.findOne({
+      include: [{ model: GroupUser, attributes: [] }],
       raw: true,
       where: { ...findData },
+      attributes: [
+        'group_id',
+        'group_name',
+        'thumbnail',
+        'description',
+        [Sequelize.col('groupUser.user_id'), 'user_id'],
+        'created_at',
+        'updated_at',
+      ],
     });
   }
 
-  async getGroup(sort) {
+  async groupHashTag(groupId) {
+    return this.groupHashtagModel.findAll({
+      where: { ...groupId },
+      include: [
+        {
+          model: Hashtag,
+          required: true,
+          attributes: ['title'],
+        },
+      ],
+      raw: true,
+    });
+  }
+
+  async getGroup(sort, search) {
     return this.groupModel.findAll({
       include: [
         {
@@ -106,6 +130,13 @@ export class GroupRepository {
         'updated_at',
       ],
       group: ['group_id'],
+      where: {
+        [Op.or]: [
+          { group_name: { [Op.like]: `%${search}%` } },
+          { description: { [Op.like]: `%${search}%` } },
+          { '$groupHashTag.hashtag.title$': { [Op.like]: `%${search}` } },
+        ],
+      },
       order: [[sort, 'DESC']],
       raw: false,
     });
@@ -140,7 +171,7 @@ export class GroupRepository {
     this.groupUser.destroy({ where: { ...groupUser } });
   }
 
-  async getGroupFeed(groupId: number) {
+  async getGroupFeed(groupId: number, userId: number) {
     return this.feed.findAll({
       attributes: {
         exclude: ['user_id'],
@@ -150,8 +181,23 @@ export class GroupRepository {
           'thumbnail',
           'description',
           'location',
+          [Sequelize.col('groupUser.user.profile_img'), 'profile_img'],
+          [Sequelize.col('groupUser.user_id'), 'user_id'],
           [Sequelize.col('groupUser.user.mbti'), 'mbti'],
           [Sequelize.col('groupUser.user.nickname'), 'nickname'],
+          [
+            Sequelize.literal(
+              `(SELECT COUNT(*) FROM likes WHERE likes.user_id = ${userId} AND likes.feed_id = Feed.feed_id)`,
+            ),
+            'isLike',
+          ],
+          [
+            Sequelize.fn(
+              'COUNT',
+              Sequelize.fn('DISTINCT', Sequelize.col('like.like_id')),
+            ),
+            'likeCount',
+          ],
           'created_at',
           'updated_at',
         ],
@@ -162,10 +208,16 @@ export class GroupRepository {
           attributes: [],
           include: [{ model: Group }, { model: User }],
         },
+        {
+          model: Like,
+          attributes: [],
+          required: false,
+        },
       ],
       where: {
         '$groupUser.group.group_id$': groupId,
       },
+      group: ['feed_id'],
     });
   }
 
@@ -325,5 +377,17 @@ export class GroupRepository {
 
   async getHashTag() {
     return this.hashtagModel.findAll({});
+  }
+
+  async deleteGroup(groupId) {
+    return this.groupModel.destroy({ where: { [Op.and]: { ...groupId } } });
+  }
+
+  async editGroup(edit, groupId) {
+    await this.groupModel.update({ ...edit }, { where: { ...groupId } });
+  }
+
+  async deleteGroupHashtag(groupId) {
+    return await this.groupHashtagModel.destroy({ where: { ...groupId } });
   }
 }

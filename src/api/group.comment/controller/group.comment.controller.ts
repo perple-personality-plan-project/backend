@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   ParseIntPipe,
   Post,
@@ -56,5 +57,15 @@ export class GroupCommentController {
       comment_id,
       userId,
     );
+  }
+
+  @Get('group/:group_id/feed/:feed_id')
+  async getGroupComment(
+    @Param('group_id', ParseIntPipe, PositiveIntPipe) group_id: number,
+    @Param('feed_id', ParseIntPipe, PositiveIntPipe) feed_id: number,
+  ) {
+    const groupId = { group_id };
+    const feedId = { feed_id };
+    return this.groupCommentService.getGroupComment(groupId, feedId);
   }
 }

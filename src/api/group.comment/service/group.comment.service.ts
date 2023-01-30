@@ -48,4 +48,7 @@ export class GroupCommentService {
       return `댓글이 삭제 되었습니다.`;
     }
   }
+  async getGroupComment(groupId, feedId) {
+    return this.commentRepository.getGroupComment(groupId, feedId);
+  }
 }
