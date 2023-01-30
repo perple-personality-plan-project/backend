@@ -64,4 +64,4 @@ jobs:
           --application-name mbti-codeDeploy
           --deployment-config-name CodeDeployDefault.OneAtATime
           --deployment-group-name MBTI
-          --s3-location bucket=hous-build,bundleType=zip,key=deploy/mbti.zip
+          --s3-location bucket=16platter.backend,bundleType=zip,key=build/mbti.zip
