@@ -36,6 +36,7 @@ export class FeedRepository {
         'location',
         [Sequelize.col('user.user_id'), 'user_id'],
         [Sequelize.col('user.nickname'), 'nickname'],
+        [Sequelize.col('user.profile_img'), 'profile_img'],
         [Sequelize.col('user.mbti'), 'mbti'],
         [Sequelize.fn('COUNT', Sequelize.col('like.like_id')), 'likeCount'],
         [
@@ -93,6 +94,7 @@ export class FeedRepository {
         'description',
         'location',
         [Sequelize.col('user.nickname'), 'nickname'],
+        [Sequelize.col('user.profile_img'), 'profile_img'],
         [Sequelize.fn('COUNT', Sequelize.col('like.like_id')), 'likeCount'],
         [
           Sequelize.literal(
@@ -157,6 +159,7 @@ export class FeedRepository {
         'location',
         [Sequelize.col('user.user_id'), 'user_id'],
         [Sequelize.col('user.mbti'), 'mbti'],
+        [Sequelize.col('user.profile_img'), 'profile_img'],
         [Sequelize.fn('COUNT', Sequelize.col('like.like_id')), 'likeCount'],
         'created_at',
         'updated_at',
