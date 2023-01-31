@@ -6,7 +6,11 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { User } from 'src/db/models/user.models';
-import { CreateUserDto } from '../dto/request/create-user.dto';
+import {
+  CreateUserDto,
+  LoginIdDto,
+  NicknameDto,
+} from '../dto/request/create-user.dto';
 import { UserRepository } from '../user.repository';
 import { UpdateMbtiDto, UpdateUserDto } from '../dto/request/update-user.dto';
 import { GroupRepository } from '../../group/group.repository';
@@ -24,26 +28,22 @@ export class UserService {
   ) {}
 
   async signUp(createUserDto: CreateUserDto): Promise<User> {
-    // 아이디 중복검사
-    const isDupLoginId = await this.userRepository.IsDuplicatedInputData(
-      'login_id',
-      createUserDto.login_id,
-    );
+    const isDupLoginId = await this.userRepository.IsDuplicatedLoginId({
+      login_id: createUserDto.login_id,
+    });
 
     if (isDupLoginId) {
       throw new ConflictException('중복되는 아이디가 존재합니다.');
     }
 
-    // 비밀번호와 confirm 검사
     if (createUserDto.password !== createUserDto.confirm_password) {
       throw new ForbiddenException('비밀번호가 일치하지 않습니다.');
     }
 
     // 닉네임 중복검사
-    const isDupNickname = await this.userRepository.IsDuplicatedInputData(
-      'nickname',
-      createUserDto.nickname,
-    );
+    const isDupNickname = await this.userRepository.IsDuplicatedNickname({
+      nickname: createUserDto.nickname,
+    });
 
     if (isDupNickname) {
       throw new ConflictException('중복되는 닉네임이 존재합니다.');
@@ -58,6 +58,30 @@ export class UserService {
     return createUser;
   }
 
+  async IsDuplicatedLoginId(loginIdDto: LoginIdDto) {
+    const existsUser = await this.userRepository.IsDuplicatedLoginId(
+      loginIdDto,
+    );
+
+    if (existsUser) {
+      throw new ConflictException('중복되는 아이디가 존재합니다.');
+    }
+
+    return existsUser;
+  }
+
+  async IsDuplicatedNickname(nicknameDto: NicknameDto) {
+    const existsUser = await this.userRepository.IsDuplicatedNickname(
+      nicknameDto,
+    );
+
+    if (existsUser) {
+      throw new ConflictException('중복되는 닉네임이 존재합니다.');
+    }
+
+    return existsUser;
+  }
+
   async updatedProfile(
     user_id: number,
     updateUserDto: UpdateUserDto,
@@ -67,10 +91,9 @@ export class UserService {
     const currentUserInfo = await this.findUserByUserId(user_id);
 
     if (nickname !== currentUserInfo.nickname) {
-      const isDupNickname = await this.userRepository.IsDuplicatedInputData(
-        'nickname',
+      const isDupNickname = await this.userRepository.IsDuplicatedNickname({
         nickname,
-      );
+      });
 
       if (isDupNickname) {
         throw new ConflictException('중복되는 닉네임이 존재합니다.');

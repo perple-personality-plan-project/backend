@@ -16,7 +16,13 @@ import {
 } from '@nestjs/common';
 import { GlobalResponseInterceptor } from '../../../common/interceptors/global.response.interceptor';
 import { UserService } from 'src/api/user/service/user.service';
-import { CreateUserDto } from '../dto/request/create-user.dto';
+import {
+  CreateUserDto,
+  LoginIdDto,
+  NicknameDto,
+  // LoginIdDto,
+  // NicknameDto,
+} from '../dto/request/create-user.dto';
 import { AuthService } from 'src/auth/auth.service';
 import { KakaoAuthGuard } from 'src/auth/kakao/kaka-auth.guard';
 import { UpdateMbtiDto, UpdateUserDto } from '../dto/request/update-user.dto';
@@ -41,11 +47,24 @@ export class UserController {
   async signup(
     @Body(ValidationPipe) createUserDto: CreateUserDto,
   ): Promise<{ message: string }> {
+    console.log(createUserDto);
     await this.userService.signUp(createUserDto);
 
     return { message: '회원가입에 성공했습니다.' };
   }
-  //
+
+  @Post('check-id')
+  async checkEmail(@Body() loginIdDto: LoginIdDto) {
+    await this.userService.IsDuplicatedLoginId(loginIdDto);
+    return { message: '사용가능한 아이디입니다.' };
+  }
+
+  @Post('check-nick')
+  async checkNickname(@Body() nicknameDto: NicknameDto) {
+    await this.userService.IsDuplicatedNickname(nicknameDto);
+    return { message: '사용가능한 닉네임입니다.' };
+  }
+
   @UseGuards(AuthGuard('local'))
   @Post('/login')
   async login(@Req() req): Promise<{

@@ -6,7 +6,11 @@ import { Pick } from 'src/db/models/pick.models';
 import { User } from 'src/db/models/user.models';
 import { Feed } from 'src/db/models/feed.models';
 import { Like } from 'src/db/models/like.models';
-import { CreateUserDto } from './dto/request/create-user.dto';
+import {
+  CreateUserDto,
+  LoginIdDto,
+  NicknameDto,
+} from './dto/request/create-user.dto';
 import { UpdateMbtiDto, UpdateUserDto } from './dto/request/update-user.dto';
 
 @Injectable()
@@ -56,8 +60,12 @@ export class UserRepository {
     return this.sequelize.query(query, { type: QueryTypes.SELECT });
   }
 
-  async IsDuplicatedInputData(column: string, data: string): Promise<User> {
-    return this.userModel.findOne({ where: { [column]: data } });
+  async IsDuplicatedLoginId(loginIdDto: LoginIdDto): Promise<User> {
+    return this.userModel.findOne({ where: { ...loginIdDto } });
+  }
+
+  async IsDuplicatedNickname(nicknameDto: NicknameDto): Promise<User> {
+    return this.userModel.findOne({ where: { ...nicknameDto } });
   }
 
   async getUserFeed(user_id: number): Promise<Feed[]> {
