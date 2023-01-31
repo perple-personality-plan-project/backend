@@ -390,4 +390,25 @@ export class GroupRepository {
   async deleteGroupHashtag(groupId) {
     return await this.groupHashtagModel.destroy({ where: { ...groupId } });
   }
+
+  async deleteHashtag(HashtagId) {
+    return await this.hashtagModel.destroy({
+      where: { hashtag_id: [...HashtagId] },
+    });
+  }
+
+  async getGroupHashtag(groupId) {
+    return await this.groupHashtagModel.findAll({
+      having: [
+        Sequelize.where(Sequelize.fn('COUNT', Sequelize.col('hashtag_id')), {
+          [Op.eq]: 1,
+        }),
+        // Sequelize.where(Sequelize.col('group_id'), groupId.group_id),
+      ],
+      where: { ...groupId },
+      attributes: ['group_id', 'hashtag_id'],
+      group: ['hashtag_id'],
+      raw: true,
+    });
+  }
 }
