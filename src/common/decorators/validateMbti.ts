@@ -1,3 +1,4 @@
+import { BadRequestException } from '@nestjs/common';
 import {
   registerDecorator,
   ValidationOptions,
@@ -39,6 +40,7 @@ export function IsMbti(
         validate(value: any, args: ValidationArguments) {
           const [mbtiField] = args.constraints;
           const mbti = (args.object as any)[mbtiField];
+
           return mbtiList.includes(mbti.toUpperCase());
         },
         defaultMessage: buildMessage(

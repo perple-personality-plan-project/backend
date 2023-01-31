@@ -1,4 +1,4 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { IsMbti } from 'src/common/decorators/validateMbti';
 
 export class UpdateUserDto {
@@ -8,6 +8,13 @@ export class UpdateUserDto {
 
   @IsString()
   @IsOptional()
+  @IsMbti('mbti')
+  mbti: string;
+}
+
+export class UpdateMbtiDto {
+  @IsString()
+  @IsNotEmpty()
   @IsMbti('mbti')
   mbti: string;
 }
