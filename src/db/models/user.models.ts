@@ -9,6 +9,9 @@ import {
   AllowNull,
   Unique,
   AutoIncrement,
+  BeforeUpdate,
+  BeforeCreate,
+  BeforeBulkUpdate,
 } from 'sequelize-typescript';
 import { Like } from './like.models';
 import { Feed } from './feed.models';
@@ -16,6 +19,7 @@ import { Comment } from './comment.models';
 import { Map } from './map.models';
 import { Pick } from './pick.models';
 import { GroupUser } from './groupUser.models';
+import * as bcrypt from 'bcrypt';
 
 @Table({
   modelName: 'User',
@@ -69,9 +73,34 @@ export class User extends Model {
   @Column
   provider: string;
 
+  @Column
+  profile_img: string;
+
+  @Column
+  background_img: string;
+
   @CreatedAt
   created_at: Date;
 
   @UpdatedAt
   updated_at: Date;
+
+  @BeforeCreate
+  static async hashedPassword(user: User) {
+    user.password = await bcrypt.hash(user.password, 10);
+  }
+
+  @BeforeCreate
+  static mbtiConvertToUpperCaseBeforeCreate(user: User) {
+    user.mbti = user.mbti.toUpperCase();
+  }
+
+  @BeforeBulkUpdate
+  static mbtiConvertToUpperCaseBeforeUpdate(user: User) {
+    const { mbti } = user['attributes'];
+
+    if (mbti) {
+      user['attributes']['mbti'] = mbti.toUpperCase();
+    }
+  }
 }

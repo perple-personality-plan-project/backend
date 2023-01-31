@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class GroupRequestDto {
@@ -33,4 +33,8 @@ export class GroupParamDto {
   @IsNotEmpty()
   @IsString()
   sort: string;
+
+  @IsString()
+  @IsOptional()
+  search: string | null;
 }

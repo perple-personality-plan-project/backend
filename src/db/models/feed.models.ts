@@ -15,6 +15,7 @@ import { User } from './user.models';
 import { Comment } from './comment.models';
 import { Like } from './like.models';
 import { GroupUser } from './groupUser.models';
+import { Pick } from './pick.models';
 
 @Table({
   modelName: 'Feed',
@@ -31,6 +32,9 @@ export class Feed extends Model {
 
   @BelongsTo(() => User)
   user: User;
+
+  @HasMany(() => Pick)
+  pick: Pick[];
 
   @BelongsTo(() => GroupUser)
   groupUser: GroupUser;
