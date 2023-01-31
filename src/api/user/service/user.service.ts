@@ -8,7 +8,7 @@ import {
 import { User } from 'src/db/models/user.models';
 import { CreateUserDto } from '../dto/request/create-user.dto';
 import { UserRepository } from '../user.repository';
-import { UpdateUserDto } from '../dto/request/update-user.dto';
+import { UpdateMbtiDto, UpdateUserDto } from '../dto/request/update-user.dto';
 import { GroupRepository } from '../../group/group.repository';
 import { AwsS3Service } from 'src/common/utils/asw.s3.service';
 import { Group } from 'src/db/models/group.models';
@@ -119,6 +119,22 @@ export class UserService {
     const profile_img = data[0]['key'].split('/')[1];
 
     return this.userRepository.updateProfile(user_id, profile_img);
+  }
+
+  async updateMbti(
+    user_id: number,
+    updateMbtiDto: UpdateMbtiDto,
+  ): Promise<[affectedCount: number]> {
+    const updatedMbti = await this.userRepository.updateMbti(
+      user_id,
+      updateMbtiDto,
+    );
+
+    if (updatedMbti[0] === 0) {
+      throw new BadRequestException('MBTI 업데이트에 실패했습니다.');
+    }
+
+    return updatedMbti;
   }
 
   async getMypageInfo(user_id: number): Promise<object[]> {
