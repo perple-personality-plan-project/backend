@@ -1,3 +1,4 @@
+import { PickType } from '@nestjs/swagger';
 import {
   IsNotEmpty,
   IsOptional,
@@ -54,3 +55,11 @@ export class CreateUserDto {
   @IsString()
   provider: string;
 }
+
+export class LoginIdDto extends PickType(CreateUserDto, [
+  'login_id',
+] as const) {}
+
+export class NicknameDto extends PickType(CreateUserDto, [
+  'nickname',
+] as const) {}

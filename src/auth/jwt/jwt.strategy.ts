@@ -14,11 +14,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   }
 
   async validate(payload: any) {
-    const existUser = await this.userService.findUserByUserId(payload.user_id);
-
-    if (!existUser) {
-      throw new UnauthorizedException('회원정보가 존재하지 않습니다.');
-    }
+    await this.userService.findUserByUserId(payload.user_id);
 
     return payload.user_id;
   }
