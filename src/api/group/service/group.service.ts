@@ -188,6 +188,17 @@ export class GroupService {
     if (group['user_id'] !== user_id) {
       return '본인 그룹만 삭제 할 수 있습니다.';
     }
+    const groupHashtag = await this.groupRepository.getGroupHashtag(groupId);
+
+    const hashtagId = [];
+
+    if (groupHashtag) {
+      groupHashtag.map((data) => {
+        hashtagId.push(data['hashtag_id']);
+      });
+
+      await this.groupRepository.deleteHashtag(hashtagId);
+    }
 
     const deleteGroup = this.groupRepository.deleteGroup(groupId);
     if (deleteGroup) {
