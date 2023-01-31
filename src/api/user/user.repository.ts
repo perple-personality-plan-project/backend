@@ -7,7 +7,7 @@ import { User } from 'src/db/models/user.models';
 import { Feed } from 'src/db/models/feed.models';
 import { Like } from 'src/db/models/like.models';
 import { CreateUserDto } from './dto/request/create-user.dto';
-import { UpdateUserDto } from './dto/request/update-user.dto';
+import { UpdateMbtiDto, UpdateUserDto } from './dto/request/update-user.dto';
 
 @Injectable()
 export class UserRepository {
@@ -167,5 +167,12 @@ export class UserRepository {
     background_img: string,
   ): Promise<[affectedCount: number]> {
     return this.userModel.update({ background_img }, { where: { user_id } });
+  }
+
+  async updateMbti(
+    user_id: number,
+    updateMbtiDto: UpdateMbtiDto,
+  ): Promise<[affectedCount: number]> {
+    return this.userModel.update({ ...updateMbtiDto }, { where: { user_id } });
   }
 }

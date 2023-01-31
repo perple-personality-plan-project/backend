@@ -19,7 +19,7 @@ import { UserService } from 'src/api/user/service/user.service';
 import { CreateUserDto } from '../dto/request/create-user.dto';
 import { AuthService } from 'src/auth/auth.service';
 import { KakaoAuthGuard } from 'src/auth/kakao/kaka-auth.guard';
-import { UpdateUserDto } from '../dto/request/update-user.dto';
+import { UpdateMbtiDto, UpdateUserDto } from '../dto/request/update-user.dto';
 import { ParseIntPipe } from '@nestjs/common/pipes';
 import { AuthGuard } from '@nestjs/passport';
 import { FilesInterceptor } from '@nestjs/platform-express';
@@ -74,13 +74,19 @@ export class UserController {
   async kakaoLogin(
     @Req() req,
     @Query('code') code: string,
-  ): Promise<{ accessToken: string; refreshToken: string; user_id: number }> {
-    const { accessToken, refreshToken, user_id } = req.user;
+  ): Promise<{
+    accessToken: string;
+    refreshToken: string;
+    user_id: number;
+    mbti: string;
+  }> {
+    const { accessToken, refreshToken, user_id, mbti } = req.user;
 
     return {
       accessToken: `Bearer ${accessToken}`,
       refreshToken: `Bearer ${refreshToken}`,
       user_id,
+      mbti,
     };
   }
 
@@ -137,6 +143,21 @@ export class UserController {
     const user_id = req.user;
     await this.userService.updateBackground(user_id, files);
     return { message: '업데이트 성공' };
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Patch('update-mbti')
+  async updateMbti(
+    @Req() req,
+    @Body(ValidationPipe) updateMbtiDto: UpdateMbtiDto,
+  ) {
+    const user_id = req.user;
+
+    await this.userService.updateMbti(user_id, updateMbtiDto);
+
+    const user = await this.userService.findUserByUserId(user_id);
+
+    return { mbti: user.mbti };
   }
 
   @UseGuards(AuthGuard('jwt-refresh'))
