@@ -13,6 +13,7 @@ import {
   Query,
   UploadedFiles,
   NotFoundException,
+  Delete,
 } from '@nestjs/common';
 import { GlobalResponseInterceptor } from '../../../common/interceptors/global.response.interceptor';
 import { UserService } from 'src/api/user/service/user.service';
@@ -117,6 +118,18 @@ export class UserController {
     await this.authService.deleteRefreshToken(user_id);
 
     return { message: '로그아웃 성공' };
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Delete('/delete')
+  async deleteUser(@Req() req): Promise<{ message: string }> {
+    const user_id = req.user;
+
+    await this.userService.deleteUser(user_id);
+
+    await this.authService.deleteRefreshToken(user_id);
+
+    return { message: '회원탈퇴 성공' };
   }
 
   @UseGuards(AuthGuard('jwt'))
