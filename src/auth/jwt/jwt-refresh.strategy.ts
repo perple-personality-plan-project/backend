@@ -14,18 +14,14 @@ export class JwtRefreshStrategy extends PassportStrategy(
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
       secretOrKey: process.env.REFRESH_TOKEN_KEY,
-      passReqToCallback: true,
     });
   }
 
-  async validate(request: Request) {
-    const { authorization } = request.headers;
-    const refreshToken = authorization.split(' ')[1];
+  async validate(payload: any) {
+    const user_id = payload.user_id;
 
-    const user_id = await this.authService.getUserRefreshTokenToMatches(
-      refreshToken,
-    );
+    await this.authService.getUserRefreshTokenToMatches(user_id);
 
-    return { user_id, refreshToken };
+    return user_id;
   }
 }

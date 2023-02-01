@@ -112,9 +112,9 @@ export class UserController {
   @UseGuards(AuthGuard('jwt-refresh'))
   @Post('/logout')
   async logout(@Req() req): Promise<{ message: string }> {
-    const { refreshToken } = req.user;
+    const user_id = req.user;
 
-    await this.authService.deleteRefreshToken(refreshToken);
+    await this.authService.deleteRefreshToken(user_id);
 
     return { message: '로그아웃 성공' };
   }
@@ -182,7 +182,7 @@ export class UserController {
   @UseGuards(AuthGuard('jwt-refresh'))
   @Get('/refresh-token')
   async reIssue(@Req() req): Promise<{ accessToken: string }> {
-    const { user_id } = req.user;
+    const user_id = req.user;
     const newAccessToken = await this.authService.createAccessToken({
       user_id,
     });
