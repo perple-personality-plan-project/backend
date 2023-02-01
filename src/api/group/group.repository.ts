@@ -142,6 +142,77 @@ export class GroupRepository {
     });
   }
 
+  async getGroupList(sort, group_id) {
+    return this.groupModel.findAll({
+      include: [
+        {
+          model: GroupUser,
+          as: 'groupUser',
+          attributes: [],
+          required: false,
+          include: [
+            {
+              model: Feed,
+              required: false,
+              attributes: [],
+            },
+          ],
+        },
+        {
+          model: GroupHashtag,
+          as: 'groupHashTag',
+          required: false,
+          attributes: [],
+          include: [
+            {
+              model: Hashtag,
+              required: false,
+              attributes: ['title'],
+            },
+          ],
+        },
+      ],
+      attributes: [
+        'group_id',
+        'group_name',
+        'thumbnail',
+        'description',
+        [
+          Sequelize.fn(
+            'COUNT',
+            Sequelize.fn('DISTINCT', Sequelize.col('groupUser.group_user_id')),
+          ),
+          'group_user_count',
+        ],
+        [
+          Sequelize.fn(
+            'GROUP_CONCAT',
+            Sequelize.fn(
+              'DISTINCT',
+              Sequelize.col('groupHashTag.hashtag.title'),
+            ),
+          ),
+          'hashtags',
+        ],
+        [
+          Sequelize.fn(
+            'COUNT',
+            Sequelize.fn('DISTINCT', Sequelize.col('groupUser.feed.feed_id')),
+          ),
+          'feedCount',
+        ],
+        'created_at',
+        'updated_at',
+      ],
+      group: ['group_id'],
+      where: {
+        group_id: [...group_id],
+      },
+      order: [[sort, 'DESC']],
+      raw: false,
+    });
+  }
+
   //태그
   async findHashtag(findData: object) {
     return this.hashtagModel.findOne({
