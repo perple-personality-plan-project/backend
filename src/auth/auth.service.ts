@@ -70,9 +70,9 @@ export class AuthService {
     return refreshToken;
   }
 
-  async getUserRefreshTokenToMatches(user_id: number) {
+  async getUserRefreshTokenToMatches(user_id: string) {
     console.log(user_id);
-    const refreshToken = await this.cacheManager.get(user_id + '');
+    const refreshToken = await this.cacheManager.get(user_id);
     console.log(refreshToken);
     if (!refreshToken) {
       throw new ForbiddenException('리프레쉬 토큰이 존재하지 않습니다');
