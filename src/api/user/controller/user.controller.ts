@@ -109,7 +109,7 @@ export class UserController {
     };
   }
 
-  @UseGuards(AuthGuard('jwt-refresh'))
+  @UseGuards(AuthGuard('jwt'))
   @Post('/logout')
   async logout(@Req() req): Promise<{ message: string }> {
     const user_id = req.user;
