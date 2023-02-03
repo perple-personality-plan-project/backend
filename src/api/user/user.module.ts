@@ -20,6 +20,7 @@ import { Comment } from '../../db/models/comment.models';
 import { AwsS3Service } from 'src/common/utils/asw.s3.service';
 import { FeedService } from '../feed/service/feed.service';
 import { FeedRepository } from '../feed/feed.repository';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { FeedRepository } from '../feed/feed.repository';
       Comment,
     ]),
     forwardRef(() => AuthModule),
+    HttpModule,
   ],
   providers: [
     UserService,

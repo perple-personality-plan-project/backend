@@ -16,6 +16,7 @@ import { GroupCommentModule } from './api/group.comment/group.comment.module';
 import { MapModule } from './api/map/map.module';
 import * as redisStore from 'cache-manager-ioredis';
 import { LoggerMiddleware } from './common/middlewares/logger.meddleware';
+import { HttpModule } from '@nestjs/axios/dist';
 
 @Module({
   imports: [
@@ -25,6 +26,10 @@ import { LoggerMiddleware } from './common/middlewares/logger.meddleware';
     FeedModule,
     GroupModule,
     GroupCommentModule,
+    HttpModule.register({
+      timeout: 5000,
+      maxRedirects: 5,
+    }),
     SequelizeModule.forRoot({
       dialect: 'mysql',
       host: process.env.DATABASE_HOST,
