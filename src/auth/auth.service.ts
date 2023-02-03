@@ -3,7 +3,6 @@ import {
   Injectable,
   CACHE_MANAGER,
   UnauthorizedException,
-  ForbiddenException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserRepository } from 'src/api/user/user.repository';
@@ -71,11 +70,10 @@ export class AuthService {
   }
 
   async getUserRefreshTokenToMatches(user_id: string) {
-    console.log(user_id);
     const refreshToken = await this.cacheManager.get(user_id);
-    console.log(refreshToken);
+
     if (!refreshToken) {
-      throw new ForbiddenException('리프레쉬 토큰이 존재하지 않습니다');
+      throw new UnauthorizedException('리프레쉬 토큰이 존재하지 않습니다');
     }
 
     return user_id;
