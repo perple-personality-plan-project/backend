@@ -98,8 +98,24 @@ export class GroupService {
     } else {
       searchData = search;
     }
+    if (searchData.indexOf('#') === 0) {
+      const groupIdList = [];
 
-    return this.groupRepository.getGroup(this.GROUPSORT[sort], searchData);
+      const result = await this.groupRepository.getGroup(
+        this.GROUPSORT[sort],
+        searchData,
+      );
+      result.map((group) => {
+        groupIdList.push(group.dataValues.group_id);
+      });
+
+      return this.groupRepository.getGroupList(
+        this.GROUPSORT[sort],
+        groupIdList,
+      );
+    } else {
+      return this.groupRepository.getGroup(this.GROUPSORT[sort], searchData);
+    }
   }
 
   async groupSignUp(userId: object, groupId: object) {
