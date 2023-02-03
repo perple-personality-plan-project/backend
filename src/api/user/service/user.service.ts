@@ -18,6 +18,9 @@ import { AwsS3Service } from 'src/common/utils/asw.s3.service';
 import { Group } from 'src/db/models/group.models';
 import { Feed } from 'src/db/models/feed.models';
 import { Pick } from 'src/db/models/pick.models';
+import { HttpService } from '@nestjs/axios';
+import { map } from 'rxjs';
+import { lastValueFrom } from 'rxjs';
 
 @Injectable()
 export class UserService {
@@ -25,6 +28,7 @@ export class UserService {
     private readonly userRepository: UserRepository,
     private readonly groupRepository: GroupRepository,
     private readonly awsS3Service: AwsS3Service,
+    private readonly httpService: HttpService,
   ) {}
 
   async signUp(createUserDto: CreateUserDto): Promise<User> {
@@ -80,6 +84,58 @@ export class UserService {
     }
 
     return existsUser;
+  }
+
+  async deleteUser(user_id: number): Promise<number> {
+    const { login_id, provider } = await this.userRepository.findUserByUserId(
+      user_id,
+    );
+
+    if (provider === 'kakao') {
+      const { id } = await this.kakaoUnlinked(login_id);
+      const deletedSocialUser = await this.userRepository.deleteUser(id);
+
+      if (deletedSocialUser === 0) {
+        throw new BadRequestException(
+          '회원 탈퇴가 정상적으로 완료되지 않았습니다.',
+        );
+      }
+
+      return deletedSocialUser;
+    }
+
+    const deletedLocalUser = await this.userRepository.deleteUser(login_id);
+
+    if (deletedLocalUser === 0) {
+      throw new BadRequestException(
+        '회원 탈퇴가 정상적으로 완료되지 않았습니다.',
+      );
+    }
+
+    return deletedLocalUser;
+  }
+
+  async kakaoUnlinked(login_id: string): Promise<any> {
+    const requestConfig = {
+      headers: {
+        Authorization: 'KakaoAK ' + process.env.KAKAO_ADMIN_KEY,
+      },
+      params: {
+        target_id_type: 'user_id',
+        target_id: login_id,
+      },
+    };
+
+    const responseData = await lastValueFrom(
+      this.httpService
+        .post('https://kapi.kakao.com/v1/user/unlink', null, requestConfig)
+        .pipe(
+          map((response) => {
+            return response.data;
+          }),
+        ),
+    );
+    return responseData;
   }
 
   async updatedProfile(

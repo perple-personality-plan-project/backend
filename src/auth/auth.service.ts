@@ -34,8 +34,8 @@ export class AuthService {
     return existsUser;
   }
 
-  async deleteRefreshToken(refreshToken: string) {
-    await this.cacheManager.del(refreshToken);
+  async deleteRefreshToken(user_id: string) {
+    await this.cacheManager.del(user_id);
     return true;
   }
 
@@ -43,9 +43,9 @@ export class AuthService {
     const payload = { user_id };
 
     const accessToken = await this.createAccessToken(payload);
-    const refreshToken = await this.createRefreshToken();
+    const refreshToken = await this.createRefreshToken(payload);
 
-    await this.cacheManager.set(refreshToken, user_id, {
+    await this.cacheManager.set(user_id + '', refreshToken, {
       ttl: +process.env.REFRESH_TOKEN_EXP,
     } as any);
 
@@ -61,22 +61,20 @@ export class AuthService {
     return accessToken;
   }
 
-  async createRefreshToken() {
-    const refreshToken = this.jwtService.sign(
-      {},
-      {
-        secret: process.env.REFRESH_TOKEN_KEY,
-        expiresIn: `${process.env.REFRESH_TOKEN_EXP}s`,
-      },
-    );
+  async createRefreshToken(payload: object) {
+    const refreshToken = this.jwtService.sign(payload, {
+      secret: process.env.REFRESH_TOKEN_KEY,
+      expiresIn: `${process.env.REFRESH_TOKEN_EXP}s`,
+    });
 
     return refreshToken;
   }
 
-  async getUserRefreshTokenToMatches(refreshToken: string) {
-    const user_id = await this.cacheManager.get(refreshToken);
-
-    if (!user_id) {
+  async getUserRefreshTokenToMatches(user_id: string) {
+    console.log(user_id);
+    const refreshToken = await this.cacheManager.get(user_id);
+    console.log(refreshToken);
+    if (!refreshToken) {
       throw new ForbiddenException('리프레쉬 토큰이 존재하지 않습니다');
     }
 

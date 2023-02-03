@@ -13,6 +13,7 @@ import {
   Query,
   UploadedFiles,
   NotFoundException,
+  Delete,
 } from '@nestjs/common';
 import { GlobalResponseInterceptor } from '../../../common/interceptors/global.response.interceptor';
 import { UserService } from 'src/api/user/service/user.service';
@@ -112,11 +113,23 @@ export class UserController {
   @UseGuards(AuthGuard('jwt-refresh'))
   @Post('/logout')
   async logout(@Req() req): Promise<{ message: string }> {
-    const { refreshToken } = req.user;
+    const user_id = req.user;
 
-    await this.authService.deleteRefreshToken(refreshToken);
+    await this.authService.deleteRefreshToken(user_id);
 
     return { message: '로그아웃 성공' };
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Delete('/delete')
+  async deleteUser(@Req() req): Promise<{ message: string }> {
+    const user_id = req.user;
+
+    await this.userService.deleteUser(user_id);
+
+    await this.authService.deleteRefreshToken(user_id);
+
+    return { message: '회원탈퇴 성공' };
   }
 
   @UseGuards(AuthGuard('jwt'))
@@ -182,7 +195,7 @@ export class UserController {
   @UseGuards(AuthGuard('jwt-refresh'))
   @Get('/refresh-token')
   async reIssue(@Req() req): Promise<{ accessToken: string }> {
-    const { user_id } = req.user;
+    const user_id = req.user;
     const newAccessToken = await this.authService.createAccessToken({
       user_id,
     });

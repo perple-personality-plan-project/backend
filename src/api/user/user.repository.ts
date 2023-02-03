@@ -29,6 +29,10 @@ export class UserRepository {
     return await this.userModel.create({ ...createUserDto });
   }
 
+  async deleteUser(login_id: string): Promise<number> {
+    return await this.userModel.destroy({ where: { login_id } });
+  }
+
   async findUserByLoginId(login_id: string): Promise<User | null> {
     return this.userModel.findOne({ raw: true, where: { login_id } });
   }
