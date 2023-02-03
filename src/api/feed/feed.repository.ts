@@ -229,6 +229,7 @@ export class FeedRepository {
         'thumbnail',
         'description',
         'location',
+        [Sequelize.col('user.nickname'), 'nickname'],
         [Sequelize.col('user.user_id'), 'user_id'],
         [Sequelize.col('user.mbti'), 'mbti'],
         [Sequelize.col('user.profile_img'), 'profile_img'],
