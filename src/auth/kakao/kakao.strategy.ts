@@ -32,14 +32,12 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
 
     let user = await this.userService.findUserByLoginId(profile.id);
 
-    const userNickname = profile.username + Math.floor(Math.random() * 10000);
-
     if (!user) {
       const newUser = await this.userService.signUp({
         login_id: profile.id,
         password: '',
         confirm_password: '',
-        nickname: userNickname,
+        nickname: profile.username,
         mbti: '',
         provider: 'kakao',
       });
