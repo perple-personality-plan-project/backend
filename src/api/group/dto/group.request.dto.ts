@@ -36,5 +36,5 @@ export class GroupParamDto {
 
   @IsString()
   @IsOptional()
-  search: string | null;
+  search?: string | null;
 }

@@ -9,7 +9,7 @@ import { FeedRepository } from '../../feed/feed.repository';
 export class GroupService {
   private GROUPSORT: object = {
     date: 'created_at',
-    rank: 'group_user_count',
+    rank: 'group_ufser_count',
   };
   constructor(
     private readonly groupRepository: GroupRepository,
@@ -85,7 +85,7 @@ export class GroupService {
     return '그룹 생성이 완료되었습니다.';
   }
 
-  async getGroup(req: GroupParamDto) {
+  async getGroup(req: GroupParamDto): Promise<any> {
     const { sort, search } = req;
     let searchData = '';
 
