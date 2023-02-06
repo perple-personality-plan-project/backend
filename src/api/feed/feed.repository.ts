@@ -26,9 +26,8 @@ export class FeedRepository {
     return this.feedModel.create({ ...body, user_id });
   }
 
-  async getAllFeed(user_id: number) {
+  async getAllFeed(user_id: number, page: number, limit: number) {
     const feeds = await this.feedModel.findAll({
-      raw: true,
       attributes: [
         'feed_id',
         'thumbnail',
@@ -69,9 +68,27 @@ export class FeedRepository {
       where: { group_user_id: { [Op.eq]: null } },
       group: ['feed_id'],
       order: [['created_at', 'DESC']],
+      // distinct: true,
+      raw: true,
+      limit: limit,
+      offset: page,
+      subQuery: false,
     });
 
-    return feeds;
+    const count = await this.feedCount();
+
+    const result = {
+      feed_list: feeds,
+      feed_count: count,
+    };
+    return result;
+  }
+
+  async feedCount() {
+    const result = await this.feedModel.findAndCountAll({
+      where: { group_user_id: { [Op.eq]: null } },
+    });
+    return result.count;
   }
 
   async findFeedById(feed_id, user_id) {

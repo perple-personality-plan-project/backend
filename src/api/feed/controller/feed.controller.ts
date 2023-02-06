@@ -47,8 +47,8 @@ export class FeedController {
   }
 
   @Get()
-  getAllFeed(@Query() user_id) {
-    return this.feedService.getAllFeed(user_id);
+  getAllFeed(@Query() req) {
+    return this.feedService.getAllFeed(req);
   }
 
   @Get('/:feed_id')
