@@ -75,7 +75,13 @@ export class FeedRepository {
       subQuery: false,
     });
 
-    return feeds;
+    const count = await this.feedCount();
+
+    const result = {
+      feed_list: feeds,
+      feed_count: count,
+    };
+    return result;
   }
 
   async feedCount() {
