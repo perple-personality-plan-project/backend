@@ -38,10 +38,16 @@ export class FeedService {
     }
   }
 
-  async getAllFeed(userId) {
-    const { user_id } = userId;
+  async getAllFeed(req) {
+    const { user_id, page } = req;
+    const limit = 6;
+    let offset = 0;
 
-    return this.feedRepository.getAllFeed(user_id);
+    if (page > 1) {
+      offset = 6 * (page - 1);
+    }
+
+    return this.feedRepository.getAllFeed(user_id, offset, limit);
   }
 
   async findFeedById(feed_id, userId) {
