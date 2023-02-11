@@ -1,5 +1,9 @@
 # 💻Platter - Backend
+<a href="https://16platter.site/)" target="_blank" ><img width="756" alt="image" src="https://user-images.githubusercontent.com/106604926/218228482-356c6716-d19e-4677-b40a-c4069cd544b7.png"></a>
 
+## 🏠 [Home Page Link](https://16platter.site/)
+## [소개 영상](https://www.youtube.com/watch?v=hd9bLPlnSGA)
+<hr>
 <br>
 
 ## 🗂️ 목차
@@ -21,6 +25,8 @@
 ## 📈 프로젝트 소개
 
 #### Mbti 기반 핫플레이스 공유 커뮤니티!
+
+
 
 <br>
 
@@ -221,9 +227,17 @@
 
 <br>
 
-## 🕹️ 주요 기능
+## 🕹️ 트러블 슈팅
 
-<hr>
+### 문제사항
+#### 메인페이지 속도가 느리다라는 유저 피드백을 확인
+### 문제가 발생한 이유
+#### api/feed? 호출시 서버로 부터 feed테이블의 연관된 데이터를 모두 전송해 주고 있어 데이터가 많아 질 수록 성능이 저하되는 이슈 발견
+### 해결방법
+#### api 호출시 페이지네이션 기능을 주어 api 호출시 Front로 전달되는 데이터를 제한
+
+<img width="768" alt="image" src="https://user-images.githubusercontent.com/106604926/218227278-0e63e7ea-55c3-4a1a-8344-30055cd12fe3.png">
+
 
 <br>
 
